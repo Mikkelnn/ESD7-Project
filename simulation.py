@@ -23,11 +23,11 @@ f_c = 5.8e9 # center frequency
 wavelength = c / f_c
 
 bw = 20.0e6 # bandwidth
-t_chirp = 4.6e-6 # chirp time
-prp=5e-6 # Pulse Repetition Period
+t_chirp = 3.2e-6 # chirp time
+prp=4.8e-6 # Pulse Repetition Period
 pulses = 128
 
-fs = 46e6 # 50e6 # IF fs
+fs = 45e6 # 50e6 # IF fs
 
 r_max = (c * t_chirp) / 2 # calculate the maximum range
 delta_R = c / (2 * bw)  # Calculate range resolution (meters / bin)
@@ -111,14 +111,10 @@ rcs = 10
 
 def runSimulation(params):
     #Do a lot of simulations
-    targets = np.array()
-    for n_targ in enumerate(params):
-        range = n_targ[0]
-        velocity = n_targ[1]
-        angle = n_targ[2]
-
-        cos_val = range*np.cos(np.radians(angle))
-        sin_val = range*np.sin(np.radians(angle))
+    targets = []
+    for i, (range, velocity, angle) in enumerate(params):
+        cos_val = range * np.cos(np.radians(angle))
+        sin_val = range * np.sin(np.radians(angle))
 
         targetLoop = dict(
             location=(
@@ -131,7 +127,7 @@ def runSimulation(params):
             phase=0,
         )
 
-        targets.append(targetLoop)      
+        targets.append(targetLoop)
 
     data = sim_radar(radar, targets)
     timestamp = data["timestamp"]

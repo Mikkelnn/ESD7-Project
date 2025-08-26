@@ -3,15 +3,29 @@ from numpy.typing import NDArray
 from scipy import signal, linalg, fft
 import matplotlib.pyplot as plt
 from scipy.ndimage import binary_dilation
+# from tfrecord_to_numpy import load_tfrecord_to_numpy, load_all_tfrecords
 
 import radarsimpy.processing as proc
 
 # load data
+uuid = '76ef5623-c6ae-4788-8aad-0436d7de237c'
 baseband = []
-with open('simDataLoopChirp/Range500Velocity1071Angle0.npy', 'rb') as f:
+with open(f'./sim_output/baseband/{uuid}.npy', 'rb') as f:
     baseband = np.load(f)
 
 print(f"loaded data shape: {baseband.shape}")
+
+params = []
+with open(f'./sim_output/params/{uuid}.npy', 'rb') as f:
+    params = np.load(f)
+
+print(f"loaded params shape: {params.shape}")
+print(f"Loaded params: {params}")
+
+# Load tensor data if needed. This will be needed to be looked at properly
+# baseband = load_tfrecord_to_numpy("./sim_output/baseband/${uuid}.tfrecord")
+# print(baseband.shape, baseband)
+# params = load_tfrecord_to_numpy("./sim_output/params/${uuid}.tfrecord")
 
 # parameters
 c = 3e8
@@ -387,55 +401,55 @@ plt.legend()
 # print(f"shape: {baseband.shape}, rw: {len(range_window)}, dw: {len(doppler_window)}")
 # proc.range_doppler_fft(baseband, rwin=range_window, dwin=doppler_window, rn=256, dn=200000)
 
-# Get the index of the maximum value
-a_max, d_max, r_max = np.unravel_index(np.argmax(angle_doppler_range_shifted), angle_doppler_range_shifted.shape)
+# # Get the index of the maximum value
+# a_max, d_max, r_max = np.unravel_index(np.argmax(angle_doppler_range_shifted), angle_doppler_range_shifted.shape)
 
-# Helper: Find first failure before/after peak in 1D profile
-def find_threshold_failures(data_1d, peak_idx, threshold):
-    forward_fail = None
-    for i in range(peak_idx, len(data_1d) - 1):
-        if data_1d[i] > threshold and data_1d[i + 1] <= threshold:
-            forward_fail = i + 1
-            break
+# # Helper: Find first failure before/after peak in 1D profile
+# def find_threshold_failures(data_1d, peak_idx, threshold):
+#     forward_fail = None
+#     for i in range(peak_idx, len(data_1d) - 1):
+#         if data_1d[i] > threshold and data_1d[i + 1] <= threshold:
+#             forward_fail = i + 1
+#             break
 
-    backward_fail = None
-    for i in range(peak_idx, 0, -1):
-        if data_1d[i] > threshold and data_1d[i - 1] <= threshold:
-            backward_fail = i - 1
-            break
+#     backward_fail = None
+#     for i in range(peak_idx, 0, -1):
+#         if data_1d[i] > threshold and data_1d[i - 1] <= threshold:
+#             backward_fail = i - 1
+#             break
 
-    return backward_fail, forward_fail
+#     return backward_fail, forward_fail
 
-# 1. Along angle
-angle_profile = angle_doppler_range_shifted[:, d_max, r_max]
-fail_angle_back, fail_angle_forward = find_threshold_failures(angle_profile, a_max, threshold)
+# # 1. Along angle
+# angle_profile = angle_doppler_range_shifted[:, d_max, r_max]
+# fail_angle_back, fail_angle_forward = find_threshold_failures(angle_profile, a_max, threshold)
 
-# 2. Along doppler
-doppler_profile = angle_doppler_range_shifted[a_max, :, r_max]
-fail_doppler_back, fail_doppler_forward = find_threshold_failures(doppler_profile, d_max, threshold)
+# # 2. Along doppler
+# doppler_profile = angle_doppler_range_shifted[a_max, :, r_max]
+# fail_doppler_back, fail_doppler_forward = find_threshold_failures(doppler_profile, d_max, threshold)
 
-# 3. Along range
-range_profile = angle_doppler_range_shifted[a_max, d_max, :]
-fail_range_back, fail_range_forward = find_threshold_failures(range_profile, r_max, threshold)
+# # 3. Along range
+# range_profile = angle_doppler_range_shifted[a_max, d_max, :]
+# fail_range_back, fail_range_forward = find_threshold_failures(range_profile, r_max, threshold)
 
-# Map to physical coordinates
-def safe_map(axis, idx):
-    return axis[idx] if idx is not None else None
+# # Map to physical coordinates
+# def safe_map(axis, idx):
+#     return axis[idx] if idx is not None else None
 
-angle_fail_back = safe_map(angle_axis, fail_angle_back)
-angle_fail_forward = safe_map(angle_axis, fail_angle_forward)
+# angle_fail_back = safe_map(angle_axis, fail_angle_back)
+# angle_fail_forward = safe_map(angle_axis, fail_angle_forward)
 
-doppler_fail_back = safe_map(np.flip(doppler_axis), fail_doppler_back)
-doppler_fail_forward = safe_map(np.flip(doppler_axis), fail_doppler_forward)
+# doppler_fail_back = safe_map(np.flip(doppler_axis), fail_doppler_back)
+# doppler_fail_forward = safe_map(np.flip(doppler_axis), fail_doppler_forward)
 
-range_fail_back = safe_map(range_axis, fail_range_back)
-range_fail_forward = safe_map(range_axis, fail_range_forward)
+# range_fail_back = safe_map(range_axis, fail_range_back)
+# range_fail_forward = safe_map(range_axis, fail_range_forward)
 
-# Output
-print(f"Max value at: angle={angle_axis[a_max]}, doppler={np.flip(doppler_axis)[d_max]}, range={range_axis[r_max]}")
-print("\nThreshold fails at:")
-print(f"  Angle:   back={angle_fail_back}, forward={angle_fail_forward}")
-print(f"  Doppler: back={doppler_fail_back}, forward={doppler_fail_forward}")
-print(f"  Range:   back={range_fail_back}, forward={range_fail_forward}")
+# # Output
+# print(f"Max value at: angle={angle_axis[a_max]}, doppler={np.flip(doppler_axis)[d_max]}, range={range_axis[r_max]}")
+# print("\nThreshold fails at:")
+# print(f"  Angle:   back={angle_fail_back}, forward={angle_fail_forward}")
+# print(f"  Doppler: back={doppler_fail_back}, forward={doppler_fail_forward}")
+# print(f"  Range:   back={range_fail_back}, forward={range_fail_forward}")
 
 plt.show()

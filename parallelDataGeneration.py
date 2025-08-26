@@ -8,17 +8,19 @@ import tensorflow as tf
 import random as rn
 
 # Import your simulation function from separate file
-from parallelDataGeneration import simulate
+from simulation import runSimulation
 
 # -------------------------------
 # Disk Monitor
 # -------------------------------
-def disk_monitor(root_path, flag, check_interval=1):
+def disk_monitor(root_path, flag, check_interval=0.25): # check_interval=1
     """Continuously update flag: True if disk < 90%, False if >= 90%"""
     while flag.value:
-        total, used, free = shutil.disk_usage(root_path)
-        used_percent = used / total * 100
-        flag.value = used_percent < 90
+        # total, used, free = shutil.disk_usage(root_path)
+        # used_percent = used / total * 100
+        # flag.value = used_percent < 90
+        path =  os.path.join(root_path, "baseband")
+        flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
         time.sleep(check_interval)
     print("Disk monitor exiting.")
 
@@ -31,7 +33,7 @@ def generate_batch(worker_seed):
     n_targets = rn.randint(0, 3)
     data = np.zeros((n_targets, 3), dtype=np.int16)
     for j in range(n_targets):
-        data[j, 0] = rn.randint(100, 800)    # range
+        data[j, 0] = rn.randint(100, 800)   # range
         data[j, 1] = rn.randint(0, 7500)    # velocity
         data[j, 2] = rn.randint(-15, 15)    # angle
     return data
@@ -48,20 +50,33 @@ def serialize_example_binary(data: np.ndarray):
 # Worker
 # -------------------------------
 def run_worker(root_path, worker_id, disk_flag):
-    os.makedirs(root_path, exist_ok=True)
+    # os.makedirs(root_path, exist_ok=True)
+    params_path = os.path.join(root_path, "params")
+    baseband_path = os.path.join(root_path, "baseband")
     print(f"Worker {worker_id} started (PID {os.getpid()})")
 
     while disk_flag.value:  # read shared flag instead of calling disk_usage
+        local_uuid = uuid.uuid4()
         # Generate random parameters
         params = generate_batch(worker_seed=worker_id)
 
         # Call your simulation function
-        result = simulate(params)
+        baseband = runSimulation(params)
+        # Write params as raw-binary TFRecord file with UUID
+        # params_filename = os.path.join(params_path, f"{local_uuid}.tfrecord")
+        # with tf.io.TFRecordWriter(params_filename) as writer:
+        #     writer.write(serialize_example_binary(params))
+        params_filename = os.path.join(params_path, f"{local_uuid}.npy")
+        with open(params_filename, 'wb') as f:
+                np.save(f, params)
 
         # Write result as raw-binary TFRecord file with UUID
-        filename = os.path.join(root_path, f"{uuid.uuid4()}.tfrecord")
-        with tf.io.TFRecordWriter(filename) as writer:
-            writer.write(serialize_example_binary(result))
+        # baseband_filename = os.path.join(baseband_path, f"{local_uuid}.tfrecord")
+        # with tf.io.TFRecordWriter(baseband_filename) as writer:
+        #     writer.write(serialize_example_binary(baseband))
+        baseband_filename = os.path.join(baseband_path, f"{local_uuid}.npy")
+        with open(baseband_filename, 'wb') as f:
+                np.save(f, baseband)
 
     print(f"Worker {worker_id} stopped (disk >= 90%)")
 
@@ -70,21 +85,23 @@ def run_worker(root_path, worker_id, disk_flag):
 # -------------------------------
 if __name__ == "__main__":
     root_path = "./sim_output"  # Change to desired folder
-    os.makedirs(root_path, exist_ok=True)
+    os.makedirs(os.path.join(root_path, "params"), exist_ok=True)
+    os.makedirs(os.path.join(root_path, "baseband"), exist_ok=True)
 
     # Shared flag to indicate if disk has space
-    disk_flag = mp.Value('b', True)  # True = disk < 90%
+    with mp.Manager() as manager:
+        disk_flag = manager.Value('b', True) # True = disk < 90%
 
-    # Start disk monitor process
-    monitor = mp.Process(target=disk_monitor, args=(root_path, disk_flag))
-    monitor.start()
+        # Start disk monitor process
+        monitor = mp.Process(target=disk_monitor, args=(root_path, disk_flag))
+        monitor.start()
 
-    # Start worker pool
-    n_workers = mp.cpu_count()
-    print(f"Starting {n_workers} workers...")
-    with mp.Pool(processes=n_workers) as pool:
-        pool.starmap(run_worker, [(root_path, i, disk_flag) for i in range(n_workers)])
+        # Start worker pool
+        n_workers = mp.cpu_count()
+        print(f"Starting {n_workers} workers...")
+        with mp.Pool(processes=n_workers) as pool:
+            pool.starmap(run_worker, [(root_path, i, disk_flag) for i in range(n_workers)])
 
-    # Cleanup
-    monitor.join()
-    print("All workers stopped, simulation complete.")
+        # Cleanup
+        monitor.join()
+        print("All workers stopped, simulation complete.")
