@@ -33,7 +33,7 @@ def generate_batch(worker_seed):
     for j in range(n_targets):
         data[j, 0] = rn.randint(100, 800)    # range
         data[j, 1] = rn.randint(0, 7500)    # velocity
-        data[j, 2] = rn.randint(-50, 50)    # angle
+        data[j, 2] = rn.randint(-15, 15)    # angle
     return data
 
 def serialize_example_binary(data: np.ndarray):
