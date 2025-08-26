@@ -107,19 +107,12 @@ fig.update_layout(
     yaxis=dict(title="z (λ)", scaleanchor="x", scaleratio=1),
 )
 
-# uncomment this to display interactive plot
-# fig.show()
-
-# display static image to reduce size on radarsimx.com
-# img_bytes = fig.to_image(format="jpg", scale=2)
-# display(Image(img_bytes))
-
 rcs = 10
 
-def runSimulation():
+def runSimulation(params):
     #Do a lot of simulations
     targets = np.array()
-    for n_targ in enumerate(params)
+    for n_targ in enumerate(params):
         range = n_targ[0]
         velocity = n_targ[1]
         angle = n_targ[2]
@@ -144,8 +137,3 @@ def runSimulation():
     timestamp = data["timestamp"]
     baseband = data["baseband"] #+ data["noise"]
     return baseband
-
-# Save data to file
-# filename = f'simDataLoopChirp/Range{int(range)}Velocity{int(velocity)}Angle{int(angle)}.npy'
-# with open(filename, 'wb') as f:
-#     np.save(f, baseband)
