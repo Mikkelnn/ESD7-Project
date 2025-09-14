@@ -19,7 +19,7 @@ If a folder contains Python code, a virtual enviorment must be used within the f
 1. Intall virtial enviorment (if not alredy):
 
    - Windows: `py -m pip install virtualenv`
-   - Linux: `pip install virtualenv`
+   - Linux: `pip install virtualenv` _OR_ `sudo apt install python3.12-venv`
 
 2. If not already created, create the virtual enviorment:
 
