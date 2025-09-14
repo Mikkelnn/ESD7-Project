@@ -38,13 +38,13 @@ def generate_batch(worker_seed):
         data[j, 2] = rn.randint(-15, 15)    # angle
     return data
 
-def serialize_example_binary(data: np.ndarray):
-    """Serialize a numpy array to raw-binary TFRecord Example"""
-    feature = {
-        "raw": tf.train.Feature(bytes_list=tf.train.BytesList(value=[data.tobytes()]))
-    }
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
+# def serialize_example_binary(data: np.ndarray):
+#     """Serialize a numpy array to raw-binary TFRecord Example"""
+#     feature = {
+#         "raw": tf.train.Feature(bytes_list=tf.train.BytesList(value=[data.tobytes()]))
+#     }
+#     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+#     return example_proto.SerializeToString()
 
 # -------------------------------
 # Worker

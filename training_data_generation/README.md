@@ -18,6 +18,6 @@ Obtain the binaries of radarsimpy and place it in this folder i.e. 'pythonRadarS
    2. Simulation:
       - Windows: `py -m simulation.py`
       - Linux: `python3 simulation.py`
-   3. Generate training data:
+   3. Generate training data: **OBS:** _runs until disk is 90% full_
       - Windows: `py -m parallelDataGeneration.py`
       - Linux: `python3 parallelDataGeneration.py`
