@@ -4,7 +4,7 @@ import uuid
 import time
 import shutil
 import numpy as np
-import tensorflow as tf
+# import tensorflow as tf
 import random as rn
 
 # Import your simulation function from separate file
@@ -13,14 +13,14 @@ from simulation import runSimulation
 # -------------------------------
 # Disk Monitor
 # -------------------------------
-def disk_monitor(root_path, flag, check_interval=0.25): # check_interval=1
+def disk_monitor(root_path, flag, check_interval=1):
     """Continuously update flag: True if disk < 90%, False if >= 90%"""
     while flag.value:
-        # total, used, free = shutil.disk_usage(root_path)
-        # used_percent = used / total * 100
-        # flag.value = used_percent < 90
-        path =  os.path.join(root_path, "baseband")
-        flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
+        total, used, free = shutil.disk_usage(root_path)
+        used_percent = used / total * 100
+        flag.value = used_percent < 90
+        # path =  os.path.join(root_path, "baseband")
+        # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
         time.sleep(check_interval)
     print("Disk monitor exiting.")
 
