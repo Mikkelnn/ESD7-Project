@@ -35,8 +35,8 @@ doppler_max = wavelength / (4 * prp) #((wavelength * (1 / (2 * prp))) / 2)
 delta_velocity = wavelength / (2 * pulses * prp)
 
 # print(f"max range: {round(r_max, 2)} m; range resolution: {round(delta_R, 3)} m")
-print(f"max velocity {round(doppler_max, 2)} m/s; velocity resolution: {round(delta_velocity, 3)} m/s")
-print(f"tx time: {prp * pulses}s; sampls/chirp: {round(t_chirp * fs, 2)}")
+# print(f"max velocity {round(doppler_max, 2)} m/s; velocity resolution: {round(delta_velocity, 3)} m/s")
+# print(f"tx time: {prp * pulses}s; sampls/chirp: {round(t_chirp * fs, 2)}")
 
 N_tx = 1
 N_rx = 4
@@ -131,5 +131,5 @@ def runSimulation(params):
 
     data = sim_radar(radar, targets)
     timestamp = data["timestamp"]
-    baseband = data["baseband"] #+ data["noise"]
+    baseband = data["baseband"] + data["noise"]
     return baseband

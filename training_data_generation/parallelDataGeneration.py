@@ -18,7 +18,7 @@ def disk_monitor(root_path, flag, check_interval=1):
     while flag.value:
         total, used, free = shutil.disk_usage(root_path)
         used_percent = used / total * 100
-        flag.value = used_percent < 90
+        flag.value = used_percent < 98
         # path =  os.path.join(root_path, "baseband")
         # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
         time.sleep(check_interval)
