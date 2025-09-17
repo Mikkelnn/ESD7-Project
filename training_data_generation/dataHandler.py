@@ -5,7 +5,7 @@ import glob
 
 class DataHandler():
 
-    def unpack_params(self, array) -> list[dict[str, float]]:
+    def unpack_params(self, array) -> list[dict[str, ps.Float32]]:
         targets = []
         for i in range(array.shape[0]):
             targets.append({
@@ -78,6 +78,13 @@ class DataHandler():
             compression_level=3,
             row_group_size=128*1024*1024
         )
+
+    def parquet_to_tfrecord_example(self, parquet_params_file_path, parquet_baseband_file_path): #TODO
+
+        params_tfrecord = None
+        baseband_tfrecord = None
+
+        return params_tfrecord, baseband_tfrecord
 
     def print_parquet(self, parquet_file_path):
         if not os.path.exists(parquet_file_path):
