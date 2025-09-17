@@ -2,6 +2,7 @@ import polars as ps
 import numpy as np
 import os
 import glob
+import time
 
 class DataHandler():
 
@@ -41,7 +42,7 @@ class DataHandler():
             param_schema[f"{tname}_range"] = ps.Float32
             param_schema[f"{tname}_velocity"] = ps.Float32
             param_schema[f"{tname}_angle"] = ps.Float32
-        parameters = ps.DataFrame(param_dict, schema=param_schema, strict=True).rechunk()
+        parameters = ps.DataFrame(param_dict, schema=param_schema, strict=True).rechunk().lazy()
 
         # Split each antenna's complex array into real and imaginary columns
         baseband_data = {}
@@ -52,7 +53,7 @@ class DataHandler():
             baseband_data,
             schema={k: ps.Float32 for k in baseband_data.keys()},
             strict=True
-        ).rechunk()
+        ).rechunk().lazy()
 
         # Save DataFrames to parquet files in respective subfolders
         output_dir = os.path.join(os.getcwd(), "parquet")
@@ -66,20 +67,24 @@ class DataHandler():
         baseband_path = os.path.join(output_dir, "baseband", baseband_filename)
         params_path = os.path.join(output_dir, "params", params_filename)
 
-        baseband.write_parquet(
+        baseband.sink_parquet(
             baseband_path,
             compression="zstd",
             compression_level=3,
-            row_group_size=128*1024*1024
+            row_group_size=128*1024*1024 # 128 MB
         )
-        parameters.write_parquet(
+        parameters.sink_parquet(
             params_path,
             compression="zstd",
             compression_level=3,
-            row_group_size=128*1024*1024
+            row_group_size=128*1024*1024 # 128 MB
         )
 
     def parquet_to_tfrecord_example(self, parquet_params_file_path, parquet_baseband_file_path): #TODO
+
+        # TODO notes:
+        # TFRecord shards: 256 MB (tune 100–500 MB).
+        # Input pipeline tensorflow: use num_parallel_reads=tf.data.AUTOTUNE, interleave, map(..., num_parallel_calls=AUTO), prefetch(AUTO).
 
         params_tfrecord = None
         baseband_tfrecord = None
@@ -103,11 +108,13 @@ def _main():
     baseband_files = sorted(glob.glob("../training_data_generation/sim_output/baseband/*.npy"))
     params_files = sorted(glob.glob("../training_data_generation/sim_output/params/*.npy"))
 
+    start_time = time.time()
+
     for baseband_path, params_path in zip(baseband_files, params_files):
         handler.numpy_to_parquet(baseband_path, params_path)
 
     # Print every 200th params and baseband parquet file for inspection, along with their numpy pairs
-    for i in range(0, len(baseband_files), 200):
+    for i in range(0, len(baseband_files), 400):
         print(f"\n--- Params file: {params_files[i]} ---")
         handler.print_numpy(params_files[i])
         handler.print_parquet(
@@ -128,6 +135,9 @@ def _main():
                 os.path.splitext(os.path.basename(baseband_files[i]))[0] + ".parquet"
             )
         )
+
+    elapsed = time.time() - start_time
+    print(f"\nTotal time taken: {elapsed:.2f} seconds")
 
 if __name__ == "__main__":
     _main()
