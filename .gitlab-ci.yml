@@ -1,0 +1,5 @@
+model:
+  script:
+    - BigBrother/run.sh
+  tags:
+    - gpu
