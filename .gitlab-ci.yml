@@ -1,5 +1,24 @@
+default:
+  image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_CHECKOUT: "true"
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_CLEAN_FLAGS: none
+  GIT_SSL_NO_VERIFY: "false"
+
+before_script:
+  # Force Git to use CI_JOB_TOKEN for HTTPS clone/fetch
+  - git config --global credential.helper store
+  - echo "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk" > ~/.git-credentials
+
+stages:
+  - model
+
 model:
   script:
+    - nvidia-smi
     - BigBrother/run.sh
   tags:
     - gpu
