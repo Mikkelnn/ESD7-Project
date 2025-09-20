@@ -17,6 +17,7 @@ stages:
   - model
 
 model:
+  stage: model
   script:
     - nvidia-smi
     - BigBrother/run.sh
