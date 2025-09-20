@@ -13,7 +13,7 @@ stages:
 setup:
   stage: setup
   script:
-    - apt-get update && apt-get install -y git nvidia-utils
+    - apt-get update && apt-get install -y --no-install-recommends git nvidia-utils-535 && apt-get clean
     - git config --global credential.helper store
     - echo "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk" > ~/.git-credentials
     - nvidia-smi
