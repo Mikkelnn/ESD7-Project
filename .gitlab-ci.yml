@@ -1,9 +1,7 @@
-default:
-  image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
-  tags:
-    - gpu
-  resources:
-    gpus: 1
+image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
+tags: [gpu]
+resources:
+  gpus: 1
 
 variables:
   GIT_STRATEGY: clone
@@ -17,7 +15,7 @@ stages:
 setup:
   stage: setup
   script:
-    - apt-get update && apt-get install -y --no-install-recommends git nvidia-utils-535 && apt-get clean
+    - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
     - git config --global credential.helper store
     - echo "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk" > ~/.git-credentials
     - nvidia-smi
@@ -28,7 +26,3 @@ model:
   stage: model
   script:
     - BigBrother/run.sh
-  tags:
-    - gpu
-  resources:
-    gpus: 1
