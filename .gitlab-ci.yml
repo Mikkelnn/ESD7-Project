@@ -1,6 +1,11 @@
 default:
   image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
 
+variables:
+  GIT_STRATEGY: clone
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_URL: "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk/karlbrandt/p7_project.git"
+
 stages:
   - model
 
