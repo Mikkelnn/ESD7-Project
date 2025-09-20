@@ -5,8 +5,8 @@ setup:
   stage: setup
   tags: [gpu]
   script:
-    - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
-    - nvidia-smi
-    - git config --global url."https://${GITLAB_USER}:${GITLAB_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+     - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
+     - nvidia-smi
+     - git config --global url."https://${CI_JOB_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   rules:
     - when: always
