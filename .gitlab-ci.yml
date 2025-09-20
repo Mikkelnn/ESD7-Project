@@ -1,3 +1,6 @@
+stages:
+  - setup
+
 setup:
   stage: setup
   tags: [gpu]
