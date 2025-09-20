@@ -1,25 +1,9 @@
-image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
-
-variables:
-  GIT_STRATEGY: clone
-  GIT_SUBMODULE_STRATEGY: recursive
-
-stages:
-  - setup
-  - model
-
 setup:
   stage: setup
   tags: [gpu]
   script:
     - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
     - nvidia-smi
+    - git config --global url."https://${GITLAB_USER}:${GITLAB_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   rules:
     - when: always
-
-model:
-  stage: model
-  tags: [gpu]
-  script:
-    - BigBrother/run.sh
-
