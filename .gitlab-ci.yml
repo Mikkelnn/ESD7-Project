@@ -3,7 +3,6 @@ image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
 variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: recursive
-  GIT_SUBMODULE_URL: "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk/guest_developers/p7_project.git"
 
 stages:
   - setup
@@ -14,8 +13,6 @@ setup:
   tags: [gpu]
   script:
     - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
-    - git config --global credential.helper store
-    - echo "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk" > ~/.git-credentials
     - nvidia-smi
   rules:
     - when: always
