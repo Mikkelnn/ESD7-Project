@@ -4,7 +4,7 @@ default:
 variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: recursive
-  GIT_SUBMODULE_URL: "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk/karlbrandt/p7_project.git"
+  GIT_SUBMODULE_URL: "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brandttech.dk/guest_developers/p7_project.git"
 
 stages:
   - model
