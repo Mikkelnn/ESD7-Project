@@ -12,8 +12,6 @@ stages:
 setup:
   stage: setup
   tags: [gpu]
-  resources:
-    gpus: 1
   script:
     - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
     - git config --global credential.helper store
@@ -25,7 +23,6 @@ setup:
 model:
   stage: model
   tags: [gpu]
-  resources:
-    gpus: 1
   script:
     - BigBrother/run.sh
+
