@@ -32,6 +32,12 @@ def main():
 
     ai_handler.wait_for_ctrl_c()
 
+    model = defineModel()
+    model.summary()
+
+    # ai_handler.configModelFit()
+    # ai_handler.fitModel(model)
+
     # Plot and save the figure using matplotlib
     #plt.figure()
     #plt.scatter(x, y, label="True data")
