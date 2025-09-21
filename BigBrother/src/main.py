@@ -15,14 +15,15 @@ VALIDATE_DATA_PATH = Path("validate/")
 
 
 def main():
-    ai_handler.set_time_start()
+    try:
+        ai_handler.set_time_start()
 
-    model = defineModel()
+        model = defineModel()
 
-    ai_handler.print_summary(model)
-    ai_handler.plot_block_diagram(model)
+        ai_handler.print_summary(model)
+        ai_handler.plot_block_diagram(model)
 
-    compiled_model = ai_handler.compile_model(model)
+        compiled_model = ai_handler.compile_model(model)
 
         labeld_data = ai_handler.dataset_from_data_and_labels(data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label")
         labeld_validation = ai_handler.dataset_from_data_and_labels(data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label")
