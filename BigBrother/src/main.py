@@ -3,6 +3,7 @@ from ntfy import NtfyHandler
 from logger import get_logger
 import matplotlib.pyplot as plt
 from pathlib import Path
+from model import defineModel 
 
 log = get_logger()
 
@@ -18,6 +19,12 @@ def main():
     result_folder = RESULTS_PATH / str(time_started)
     result_folder.mkdir(parents=True, exist_ok=True)
 
+    model = defineModel()
+    model.summary()
+
+    # ai_handler.configModelFit()
+    # ai_handler.fitModel(model)
+
     # Plot and save the figure using matplotlib
     #plt.figure()
     #plt.scatter(x, y, label="True data")
@@ -32,16 +39,16 @@ def main():
 
     ai_handler.set_time_stop()
 
-    ntfy.post(  # Remember the message is markdown format
-       title="Results of ai_template",
-       message=(
-           f"**Start time:** {time_started}\n"
-           f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
-           f"**Results saved to:** `{result_folder}`\n\n"
-       )
-    )
+    # ntfy.post(  # Remember the message is markdown format
+    #    title="Results of ai_template",
+    #    message=(
+    #        f"**Start time:** {time_started}\n"
+    #        f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
+    #        f"**Results saved to:** `{result_folder}`\n\n"
+    #    )
+    # )
 
-    ntfy.post_image(result_folder / "results.png", title="Linear Regression Results", compress=False)
+    # ntfy.post_image(result_folder / "results.png", title="Linear Regression Results", compress=False)
 
 if __name__ == "__main__":
     main()
