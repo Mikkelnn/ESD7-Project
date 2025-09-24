@@ -280,9 +280,12 @@ class AiHandler():
             dataset = dataset.shuffle(len(data_files), seed=seed)
 
         dataset = dataset.batch(batch_size).prefetch(self.tf.data.AUTOTUNE)
+<<<<<<< HEAD
         
         self.log.info(f"Finished loding training data....")
 
+=======
+>>>>>>> 3b1a5e2 (exttended ai handler to incoporate functions to train, handle dta and start tensorboard)
         return dataset
 
 def _main():

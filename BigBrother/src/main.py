@@ -15,6 +15,8 @@ VALIDATE_DATA_PATH = Path("validate/")
 
 
 def main():
+    ai_handler.set_time_start()
+
     model = defineModel()
 
     ai_handler.print_summary(model)
@@ -31,12 +33,6 @@ def main():
     ai_handler.save_model(model, name=f"sum_diff_model")
 
     ai_handler.wait_for_ctrl_c()
-
-    model = defineModel()
-    model.summary()
-
-    # ai_handler.configModelFit()
-    # ai_handler.fitModel(model)
 
     # Plot and save the figure using matplotlib
     #plt.figure()
