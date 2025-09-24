@@ -7,23 +7,26 @@ from model import defineModel
 
 log = get_logger()
 
-ai_handler = AiHandler()
+RESULTS_PATH = Path("results/")
+ai_handler = AiHandler(RESULTS_PATH)
 ntfy = NtfyHandler("ai_template")
 
-RESULTS_PATH = Path("results/")
+TRAINING_DATA_PATH = Path("data/")
+VALIDATE_DATA_PATH = Path("validate/")
+
 
 def main():
-    time_started = ai_handler.set_time_start()
-
-    # Save results to a folder named after time_started
-    result_folder = RESULTS_PATH / str(time_started)
-    result_folder.mkdir(parents=True, exist_ok=True)
-
     model = defineModel()
     model.summary()
 
-    # ai_handler.configModelFit()
-    # ai_handler.fitModel(model)
+    ai_handler.plot_block_diagram(model)
+    compiled_model = ai_handler.compile_model(model)
+
+    labeld_data = ai_handler.dataset_from_data_and_labels(data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label")
+    labeld_validation = ai_handler.dataset_from_data_and_labels(data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label")
+
+    ai_handler.launch_tensorboard_threaded()
+    history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
 
     # Plot and save the figure using matplotlib
     #plt.figure()

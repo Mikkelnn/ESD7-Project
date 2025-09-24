@@ -8,6 +8,7 @@ dependencies = [
     "matplotlib>=3.10.6",
     "numpy>=2.3.2",
     "polars>=1.33.0",
+    "pydot>=4.0.1",
     "python-ntfy>=0.10.0",
     "ruff>=0.12.12",
     "scikit-image>=0.25.2",
