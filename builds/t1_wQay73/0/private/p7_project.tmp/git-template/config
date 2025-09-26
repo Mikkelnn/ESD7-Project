@@ -1,0 +1,14 @@
+[init]
+	defaultBranch = none
+[fetch]
+	recurseSubmodules = false
+[credential]
+	interactive = never
+[gc]
+	autoDetach = false
+[http]
+	extraHeader = X-Gitaly-Correlation-ID: 01K62RVD4VAK6AKZ5BAQJM7V6D
+[transfer]
+	bundleURI = true
+[http "https://gitlab.brandttech.dk"]
+	sslCAInfo = /home/karlbrandt/Projects/ESD7-Project/builds/t1_wQay73/0/private/p7_project.tmp/CI_SERVER_TLS_CA_FILE

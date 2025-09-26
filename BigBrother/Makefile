@@ -6,4 +6,4 @@ run:
 	uv run src/main.py
 
 lint:
-	uvx ruff check src/ && uvx ty check src/
+	uvx ruff check src/ --fix && uvx ty check src/
