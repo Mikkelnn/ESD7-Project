@@ -224,3 +224,5 @@ wheels/
 
 parquet
 *.zip
+
+builds

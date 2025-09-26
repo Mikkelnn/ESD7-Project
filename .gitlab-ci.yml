@@ -7,7 +7,9 @@ lint:
   tags: [gpu]
   image: bigbrother:latest
   script:
-    - cd BigBrother && make lint
+    - cd BigBrother 
+    - uv sync
+    - make lint
   rules:
     - when: always
 
