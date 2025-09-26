@@ -52,3 +52,13 @@ If a folder contains Python code, a virtual enviorment must be used within the f
 ## Training data location
 - Simulation **without** noise: `ssh ubuntu@130.225.39.235:~/ESD7-Project/training_data_generation/sim_output/`
 - Simulation **with** noise: `ssh ubuntu@130.225.39.212:~/ESD7-Project/training_data_generation/sim_output/`
+<<<<<<< HEAD
+=======
+=======
+# GitLab Runner test
+<<<<<<< HEAD
+>>>>>>> 0967482 (Test GitLab Runner without GPU)
+=======
+# GitLab Runner test
+>>>>>>> 03eceae (Test GitLab Runner without GPU)
+>>>>>>> 6c8b3f3 (Test GitLab Runner without GPU)
