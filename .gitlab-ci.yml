@@ -1,23 +1,28 @@
-before_script:
-  - cd BigBrother && docker build -f dockerfile -t bigbrother .
-
-image: bigbrother:latest
-
 stages:
-  - setup
-  - model
+  - build-and-run
 
-setup:
-  stage: setup
+# Single stage that builds and runs everything
+build-and-run:
+  stage: build-and-run
   tags: [gpu]
+  image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   script:
-    - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
+    # Build the Docker image
+    - cd BigBrother && docker build -f dockerfile -t bigbrother:latest .
+    
+    # Verify image was built
+    - docker images | grep bigbrother
+    
+    # Install dependencies (if needed in the runner environment)
+    - apt-get update && apt-get install -y git && apt-get clean
+    
+    # Run the application inside the built container
+    - docker run --rm --gpus all -v $(pwd)/BigBrother:/home/user/BigBrother bigbrother:latest sh -c "cd /home/user/BigBrother && sh run.sh"
   rules:
     - when: always
-
-model:
-  stage: model
-  tags: [gpu]
-  script:
-    - cd /home/user/BigBrother && sh run.sh
 
