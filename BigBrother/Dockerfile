@@ -1,6 +1,6 @@
 FROM nvidia/cuda:12.6.2-runtime-ubuntu24.04
 
-WORKDIR /home/user/BigBrother
+WORKDIR /app
 
 COPY apt_requirements.txt .
 
@@ -9,13 +9,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m user
-
-USER user
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
 COPY . .
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/home/user/.local/bin:$PATH"
-
-CMD ["sh", "/home/user/BigBrother/run.sh"]
+CMD ["sh", "run.sh"]

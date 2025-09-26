@@ -1,28 +1,20 @@
 stages:
-  - build-and-run
+  - lint
+  - run
 
-# Single stage that builds and runs everything
-build-and-run:
-  stage: build-and-run
+lint:
+  stage: lint
   tags: [gpu]
-  image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
-  services:
-    - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   script:
-    # Build the Docker image
-    - cd BigBrother && docker build -f dockerfile -t bigbrother:latest .
-    
-    # Verify image was built
-    - docker images | grep bigbrother
-    
-    # Install dependencies (if needed in the runner environment)
-    - apt-get update && apt-get install -y git && apt-get clean
-    
-    # Run the application inside the built container
-    - docker run --rm --gpus all -v $(pwd)/BigBrother:/home/user/BigBrother bigbrother:latest sh -c "cd /home/user/BigBrother && sh run.sh"
+    - cd BigBrother && make lint
   rules:
     - when: always
 
+run:
+  stage: run
+  tags: [gpu]
+  script:
+    # Build and run using Makefile target
+    - cd BigBrother && make docker_run
+  rules:
+    - when: always
