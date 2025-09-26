@@ -49,8 +49,6 @@ If a folder contains Python code, a virtual enviorment must be used within the f
    - Windows: `deactivate`
    - Linux: `source .venv/bin/deactivate`
 
-
-
 ## Training data location
 - Simulation **without** noise: `ssh ubuntu@130.225.39.235:~/ESD7-Project/training_data_generation/sim_output/`
 - Simulation **with** noise: `ssh ubuntu@130.225.39.212:~/ESD7-Project/training_data_generation/sim_output/`
