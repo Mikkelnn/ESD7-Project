@@ -9,11 +9,13 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-
 RUN useradd -m user
+
 USER user
 
 COPY . .
 
-CMD ["sh", "run.sh"]
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/home/user/.local/bin:$PATH"
+
+CMD ["sh", "/home/user/BigBrother/run.sh"]
