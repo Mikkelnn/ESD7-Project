@@ -14,7 +14,10 @@ run:
   stage: run
   tags: [gpu]
   script:
-    # Build and run using Makefile target
-    - cd BigBrother && make docker_run
+    # Build Docker image without GPU for testing
+    - cd BigBrother && docker build -f dockerfile -t bigbrother:latest .
+    - docker images | grep bigbrother
+    # Run without GPU temporarily to test basic functionality
+    - docker run --rm bigbrother:latest
   rules:
     - when: always
