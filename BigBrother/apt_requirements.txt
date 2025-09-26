@@ -2,3 +2,4 @@ nvidia-cuda-toolkit
 nvidia-container-toolkit
 curl
 make
+build-essential
