@@ -1,4 +1,7 @@
-image: nvidia/cuda:12.6.2-runtime-ubuntu24.04
+before_script:
+  - cd BigBrother && docker build -f dockerfile -t bigbrother .
+
+image: bigbrother:latest
 
 stages:
   - setup
@@ -9,7 +12,6 @@ setup:
   tags: [gpu]
   script:
     - apt-get update && apt-get install -y git nvidia-utils-535 && apt-get clean
-    - nvidia-smi
   rules:
     - when: always
 
@@ -17,5 +19,5 @@ model:
   stage: model
   tags: [gpu]
   script:
-    - BigBrother/run.sh
+    - cd /home/user/BigBrother && sh run.sh
 
