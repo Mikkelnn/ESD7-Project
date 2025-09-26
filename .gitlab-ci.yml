@@ -15,9 +15,6 @@ run:
   tags: [gpu]
   script:
     # Build Docker image without GPU for testing
-    - cd BigBrother && docker build -f dockerfile -t bigbrother:latest .
-    - docker images | grep bigbrother
-    # Run without GPU temporarily to test basic functionality
-    - docker run --rm bigbrother:latest
+    - cd BigBrother && make docker_run
   rules:
     - when: always
