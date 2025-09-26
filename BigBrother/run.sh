@@ -3,5 +3,5 @@
 #Make venv with packages
 uv sync
 
-#run app
+#run ap
 uv run src/main.py
