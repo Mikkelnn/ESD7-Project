@@ -19,9 +19,9 @@ run:
   tags: [gpu]
   image: bigbrother:latest
   script:
-    # Build Docker image without GPU for testing
     - cd BigBrother && make docker_run
-
+  rules:
+    - when: always
 
 clean:
   stage: clean
