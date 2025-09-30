@@ -22,6 +22,13 @@ run:
     - cd BigBrother && make docker_run
   rules:
     - when: always
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    paths:
+      - BigBrother/results/
+    expire_in: "4 mos"
 
 clean:
   stage: clean
