@@ -24,7 +24,7 @@ run:
     - when: always
   artifacts:
     untracked: false
-    when: on_success
+    when: always
     access: all
     paths:
       - BigBrother/results/
