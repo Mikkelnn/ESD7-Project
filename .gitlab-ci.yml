@@ -21,4 +21,13 @@ run:
     # Build Docker image without GPU for testing
     - cd BigBrother && make docker_run
   rules:
+    - if: '$CI_COMMIT_TAG == "run"'
+
+
+clean:
+  stage: clean
+  tags: [gpu]
+  script:
+    - docker system prune -f
+  rules:
     - when: always
