@@ -64,19 +64,29 @@ class AiHandler():
         return time.mktime(self.stop_time) - time.mktime(self.start_time)
 
     def plot_block_diagram(self, model):
+        file = self.result_path / "model_block_diagram.png"
+        self.log.info(f"Saving png image of model: {file}")
+        
         keras.utils.plot_model(
             model,
-            to_file=(self.result_path / "model_block_diagram.png"), # Save the plot to a file
+            to_file=file, # Save the plot to a file
             show_shapes=True,             # Display shape information
             show_layer_names=True,        # Display layer names
             show_layer_activations=True,  # Display activation functions
             rankdir="LR"                  # Orientation: TB=Top-to-Bottom, LR=Left-to-Right
         )
 
+    def print_summary(self, model):
+        "Print a summary of the model to the internal logger as [INFO]"
+        model.summary(print_fn=self.log.info)
+
     def compile_model(self, model, optimizer="adam", loss="mse", metrics=None):
         """Compile model with defaults or user settings"""
         if metrics is None:
             metrics = ["mae"]
+        
+        self.log.info(f"Compiling model with optimiser: {optimizer}; loss: {loss}; metrics: {metrics}")
+
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         return model
     
@@ -86,7 +96,7 @@ class AiHandler():
         Train model with optional validation data and TensorBoard logging.
         Returns tf.keras.callbacks.History
         """
-        callbacks = []
+        callbacks = [self.__get_cancel_callback()]
 
         if use_tensorboard:            
             tensorboard_cb = tensorflow.keras.callbacks.TensorBoard(
@@ -98,6 +108,8 @@ class AiHandler():
             )
             callbacks.append(tensorboard_cb)
 
+        self.log.info(f"Model training starting...")
+
         history = model.fit(
             train_data,
             validation_data=val_data,
@@ -105,6 +117,9 @@ class AiHandler():
             batch_size=batch_size,
             callbacks=callbacks
         )
+
+        self.log.info(f"Model training finished...")
+
         return history
 
     def launch_tensorboard_threaded(self, logdir=None, port=6006):
@@ -119,32 +134,86 @@ class AiHandler():
         self.tb_process = subprocess.Popen([
             "tensorboard", "--logdir", str(logdir), "--host", "0.0.0.0", "--port", str(port)
         ])
-        print(f"TensorBoard started at http://localhost:{port}")
+        self.log.info(f"TensorBoard started at http://localhost:{port}")
 
-        # Register Ctrl+C handler
-        signal.signal(signal.SIGINT, self.__handle_sigint)
 
-    def __handle_sigint(self, sig, frame):
-        """Handler for Ctrl+C to terminate TensorBoard and exit cleanly"""
-        print("\nCtrl+C detected. Shutting down TensorBoard...")
-        if hasattr(self, 'tb_process') and self.tb_process.poll() is None:
-            self.tb_process.terminate()
-            self.tb_process.wait()
-            print("TensorBoard terminated.")
+    def wait_for_ctrl_c(self):
+        """
+        Blocks until user presses Ctrl+C.
+        Keeps TensorBoard running, then shuts it down cleanly.
+        """
+        self.log.info("Press Ctrl+C to stop TensorBoard and exit.")
+        try:
+            signal.pause()  # Linux/Unix: wait for signal
+        except AttributeError:
+            # On Windows, signal.pause() is not available
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                pass
+        except KeyboardInterrupt:
+            pass
+
+        self.stop_tensorboard()
         sys.exit(0)
+
+    def stop_tensorboard(self):
+        """Stop TensorBoard subprocess if running"""
+        if hasattr(self, 'tb_process') and self.tb_process.poll() is None:
+            self.log.info("Stopping TensorBoard...")
+            self.tb_process.terminate()
+            try:
+                self.tb_process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.tb_process.kill()
+            self.log.info("TensorBoard terminated.")
+
+    def __get_cancel_callback(self):
+        """
+        Returns a Keras callback that cancels training on Ctrl+C.
+        """
+
+        logger = self.log
+        class CancelOnCtrlC(tensorflow.keras.callbacks.Callback):
+            def on_train_begin(self, logs=None):
+                logger.info("Training started. Press Ctrl+C to cancel.")
+
+            def on_epoch_end(self, epoch, logs=None):
+                # Check for KeyboardInterrupt manually
+                try:
+                    pass
+                except KeyboardInterrupt:
+                    logger.info("Training cancelled by user.")
+                    self.model.stop_training = True
+                    
+
+        return CancelOnCtrlC()
 
     def save_model(self, model, name="model"):
         """Save model to result path"""
         path = self.result_path / f"{name}.keras"
         model.save(path)
+        
+        self.log.info(f"Model saved at: {path}")
+
         return path
 
     def load_model(self, path):
         """Load model from file"""
+        self.log.info(f"Loading model from: {path}")
         return self.tf.keras.models.load_model(path)
 
     def predict(self, model, data):
         """Run prediction"""
+
+        data = np.array(data)
+
+        # If single sample, add batch dimension
+        if len(data.shape) == len(model.input_shape) - 1:
+            data = np.expand_dims(data, axis=0)
+
+        print(f"Input: {data}")
         return model.predict(data)
 
     def dataset_from_directory(self, directory, 
@@ -177,7 +246,9 @@ class AiHandler():
         Create dataset from two directories: one for data, one for labels.
         Files are matched by sorted order of filenames.
         """
-
+        
+        self.log.info(f"Starting loding training data....")
+        
         data_dir, label_dir = Path(data_dir), Path(label_dir)
         data_files  = sorted(list(data_dir.glob("*")))
         label_files = sorted(list(label_dir.glob("*")))
@@ -209,6 +280,9 @@ class AiHandler():
             dataset = dataset.shuffle(len(data_files), seed=seed)
 
         dataset = dataset.batch(batch_size).prefetch(self.tf.data.AUTOTUNE)
+        
+        self.log.info(f"Finished loding training data....")
+
         return dataset
 
 def _main():

@@ -17,9 +17,10 @@ VALIDATE_DATA_PATH = Path("validate/")
 
 def main():
     model = defineModel()
-    model.summary()
 
+    ai_handler.print_summary(model)
     ai_handler.plot_block_diagram(model)
+
     compiled_model = ai_handler.compile_model(model)
 
     labeld_data = ai_handler.dataset_from_data_and_labels(data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label")
@@ -27,6 +28,10 @@ def main():
 
     ai_handler.launch_tensorboard_threaded()
     history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
+
+    ai_handler.save_model(model, name=f"sum_diff_model")
+
+    ai_handler.wait_for_ctrl_c()
 
     # Plot and save the figure using matplotlib
     #plt.figure()
@@ -53,5 +58,13 @@ def main():
 
     # ntfy.post_image(result_folder / "results.png", title="Linear Regression Results", compress=False)
 
+def load_predict():
+    modelPath = 'results/26-09-2025_12:15:53/sum_diff_model.keras'
+
+    model = ai_handler.load_model(modelPath)
+    res = ai_handler.predict(model, [0.1, 0.3])
+    print(res)
+
 if __name__ == "__main__":
-    main()
+    load_predict()
+    # main()

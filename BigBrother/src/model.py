@@ -13,6 +13,7 @@ def defineModel():
     #         ])
     model = Sequential([
         InputLayer(input_shape=(2,)),  # two inputs
+        Dense(2, use_bias=True),
         Dense(2, use_bias=False)
     ])
 
