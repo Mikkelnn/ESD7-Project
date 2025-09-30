@@ -3,6 +3,7 @@ from skimage.io import imread, imsave
 from skimage.transform import resize
 import tempfile
 import os
+import numpy as np
 
 class NtfyHandler():
 
