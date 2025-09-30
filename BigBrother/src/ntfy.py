@@ -17,7 +17,7 @@ class NtfyHandler():
         self.topic = topic
 
     def post(self, message, title="Notification"):
-        # header can include title, tags, priority, etc.
+        # header can include title, tags,  priority, etc.
         self.conn.send(
             message=message, 
             title=title, 
