@@ -24,11 +24,18 @@ def main():
 
     compiled_model = ai_handler.compile_model(model)
 
-    labeld_data = ai_handler.dataset_from_data_and_labels(data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label")
-    labeld_validation = ai_handler.dataset_from_data_and_labels(data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label")
+        labeld_data = ai_handler.dataset_from_data_and_labels(data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label")
+        labeld_validation = ai_handler.dataset_from_data_and_labels(data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label")
 
-    ai_handler.launch_tensorboard_threaded()
-    history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
+        ai_handler.launch_tensorboard_threaded()
+        history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
+    except Exception as e:
+        ntfy.post(
+            title=f"Error during model training {time_started}",
+            message=f"An error occurred: {e}"
+        )
+        ntfy.post_image(ai_handler.result_path / "model_block_diagram.png", title=f"Model block diagram {time_started}", compress=True)
+        raise e
 
     ai_handler.save_model(model, name=f"sum_diff_model")
 
@@ -48,16 +55,16 @@ def main():
 
     ai_handler.set_time_stop()
 
-    # ntfy.post(  # Remember the message is markdown format
-    #    title="Results of ai_template",
-    #    message=(
-    #        f"**Start time:** {time_started}\n"
-    #        f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
-    #        f"**Results saved to:** `{result_folder}`\n\n"
-    #    )
-    # )
+    ntfy.post(  # Remember the message is markdown format
+       title=f"Results of ML {time_started}",
+       message=(
+           f"**Start time:** {time_started}\n"
+           f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
+           f"**Results saved to:** `{ai_handler.result_path}`\n\n"
+       )
+    )
 
-    # ntfy.post_image(result_folder / "results.png", title="Linear Regression Results", compress=False)
+    ntfy.post_image(ai_handler.result_path / "model_block_diagram.png", title=f"Model block diagram {time_started}", compress=True)
 
 def load_predict():
     modelPath = 'results/26-09-2025_12:15:53/sum_diff_model.keras'
