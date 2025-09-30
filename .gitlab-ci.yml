@@ -1,6 +1,7 @@
 stages:
   - lint
   - run
+  - clean
 
 lint:
   stage: lint
