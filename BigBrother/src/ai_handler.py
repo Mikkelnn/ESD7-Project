@@ -2,7 +2,7 @@ from logger import get_logger
 log = get_logger()
 log.info("Started importing AI libs")
 import os #noqa
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"   #Floating point unstability
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"   # Floating point unstability
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'    # Recompilation of tensorflow ignore
 import tensorflow #noqa
 import polars #noqa
