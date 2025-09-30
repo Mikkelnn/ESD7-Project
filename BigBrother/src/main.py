@@ -47,13 +47,6 @@ def main():
         ntfy.post_image(ai_handler.result_path / "model_block_diagram.png", title=f"Model block diagram {time_started}", compress=True)
         raise e
 
-    ai_handler.save_model(model, name=f"sum_diff_model")
-
-    ai_handler.wait_for_ctrl_c()
-
-    model = defineModel()
-    model.summary()
-
     # ai_handler.configModelFit()
     # ai_handler.fitModel(model)
 
