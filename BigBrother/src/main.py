@@ -1,7 +1,6 @@
 from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
-import matplotlib.pyplot as plt
 from pathlib import Path
 from model import defineModel 
 
