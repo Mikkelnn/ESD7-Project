@@ -4,3 +4,4 @@ build-essential
 curl
 make
 build-essential
+graphviz
