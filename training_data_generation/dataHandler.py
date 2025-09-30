@@ -83,7 +83,7 @@ class DataHandler():
     def parquet_to_tfrecord_example(self, parquet_params_file_path, parquet_baseband_file_path): #TODO
 
         # TODO notes:
-        # TFRecord shards: 256 MB (tune 100–500 MB).
+        # TFRecord shards: 256  MB (tune 100–500 MB).
         # Input pipeline tensorflow: use num_parallel_reads=tf.data.AUTOTUNE, interleave, map(..., num_parallel_calls=AUTO), prefetch(AUTO).
 
         params_tfrecord = None
