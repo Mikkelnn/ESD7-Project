@@ -1,6 +1,6 @@
-
 docker_run:
-	docker build -f Dockerfile -t bigbrother . && docker run --runtime=nvidia --gpus all bigbrother:latest
+	docker build -f Dockerfile -t bigbrother . && \
+	docker run --runtime=nvidia --gpus all -v $(PWD):/app bigbrother:latest
 
 run:
 	uv run src/main.py
