@@ -12,4 +12,4 @@ RUN apt-get update && \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-CMD ["sh", "run.sh"]
+CMD ["make", "run"]
