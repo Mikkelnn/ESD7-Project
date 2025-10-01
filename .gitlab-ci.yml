@@ -3,7 +3,6 @@ stages:
   - datagen
   - run
   - clean
-  
 
 lint:
   stage: lint
@@ -21,8 +20,9 @@ datagen:
   tags: [gpu]
   image: bigbrother:latest
   script:
-    - cd BigBrother/src && uv run gen_test_data.py
-    - ls -la BigBrother/src/data/
+    - cd BigBrother/src
+    - uv run gen_test_data.py
+    - ls -la data/
   rules:
   - when: always
   artifacts:
