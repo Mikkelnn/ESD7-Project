@@ -4,4 +4,6 @@
 uv sync
 
 #run app
-uv run src/main.py
+cd src
+uv run main.py
+

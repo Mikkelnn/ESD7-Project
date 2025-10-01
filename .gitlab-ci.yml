@@ -22,6 +22,7 @@ datagen:
   image: bigbrother:latest
   script:
     - cd BigBrother/src && uv run gen_test_data.py
+    - ls -la BigBrother/src/data/
   rules:
   - when: always
   artifacts:
