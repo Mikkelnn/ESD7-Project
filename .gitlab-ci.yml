@@ -19,13 +19,17 @@ datagen:
   stage: datagen
   tags: [gpu]
   image: bigbrother:latest
+  script:
+    - cd BigBrother/src && make data_gen
+  rules:
+  - when: always
   artifacts:
     untracked: false
     when: always
     access: all
     paths:
       - BigBrother/src/data/
-    expire_in: "1 hrs"
+    expire_in: "0.5 hrs"
 
 run:
   stage: run
