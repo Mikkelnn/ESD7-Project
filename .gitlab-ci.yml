@@ -1,8 +1,9 @@
 stages:
   - lint
+  - datagen
   - run
   - clean
-  - datagen
+  
 
 lint:
   stage: lint
