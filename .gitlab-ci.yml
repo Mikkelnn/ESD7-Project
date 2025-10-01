@@ -22,7 +22,6 @@ datagen:
   script:
     - cd BigBrother/src
     - uv run gen_test_data.py
-    - ls -la data/
   rules:
   - when: always
   artifacts:
@@ -38,7 +37,8 @@ run:
   tags: [gpu]
   image: bigbrother:latest
   script:
-    - cd BigBrother && make docker_run
+    - cd BigBrother
+    - make docker_run
   rules:
     - when: always
   artifacts:
