@@ -15,12 +15,13 @@ VALIDATE_DATA_PATH = Path("validate/")
 
 
 def main():
-    try:
+
+    try:    
         ai_handler.set_time_start()
-
+        
         model = defineModel()
+        model.summary()
 
-        ai_handler.print_summary(model)
         ai_handler.plot_block_diagram(model)
 
         compiled_model = ai_handler.compile_model(model)
@@ -30,6 +31,14 @@ def main():
 
         ai_handler.launch_tensorboard_threaded()
         history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
+
+        model = defineModel()
+        model.summary()
+
+        ai_handler.configModelFit()
+        ai_handler.fitModel(model)
+
+        ai_handler.set_time_stop()
     except Exception as e:
         ntfy.post(
             title=f"Error during model training {time_started}",
@@ -53,8 +62,6 @@ def main():
     #plt.savefig(result_folder / "results.svg", format="svg")
     #plt.savefig(result_folder / "results.png", format="png")
     #plt.close()
-
-    ai_handler.set_time_stop()
 
     ntfy.post(  # Remember the message is markdown format
        title=f"Results of ML {time_started}",
