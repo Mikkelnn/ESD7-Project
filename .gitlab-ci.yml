@@ -2,6 +2,7 @@ stages:
   - lint
   - run
   - clean
+  - datagen
 
 lint:
   stage: lint
@@ -13,6 +14,18 @@ lint:
     - make lint
   rules:
     - when: always
+
+datagen:
+  stage: datagen
+  tags: [gpu]
+  image: bigbrother:latest
+  artifacts:
+    untracked: false
+    when: always
+    access: all
+    paths:
+      - BigBrother/src/data/
+    expire_in: "1 hrs"
 
 run:
   stage: run

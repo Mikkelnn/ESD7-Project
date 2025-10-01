@@ -16,8 +16,6 @@ import sys
 import numpy as np
 log.info("Finalised importing AI libs")
 
-
-
 #TODO run on a Linux machine or WSL, due to tensorflow lacking gpu support on windows
 #tf.config.optimizer.set_jit(True)  #Global jit optimiser
 

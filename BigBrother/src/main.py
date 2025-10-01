@@ -47,10 +47,7 @@ def main():
         ntfy.post_image(ai_handler.result_path / "model_block_diagram.png", title=f"Model block diagram {time_started}", compress=True)
         raise e
 
-    # ai_handler.configModelFit()
-    # ai_handler.fitModel(model)
-
-    # Plot and save the figure using matplotlib
+    #Plot and save the figure using matplotlib
     #plt.figure()
     #plt.scatter(x, y, label="True data")
     #plt.plot(x, y_pred, color="red", label="Model prediction")
@@ -81,5 +78,5 @@ def load_predict():
     print(res)
 
 if __name__ == "__main__":
-    load_predict()
-    # main()
+    #load_predict()
+    main()

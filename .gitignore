@@ -226,3 +226,4 @@ parquet
 *.zip
 
 builds
+*.npy
