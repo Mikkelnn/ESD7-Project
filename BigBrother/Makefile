@@ -7,6 +7,3 @@ run:
 
 lint:
 	uvx ruff check src/ && uvx ty check src/
-
-data_gen:
-	uv run gen_test_data.py

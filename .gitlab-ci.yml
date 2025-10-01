@@ -21,7 +21,7 @@ datagen:
   tags: [gpu]
   image: bigbrother:latest
   script:
-    - cd BigBrother/src && make data_gen
+    - cd BigBrother/src && uv run gen_test_data.py
   rules:
   - when: always
   artifacts:
