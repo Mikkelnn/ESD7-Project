@@ -98,11 +98,11 @@ def frame_simulation(target_list, hpbw_az_deg, hpbw_el_deg, t_offset=0, steering
     for target in target_list:
         target["location"] = tuple([target["location"][i] + (target["speed"][i] * t_offset) for i in range(3)])
 
-    # data = sim_radar(radar, target_list)
-    # if include_noise:
-    #     baseband = data["baseband"] + data["noise"]
-    # else:
-    #     baseband = data["baseband"]
+    data = sim_radar(radar, target_list)
+    if include_noise:
+        baseband = data["baseband"] + data["noise"]
+    else:
+        baseband = data["baseband"]
 
     if render:
         fig = plot_radar_scene(radar, target_list, show_pattern=True, pulse_idx=None, t_offset=t_offset)
@@ -149,5 +149,9 @@ target_list = [
     ),
 ]
 
-basebands, frames = sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles, include_noise=False, render=True, show_progress=True)
-save_frames_mp4(frames)
+basebands, frames = sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles, include_noise=False, render=False, show_progress=True)
+
+# TODO: Save baseband to disk
+
+if frames is not None:
+    save_frames_mp4(frames)
