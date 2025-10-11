@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, InputLayer
+from tensorflow.keras.layers import Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, InputLayer, GRU
 from tensorflow.keras.models import Sequential
 
 
@@ -16,5 +16,7 @@ def defineModel():
         Dense(2, use_bias=True),
         Dense(2, use_bias=False)
     ])
+    # model.add(GRU(units=50)) #Adds Grated Recurrent Units (GRU). This is a subtype of Long/Short- Term Memory (LSTM)
+    #Note that this only adds a single layer of n neurons.
 
     return model
