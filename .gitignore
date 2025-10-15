@@ -26,6 +26,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 radarsimpy/
+radarsimpy.*
 .venv
 sim_output
 
