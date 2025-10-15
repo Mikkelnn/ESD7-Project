@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%files
+    ../../ai_template $HOME/
+
+%environment
+    export TF_ENABLE_ONEDNN_OPTS=0
+    export TMPDIR=/scratch/ai_template/tmp
+    export AI_TEMPLATE=$HOME/ai_template
+
+%post
+    mkdir -p $TMPDIR
+
+    cd AI_TEMPLATE
+
+    apt-get update
+    apt-get upgrade -y
+    xargs -a ai-lab/apt_req.txt apt-get install -y
+
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    uv sync --no-cache
+
+    uv cache clean
+
+%test
+    uv run python --version
+
+%labels
+    Author kban20@student.aau.dk
+    Version v0.0.1
+
+%help
+    This is a template container for easy use on ai-lab
