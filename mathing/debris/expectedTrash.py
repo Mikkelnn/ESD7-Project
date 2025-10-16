@@ -22,8 +22,8 @@ theta_HPBW = np.deg2rad(27.0)       # full HPBW (radians)
 phi_HPBW   = np.deg2rad(88.0)       # full HPBW (radians)
 
 # Voxelization / sampling parameters
-voxel_size = 10.0         # m (set to 1.0 for high precision, but cost increases)
-orbit_samples = 720       # number of satellite positions along orbit
+voxel_size = 1.0         # m (set to 1.0 for high precision, but cost increases)
+orbit_samples = 7200       # number of satellite positions along orbit
 cone_radial_samples = 40  # subdivisions along cone radius (0..R)
 cone_angular_samples = 80 # subdivisions across each angular axis (per side)
 beam_tilt_deg = 0.0       # keep 0 for zenith pointing
@@ -142,7 +142,7 @@ def local_frames_for_orbit_angle(ang):
     boresight_vec = zenith
     y_local = binormal
     z_local = np.cross(boresight_vec, y_local)
-    M = np.column_stack((boresight_vec, y_local, z_local))  # 3x3
+    M = np.column_stack((y_local, z_local, boresight_vec))  # 3x3
     return sat, M
 # ---------------------------------------------------------------------------
 
@@ -187,9 +187,9 @@ def singleOrbit():
     for ang in angles:
         sat_pos, M = local_frames_for_orbit_angle(ang)
         # transform cone points to world coords
-        pts_world = sat_pos[None, :] + cone_local @ M.T  # shape (N_pts, 3)
+        pts_world = sat_pos + (cone_local @ M)  # shape (N_pts, 3)
         # convert to voxel indices (floor division)
-        idxs = np.floor(pts_world / voxel_size).astype(int)
+        idxs = np.floor((pts_world - [orbit_radius_m, 0, 0]) / voxel_size).astype(int)
         # add voxel indices to set
         # vectorized unique per satellite would be faster, but keep simple and safe:
         for ix, iy, iz in idxs:
