@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:24.04
 
 %files
-    ../../ESD7-Project $HOME/
+    ../../BigBrother $HOME/
 
 %environment
     export TF_ENABLE_ONEDNN_OPTS=0
