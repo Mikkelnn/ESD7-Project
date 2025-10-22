@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:24.04
 
 %files
-    ../../BigBrother $HOME/
+    ../../BigBrother /BigBrother
 
 %environment
     export TF_ENABLE_ONEDNN_OPTS=0
@@ -11,20 +11,18 @@ From: ubuntu:24.04
 %post
     mkdir -p /scratch/BigBrother/tmp
 
-    cd $HOME/BigBrother
-
+    cd /BigBrother/
+ 
     apt-get update
     apt-get upgrade -y
     apt-get install curl make findutils -y
 
     curl -LsSf https://astral.sh/uv/install.sh | sh
-
-    uv sync --no-cache
-
-    uv cache clean
+       
+    $HOME/.local/bin/uv sync --no-cache
 
 %test
-    uv run python --version
+    $HOME/.local/bin/uv run python --version
 
 %labels
     Author kban20@student.aau.dk
