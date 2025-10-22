@@ -16,7 +16,7 @@ From: ubuntu:24.04
 
     apt-get update
     apt-get upgrade -y
-    xargs -a ai-lab/apt_req.txt apt-get install -y
+    apt-get install curl make findutils -y
 
     curl -LsSf https://astral.sh/uv/install.sh | sh
 
