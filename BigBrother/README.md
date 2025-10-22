@@ -3,7 +3,6 @@
 - init/setup: `uv sync`
 - run script: `uv run src/main.py`
 
-
 # AI-Lab usage
 
 ### Firstly

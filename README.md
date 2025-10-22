@@ -25,29 +25,14 @@ If a folder contains Python code, a virtual enviorment must be used within the f
 
    - Windows: `Set-ExecutionPolicy unrestricted`
 
-1. Intall virtial enviorment (if not alredy):
 
-   - Windows: `py -m pip install virtualenv`
-   - Linux: `pip install virtualenv` _OR_ `sudo apt install python3.12-venv`
+1. Sync python packages
 
-2. If not already created, create the virtual enviorment:
+   - Windows/Linux: `uv sync`
 
-   - Windows: `py -m venv .venv`
-   - Linux: `python3 -m venv .venv`
+2. Run python code
 
-3. Activate the virtual enviorment:
-
-   - Windows: `.venv\Scripts\activate`
-   - Linux: `source .venv/bin/activate`
-
-4. Install packages listed in associated README.md
-
-   - Windows: `py -m pip install <modules>`
-   - Linux: `pip install <modules>`
-
-5. To deactivate the enviorment (after use):
-   - Windows: `deactivate`
-   - Linux: `source .venv/bin/deactivate`
+   - Windows/Linux: `uv run filename.py `
 
 ## Training data location
 - Simulation **without** noise: `ssh ubuntu@130.225.39.235:~/ESD7-Project/training_data_generation/sim_output/`

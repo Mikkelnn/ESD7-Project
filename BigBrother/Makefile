@@ -5,5 +5,8 @@ docker_run:
 run:
 	uv sync && cd src && uv run main.py && cd ..
 
+run_ai_lab:
+	sbatch ai-lab/job.sh
+
 lint:
 	uvx ruff check src/ && uvx ty check src/
