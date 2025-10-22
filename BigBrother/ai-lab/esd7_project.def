@@ -11,9 +11,7 @@ From: ubuntu:24.04
 %post
     mkdir -p /scratch/BigBrother/tmp
 
-    pwd
-
-    cd BigBrother
+    cd $HOME/BigBrother
 
     apt-get update
     apt-get upgrade -y
