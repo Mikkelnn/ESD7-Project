@@ -2,7 +2,8 @@ FROM nvidia/cuda:12.6.2-runtime-ubuntu24.04
 
 WORKDIR /app
 
-COPY apt_requirements.txt .
+#in docker folder because run by Makefile outside of docker folder
+COPY docker/apt_requirements.txt . 
 
 RUN apt-get update && \
     xargs -a apt_requirements.txt apt-get install -y --no-install-recommends && \

@@ -1,26 +1,12 @@
 ## Setup
 - If not already install uv: `https://docs.astral.sh/uv/getting-started/installation/`
 - init/setup: `uv sync`
-- run script: `uv run src/main.py`
 
-# AI-Lab usage
+## Running simulations
+use maketargets for running on local machine, docker or ai-lab:
+- make run
+- make run_docker
+- make run_ai_lab
 
-### Firstly
-Make sure first to read ai-lab/README.md
-
-### Run job
-sbatch ai-lab/job.sh
-
-### Check status of job
-squeue --me
-
-# Linux or WSL
-
-### sync packages
-uv sync
-
-### Run
-make run
-
-### lint and type check
-make lint
+## Python linting
+- make lint 

@@ -17,7 +17,7 @@ VALIDATE_DATA_PATH = Path("validate/")
 def main():
 
     try:    
-        ai_handler.set_time_start()
+        time_started = ai_handler.set_time_start()
         
         model = defineModel()
         model.summary()
