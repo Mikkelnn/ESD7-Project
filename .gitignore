@@ -227,3 +227,5 @@ parquet
 
 builds
 *.npy
+*.err
+*.out

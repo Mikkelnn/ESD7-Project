@@ -1,3 +1,5 @@
+THIS IS NOT WORKING, USE run-on-ai-lab.sh
+
 # Setup singularity
 export SINGULARITY_TMPDIR="$HOME/.singularity/tmp/"
 export SINGULARITY_CACHEDIR="$HOME/.singularity/cache/"

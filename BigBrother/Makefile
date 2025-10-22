@@ -6,7 +6,7 @@ run:
 	uv sync && cd src && uv run main.py && cd ..
 
 run_ai_lab:
-	sbatch ai-lab/job.sh
+	./run-on-ai-lab.sh
 
 lint:
 	uvx ruff check src/ && uvx ty check src/
