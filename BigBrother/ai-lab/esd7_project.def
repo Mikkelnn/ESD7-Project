@@ -2,17 +2,17 @@ Bootstrap: docker
 From: ubuntu:24.04
 
 %files
-    ../../ai_template $HOME/
+    ../../ESD7-Project $HOME/
 
 %environment
     export TF_ENABLE_ONEDNN_OPTS=0
-    export TMPDIR=/scratch/ai_template/tmp
-    export AI_TEMPLATE=$HOME/ai_template
+    export TMPDIR=/scratch/ESD7-Project/tmp
+    export ESD7-PROJECT=$HOME/ESD7-Project
 
 %post
     mkdir -p $TMPDIR
 
-    cd AI_TEMPLATE
+    cd ESD7-PROJECT
 
     apt-get update
     apt-get upgrade -y
