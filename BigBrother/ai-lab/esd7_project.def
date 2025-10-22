@@ -11,6 +11,8 @@ From: ubuntu:24.04
 %post
     mkdir -p /scratch/BigBrother/tmp
 
+    pwd
+
     cd BigBrother
 
     apt-get update
