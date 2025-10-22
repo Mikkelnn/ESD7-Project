@@ -6,13 +6,12 @@ From: ubuntu:24.04
 
 %environment
     export TF_ENABLE_ONEDNN_OPTS=0
-    export TMPDIR=/scratch/ESD7-Project/tmp
-    export ESD7-PROJECT=$HOME/ESD7-Project
+    export BigBrother=$HOME/BigBrother
 
 %post
-    mkdir -p $TMPDIR
+    mkdir -p /scratch/BigBrother/tmp
 
-    cd ESD7-PROJECT
+    cd BigBrother
 
     apt-get update
     apt-get upgrade -y
