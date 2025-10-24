@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from scipy import integrate
 
 r_Earth = 6371e3
+M_Earth = 5.97219e24
+Grav_Const = 6.6743e-11
 r_lower = 180e3 + r_Earth
 r_upper = 2000e3 + r_Earth
 V_LEO = (4.0/3.0) * np.pi * (np.power(r_upper, 3) - np.power(r_lower, 3))
@@ -107,10 +109,32 @@ def singleOrbit():
     # Call the 3D visualization
     # plot_single_orbit_geometry(ant_orbit, ant_range, theta_HPBW)
 
+    return ESingleOrbit
+
+def orbitTime(R):
+    radiusConst = (R**3) / (Grav_Const * M_Earth)
+    orbitTime = 2 * np.pi * np.sqrt(radiusConst)
+    return orbitTime
+
+
+def movingDebris(R, tilt, rotation):
+    debrisRange = ant_orbit + R
+    cosTilt = np.cos(np.rad2deg(tilt))
+    sinTilt = np.sin(np.rad2deg(tilt))
+    cosRot = np.cos(np.rad2deg(rotation))
+    sinRot = np.sin(np.rad2deg(rotation))
+
+    T = orbitTime(debrisRange)
+
+    Xt = lambda t: debrisRange * (cosRot * np.cos(t/T) + sinTilt * sinRot * np.sin(t/T))
+    Yt = lambda t: debrisRange * (sinRot * np.cos(t/T) + sinTilt * cosRot * np.sin(t/T))
+    Zt = lambda t: debrisRange * cosTilt * np.sin(t/T)
+
 
 def main():
-    singleImage()
-    singleOrbit()
+    E_TrashSingle = singleImage()
+    ESingleOrbit = singleOrbit()
+
 
 
 if __name__ == "__main__":
