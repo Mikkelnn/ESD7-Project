@@ -32,12 +32,6 @@ def main():
         ai_handler.launch_tensorboard_threaded()
         history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
 
-        model = defineModel()
-        model.summary()
-
-        ai_handler.configModelFit()
-        ai_handler.fitModel(model)
-
         ai_handler.set_time_stop()
     except Exception as e:
         ntfy.post(

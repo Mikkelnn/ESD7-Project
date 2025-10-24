@@ -26,7 +26,8 @@ class AiHandler():
         self.time_of_import = time.localtime()        
         self.result_path = result_path / self.set_time_start()
         self.result_path.mkdir(parents=True, exist_ok=True)
-        self.tensorboard_logdir = self.result_path / "logs"        
+        self.tensorboard_logdir = self.result_path / "logs"
+        self.checkpoint_dir = os.path.join(self.result_path, "checkpoints")
         self.log = get_logger()
 
         self.tf = tensorflow
@@ -89,12 +90,13 @@ class AiHandler():
         return model
     
     def fit_model(self, model, train_data, val_data=None,
-                  epochs=10, batch_size=32, use_tensorboard=True):
+                  epochs=10, batch_size=32, use_tensorboard=True, initialEpoch=0):
         """
         Train model with optional validation data and TensorBoard logging.
+        initialEpoch is used to set correct count if training is done on previous training.
         Returns tf.keras.callbacks.History
         """
-        callbacks = [self.__get_cancel_callback()]
+        callbacks = [self.__get_cancel_callback(), self.__get_checkpoint_callback()]
 
         if use_tensorboard:            
             tensorboard_cb = tensorflow.keras.callbacks.TensorBoard(
@@ -112,6 +114,7 @@ class AiHandler():
             train_data,
             validation_data=val_data,
             epochs=epochs,
+            initial_epoch=initialEpoch, # set inital if continued on previous run
             batch_size=batch_size,
             callbacks=callbacks
         )
@@ -187,20 +190,43 @@ class AiHandler():
                     
 
         return CancelOnCtrlC()
+    
+    def __get_checkpoint_callback(self):
+        # Include the epoch in the file name (uses `str.format`)
+        checkpoint_path = os.path.join(self.checkpoint_dir, "{epoch:d}.ckpt")
+        
+        # Create a callback that saves the model's weights every epoch (period=1)
+        cp_callback = keras.callbacks.ModelCheckpoint(
+            filepath=checkpoint_path, 
+            verbose=1, 
+            save_weights_only=True,
+            period=1)
+        
+        return cp_callback
 
     def save_model(self, model, name="model"):
         """Save model to result path"""
-        path = self.result_path / f"{name}.keras"
-        model.save(path)
+        model_path = self.result_path / f"{name}.keras"
+        weights_path = self.result_path / f"{name}_weights.h5"
         
-        self.log.info(f"Model saved at: {path}")
+        model.save(model_path)
+        model.save_weights(weights_path)
+        
+        self.log.info(f"Model saved at: {model_path} and weights: {weights_path}")
 
-        return path
+        return model_path
 
-    def load_model(self, path):
+    def load_model(self, model_path, weights_path=None):
         """Load model from file"""
-        self.log.info(f"Loading model from: {path}")
-        return self.tf.keras.models.load_model(path)
+        self.log.info(f"Loading model from: {model_path}")
+        model = self.tf.keras.models.load_model(model_path)
+
+        # load weights if found
+        if weights_path is not None and os.path.exists(weights_path):
+            self.log.info(f"Loading model weights from: {weights_path}")
+            model.load_weights(weights_path)
+
+        return model
 
     def predict(self, model, data):
         """Run prediction"""
@@ -211,7 +237,7 @@ class AiHandler():
         if len(data.shape) == len(model.input_shape) - 1:
             data = np.expand_dims(data, axis=0)
 
-        print(f"Input: {data}")
+        # print(f"Input: {data}")
         return model.predict(data)
 
     def dataset_from_directory(self, directory, 
