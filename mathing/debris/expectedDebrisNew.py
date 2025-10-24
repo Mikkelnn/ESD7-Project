@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
+from mpl_toolkits.mplot3d import Axes3D
 
 r_Earth = 6371e3
 M_Earth = 5.97219e24
@@ -20,6 +21,7 @@ ant_range = 1000.0
 ant_orbit = r_Earth + 550e3
 theta_HPBW = np.deg2rad(27.0)
 phi_HPBW   = np.deg2rad(88.0)
+ant_orbit_time = 2 * np.pi * np.sqrt((ant_orbit**3)/(Grav_Const * M_Earth))
 
 
 def f1Integral(r):
@@ -116,24 +118,90 @@ def orbitTime(R):
     orbitTime = 2 * np.pi * np.sqrt(radiusConst)
     return orbitTime
 
+def archAngle(R):
+    b = np.tan(theta_HPBW/2) * R
+    a = np.tan(phi_HPBW/2) * R
+    c = np.sqrt(a**2 + b**2)
+    orbitAngle = c/(ant_orbit + R)
+    print(orbitAngle)
+    return orbitAngle
+
+def plot_orbits(debrisPos, antPos, T, num_points=500):
+    """
+    Plots 3D orbits of debris and antennas.
+
+    Parameters:
+        debrisPos: [Xt, Yt, Zt] list of lambda functions for debris orbit
+        antPos: [[X1t, Y1t, Z1t], [X2t, Y2t, Z2t]] list of lambda functions for antennas
+        T: orbital time for debris
+        ant_orbit_time: orbital time for antennas
+        num_points: resolution of plot (default 500)
+    """
+    # Time range for one full orbit
+    t_vals = np.linspace(0, T * 2 * np.pi, num_points)
+
+    # Unpack the debris position lambdas
+    Xt, Yt, Zt = debrisPos
+
+    # Compute debris coordinates
+    Xd = Xt(t_vals)
+    Yd = Yt(t_vals)
+    Zd = Zt(t_vals)
+
+    # Set up 3D plot
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(Xd, Yd, Zd, label="Debris Orbit", color='orange', linewidth=2)
+
+    # Plot each antenna orbit
+    for i, (Xf, Yf, Zf) in enumerate(antPos, start=1):
+        Xa = Xf(t_vals)
+        Ya = Yf if np.isscalar(Yf) else Yf(t_vals)
+        Za = Zf(t_vals)
+        ax.plot(Xa, Ya, Za, label=f"Antenna {i}", linewidth=1.8)
+
+    # Style the plot
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    ax.set_title("Orbital Paths")
+    ax.legend()
+    ax.grid(True)
+    ax.set_box_aspect([1,1,1])  # Equal aspect ratio
+
+    plt.show()
+
 
 def movingDebris(R, tilt, rotation):
     debrisRange = ant_orbit + R
-    cosTilt = np.cos(np.rad2deg(tilt))
-    sinTilt = np.sin(np.rad2deg(tilt))
-    cosRot = np.cos(np.rad2deg(rotation))
-    sinRot = np.sin(np.rad2deg(rotation))
+    cosTilt = np.cos(np.deg2rad(tilt))
+    sinTilt = np.sin(np.deg2rad(tilt))
+    cosRot = np.cos(np.deg2rad(rotation))
+    sinRot = np.sin(np.deg2rad(rotation))
 
     T = orbitTime(debrisRange)
 
-    Xt = lambda t: debrisRange * (cosRot * np.cos(t/T) + sinTilt * sinRot * np.sin(t/T))
-    Yt = lambda t: debrisRange * (sinRot * np.cos(t/T) + sinTilt * cosRot * np.sin(t/T))
-    Zt = lambda t: debrisRange * cosTilt * np.sin(t/T)
+    Xt = lambda t: debrisRange * (cosRot * np.cos(2*np.pi*t/T) + sinTilt * sinRot * np.sin(2*np.pi*t/T))
+    Yt = lambda t: debrisRange * (sinRot * np.cos(2*np.pi*t/T) + sinTilt * cosRot * np.sin(2*np.pi*t/T))
+    Zt = lambda t: debrisRange * cosTilt * np.sin(2*np.pi*t/T)
+
+    debrisPos = [Xt, Yt, Zt]
+
+    delay = archAngle(R)
+
+    X1t = lambda t : debrisRange * np.sin(2*np.pi*t/ant_orbit_time + delay)
+    X2t = lambda t : debrisRange * np.sin(2*np.pi*t/ant_orbit_time - delay)
+    Z1t = lambda t : debrisRange * np.cos(2*np.pi*t/ant_orbit_time + delay)
+    Z2t = lambda t : debrisRange * np.cos(2*np.pi*t/ant_orbit_time - delay)
+
+    antPos = [[X1t, 0, Z1t], [X2t, 0, Z2t]]
+    plot_orbits(debrisPos, antPos, T)
 
 
 def main():
-    E_TrashSingle = singleImage()
-    ESingleOrbit = singleOrbit()
+    # E_TrashSingle = singleImage()
+    # ESingleOrbit = singleOrbit()
+    movingDebris(200, 45, 45)
 
 
 
