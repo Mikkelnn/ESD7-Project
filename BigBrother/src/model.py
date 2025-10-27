@@ -1,6 +1,8 @@
 from tensorflow.keras.layers import Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, InputLayer, GRU
 from tensorflow.keras.models import Sequential
 
+
+
 def defineModel():
     # model = Sequential([
     #             Convolution2D(512, kernel_size=(3,3), activation='relu', padding="same", input_shape=(28, 28, 1)),

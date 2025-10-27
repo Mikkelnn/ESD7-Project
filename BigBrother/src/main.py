@@ -30,7 +30,16 @@ def main():
         labeld_validation = ai_handler.dataset_from_data_and_labels(data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label")
 
         ai_handler.launch_tensorboard_threaded()
-        history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=True)
+        history = ai_handler.fit_model(compiled_model, train_data=labeld_data, val_data=labeld_validation, use_tensorboard=False)
+
+        acc = history.history['accuracy']
+        val_acc = history.history['val_accuracy']
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        epochs = range(1, len(acc) + 1)
+        
+        for i in epochs:
+            log.info(f"Epoch {i}: loss {loss[i-1]}, validation loss {val_loss[i-1]}, accuracy {acc[i-1]}, validation accuracy {val_acc[i-1]}")
 
         ai_handler.set_time_stop()
     except Exception as e:
