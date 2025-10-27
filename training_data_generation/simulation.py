@@ -131,5 +131,5 @@ def runSimulation(params):
 
     data = sim_radar(radar, targets)
     timestamp = data["timestamp"]
-    baseband = data["baseband"] + data["noise"]
+    baseband = data["baseband"] #+ data["noise"]
     return baseband
