@@ -3,9 +3,7 @@ from tensorflow.keras.models import Sequential
 
 
 
-def defineModel(data):
-    data = data
-
+def defineModel():
     #TODO Potentially use tanh activation
     model = Sequential([
         Convolution2D(filters=8, kernel_size=(3,3), activation='relu', padding="same", input_shape=(1024, 256, 1)),
