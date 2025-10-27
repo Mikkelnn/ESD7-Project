@@ -1,8 +1,6 @@
 from tensorflow.keras.layers import Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, InputLayer, GRU
 from tensorflow.keras.models import Sequential
 
-
-
 def defineModel():
     #TODO Potentially use tanh activation
     model = Sequential([
