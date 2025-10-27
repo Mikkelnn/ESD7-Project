@@ -6,9 +6,9 @@ from model import defineModel
 import matplotlib.pyplot as plt
 
 GENEREL_PATH = Path("../../")
-RESULTS_PATH = GENEREL_PATH / "results/"
+RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data/"
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
