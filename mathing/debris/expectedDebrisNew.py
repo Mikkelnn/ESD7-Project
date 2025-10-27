@@ -123,7 +123,7 @@ def archAngle(R):
     a = np.tan(phi_HPBW/2) * R
     c = np.sqrt(a**2 + b**2)
     orbitAngle = c/(ant_orbit + R)
-    print(orbitAngle)
+    print(c)
     return orbitAngle
 
 def plot_orbits(debrisPos, antPos, T, num_points=500):
@@ -201,7 +201,7 @@ def movingDebris(R, tilt, rotation):
 def main():
     # E_TrashSingle = singleImage()
     # ESingleOrbit = singleOrbit()
-    movingDebris(200, 45, 45)
+    movingDebris(50, 0, 0)
 
 
 
