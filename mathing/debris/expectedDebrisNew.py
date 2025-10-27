@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
 from mpl_toolkits.mplot3d import Axes3D
+from fractions import Fraction
 
 r_Earth = 6371e3
 M_Earth = 5.97219e24
@@ -113,6 +114,9 @@ def singleOrbit():
 
     return ESingleOrbit
 
+
+
+
 def orbitTime(R):
     radiusConst = (R**3) / (Grav_Const * M_Earth)
     orbitTime = 2 * np.pi * np.sqrt(radiusConst)
@@ -121,57 +125,124 @@ def orbitTime(R):
 def archAngle(R):
     b = np.tan(theta_HPBW/2) * R
     a = np.tan(phi_HPBW/2) * R
-    c = np.sqrt(a**2 + b**2)
+    c = np.sqrt((a/2)**2 - b**2)
     orbitAngle = c/(ant_orbit + R)
-    print(c)
     return orbitAngle
 
-def plot_orbits(debrisPos, antPos, T, num_points=500):
+def common_alignment_time(T1, T2, max_denominator=5000, tol=1e-10):
     """
-    Plots 3D orbits of debris and antennas.
+    Finds the smallest time where two periods T1 and T2 align again
+    (i.e., n*T1 = m*T2 for integers n,m).
 
-    Parameters:
-        debrisPos: [Xt, Yt, Zt] list of lambda functions for debris orbit
-        antPos: [[X1t, Y1t, Z1t], [X2t, Y2t, Z2t]] list of lambda functions for antennas
-        T: orbital time for debris
-        ant_orbit_time: orbital time for antennas
-        num_points: resolution of plot (default 500)
+    Returns (t_common, info) where:
+      - t_common: float or None if no close match
+      - info: dict with m, n, approx_error, ratio
     """
-    # Time range for one full orbit
-    t_vals = np.linspace(0, T * 2 * np.pi, num_points)
+    ratio = T1 / T2
+    frac = Fraction(ratio).limit_denominator(max_denominator)
+    m, n = frac.numerator, frac.denominator
+    approx = m / n
+    error = abs(ratio - approx) / abs(ratio)
 
-    # Unpack the debris position lambdas
+    t_common = n * T1  # n*T1 = m*T2 approximately
+    info = {"m": m, "n": n, "approx_error": error, "ratio": ratio, "frac": frac}
+
+    if error <= tol:
+        return t_common, info
+    else:
+        return None, info
+
+
+# -------------------------------
+# Helper: fraction of time debris is inside ellipse
+# -------------------------------
+def fraction_inside_ellipse(debrisPos, antPos, T_debris, T_ant, a,
+                            num_points=20000, max_denominator=5000, tol=1e-10,
+                            num_orbits_if_ratio1=10000):
+    """
+    Computes the fraction of time the debris is inside the ellipse.
+    If the period ratio is ~1, simulate many orbits.
+    """
+    t_common, info = common_alignment_time(T_debris, T_ant,
+                                           max_denominator=max_denominator,
+                                           tol=tol)
+
+    # Check if ratio ~ 1
+    if abs(info['ratio'] - 1.0) <= 1e-4:
+        # Use many orbits
+        t_total = T_debris * num_orbits_if_ratio1
+        print(f"⚠ Period ratio ≈ 1. Simulating {num_orbits_if_ratio1} debris orbits "
+              f"(total time {t_total:.2f} s).")
+    else:
+        if t_common is None:
+            print(f"⚠ No exact alignment found (error={info['approx_error']:.2e}). "
+                  f"Using approximate ratio {info['frac']}.")
+            t_common = info['n'] * T_debris
+        t_total = t_common
+
+    # Time samples over total simulation
+    t_vals = np.linspace(0, t_total, num_points)
+
+    # Unpack debris lambdas
     Xt, Yt, Zt = debrisPos
+    Xd = Xt(t_vals)
+    Yd = Yt(t_vals) if callable(Yt) else np.full_like(t_vals, Yt)
+    Zd = Zt(t_vals)
 
-    # Compute debris coordinates
+    # Unpack antenna lambdas
+    (X1t, Y1t, Z1t), (X2t, Y2t, Z2t) = antPos
+    X1 = X1t(t_vals) if callable(X1t) else np.full_like(t_vals, X1t)
+    Y1 = Y1t(t_vals) if callable(Y1t) else np.full_like(t_vals, Y1t)
+    Z1 = Z1t(t_vals) if callable(Z1t) else np.full_like(t_vals, Z1t)
+    X2 = X2t(t_vals) if callable(X2t) else np.full_like(t_vals, X2t)
+    Y2 = Y2t(t_vals) if callable(Y2t) else np.full_like(t_vals, Y2t)
+    Z2 = Z2t(t_vals) if callable(Z2t) else np.full_like(t_vals, Z2t)
+
+    # distances to foci
+    d1 = np.sqrt((Xd - X1)**2 + (Yd - Y1)**2 + (Zd - Z1)**2)
+    d2 = np.sqrt((Xd - X2)**2 + (Yd - Y2)**2 + (Zd - Z2)**2)
+
+    # check inside ellipse
+    inside = (d1 + d2) <= 2 * a
+    fraction_inside = np.mean(inside)
+
+    return fraction_inside, t_total, info
+
+
+# -------------------------------
+# Plot function (unchanged)
+# -------------------------------
+def plot_orbits(debrisPos, antPos, T, num_points=500):
+    t_vals = np.linspace(0, T, num_points)
+
+    Xt, Yt, Zt = debrisPos
     Xd = Xt(t_vals)
     Yd = Yt(t_vals)
     Zd = Zt(t_vals)
 
-    # Set up 3D plot
     fig = plt.figure(figsize=(8, 6))
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(Xd, Yd, Zd, label="Debris Orbit", color='orange', linewidth=2)
 
-    # Plot each antenna orbit
     for i, (Xf, Yf, Zf) in enumerate(antPos, start=1):
         Xa = Xf(t_vals)
         Ya = Yf if np.isscalar(Yf) else Yf(t_vals)
         Za = Zf(t_vals)
         ax.plot(Xa, Ya, Za, label=f"Antenna {i}", linewidth=1.8)
 
-    # Style the plot
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
     ax.set_title("Orbital Paths")
     ax.legend()
     ax.grid(True)
-    ax.set_box_aspect([1,1,1])  # Equal aspect ratio
-
+    ax.set_box_aspect([1, 1, 1])
     plt.show()
 
 
+# -------------------------------
+# Main function with integration
+# -------------------------------
 def movingDebris(R, tilt, rotation):
     debrisRange = ant_orbit + R
     cosTilt = np.cos(np.deg2rad(tilt))
@@ -179,23 +250,35 @@ def movingDebris(R, tilt, rotation):
     cosRot = np.cos(np.deg2rad(rotation))
     sinRot = np.sin(np.deg2rad(rotation))
 
-    T = orbitTime(debrisRange)
+    T = orbitTime(debrisRange)  # period of debris orbit
 
-    Xt = lambda t: debrisRange * (cosRot * np.cos(2*np.pi*t/T) + sinTilt * sinRot * np.sin(2*np.pi*t/T))
-    Yt = lambda t: debrisRange * (sinRot * np.cos(2*np.pi*t/T) + sinTilt * cosRot * np.sin(2*np.pi*t/T))
+    Xt = lambda t: debrisRange * (cosRot * np.cos(2*np.pi*t/T) +
+                                  sinTilt * sinRot * np.sin(2*np.pi*t/T))
+    Yt = lambda t: debrisRange * (sinRot * np.cos(2*np.pi*t/T) +
+                                  sinTilt * cosRot * np.sin(2*np.pi*t/T))
     Zt = lambda t: debrisRange * cosTilt * np.sin(2*np.pi*t/T)
 
     debrisPos = [Xt, Yt, Zt]
 
     delay = archAngle(R)
 
-    X1t = lambda t : debrisRange * np.sin(2*np.pi*t/ant_orbit_time + delay)
-    X2t = lambda t : debrisRange * np.sin(2*np.pi*t/ant_orbit_time - delay)
-    Z1t = lambda t : debrisRange * np.cos(2*np.pi*t/ant_orbit_time + delay)
-    Z2t = lambda t : debrisRange * np.cos(2*np.pi*t/ant_orbit_time - delay)
+    X1t = lambda t: debrisRange * np.sin(2*np.pi*t/ant_orbit_time + delay)
+    X2t = lambda t: debrisRange * np.sin(2*np.pi*t/ant_orbit_time - delay)
+    Z1t = lambda t: debrisRange * np.cos(2*np.pi*t/ant_orbit_time + delay)
+    Z2t = lambda t: debrisRange * np.cos(2*np.pi*t/ant_orbit_time - delay)
 
     antPos = [[X1t, 0, Z1t], [X2t, 0, Z2t]]
-    plot_orbits(debrisPos, antPos, T)
+
+    # --- Calculate fraction inside ellipse ---
+    a = np.tan(phi_HPBW/2) * R  # assuming you already know this; replace if needed
+    fraction, t_common, info = fraction_inside_ellipse(
+        debrisPos, antPos, T, ant_orbit_time, a)
+
+    print(f"Debris is inside ellipse {fraction*100:.6e}% of the time.")
+    print(f"Common repeat time ≈ {t_common:.3f} s (ratio ≈ {info['frac']}, error={info['approx_error']:.2e})")
+
+    # --- Plot orbits ---
+    # plot_orbits(debrisPos, antPos, T)
 
 
 def main():

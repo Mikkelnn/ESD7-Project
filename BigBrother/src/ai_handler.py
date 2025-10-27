@@ -16,7 +16,6 @@ import sys
 import numpy as np
 log.info("Finalised importing AI libs")
 
-#TODO run on a Linux machine or WSL, due to tensorflow lacking gpu support on windows
 #tf.config.optimizer.set_jit(True)  #Global jit optimiser
 
 class AiHandler():
@@ -42,11 +41,13 @@ class AiHandler():
         self.gpu_list = self.tf.config.list_physical_devices('GPU')
         self.gpu_amount = len(self.gpu_list)
         self.cpu_amount = len(self.cpu_list)
+        self.strategy = self.tf.distribute.MirroredStrategy()
 
         self.log.info(f"CUDA built: {self.cuda_built}")
         self.log.info(f"cuDNN loaded: {self.cudnn_loaded}")
         self.log.info(f"CPUs {self.cpu_amount}: {self.cpu_list}")
         self.log.info(f"GPUs {self.gpu_amount}: {self.gpu_list}")
+        self.log.info(f"Number of devices: {self.strategy.num_replicas_in_sync}")
 
     def set_time_start(self):
         """Sets a timestamp for when user marks AI execution to start"""
@@ -83,12 +84,14 @@ class AiHandler():
         """Compile model with defaults or user settings"""
         if metrics is None:
             metrics = ["mae"]
-        
+
         self.log.info(f"Compiling model with optimiser: {optimizer}; loss: {loss}; metrics: {metrics}")
 
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        with self.strategy.scope():
+            model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+            
         return model
-    
+
     def fit_model(self, model, train_data, val_data=None,
                   epochs=10, batch_size=32, use_tensorboard=True, initialEpoch=0):
         """
@@ -98,7 +101,7 @@ class AiHandler():
         """
         callbacks = [self.__get_cancel_callback(), self.__get_checkpoint_callback()]
 
-        if use_tensorboard:            
+        if use_tensorboard:
             tensorboard_cb = tensorflow.keras.callbacks.TensorBoard(
                 log_dir=self.tensorboard_logdir,
                 histogram_freq=1,
@@ -110,14 +113,14 @@ class AiHandler():
 
         self.log.info(f"Model training starting...")
 
-        history = model.fit(
-            train_data,
-            validation_data=val_data,
-            epochs=epochs,
-            initial_epoch=initialEpoch, # set inital if continued on previous run
-            batch_size=batch_size,
-            callbacks=callbacks
-        )
+        with self.strategy.scope():
+            history = model.fit(
+                train_data,
+                validation_data=val_data,
+                epochs=epochs,
+                batch_size=batch_size,
+                callbacks=callbacks
+            )
 
         self.log.info(f"Model training finished...")
 
@@ -237,8 +240,10 @@ class AiHandler():
         if len(data.shape) == len(model.input_shape) - 1:
             data = np.expand_dims(data, axis=0)
 
-        # print(f"Input: {data}")
-        return model.predict(data)
+        print(f"Input: {data}")
+
+        with self.strategy.scope():
+            return model.predict(data)
 
     def dataset_from_directory(self, directory, 
                                image_size=(224, 224), 
