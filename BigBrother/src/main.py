@@ -5,10 +5,10 @@ from pathlib import Path
 from model import defineModel
 import matplotlib.pyplot as plt
 
-GENEREL_PATH = Path("~/")
+GENEREL_PATH = Path("../../")
 RESULTS_PATH = GENEREL_PATH / "results/"
-TRAINING_DATA_PATH = GENEREL_PATH / "data/"
-VALIDATE_DATA_PATH = GENEREL_PATH / "validate/"
+TRAINING_DATA_PATH = GENEREL_PATH / "training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data/"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -28,10 +28,10 @@ def main():
         compiled_model = ai_handler.compile_model(model)
 
         labeld_data = ai_handler.dataset_from_data_and_labels(
-            data_dir=TRAINING_DATA_PATH / "data", label_dir=TRAINING_DATA_PATH / "label"
+            data_dir=TRAINING_DATA_PATH / "input", label_dir=TRAINING_DATA_PATH / "labels"
         )
         labeld_validation = ai_handler.dataset_from_data_and_labels(
-            data_dir=VALIDATE_DATA_PATH / "data", label_dir=VALIDATE_DATA_PATH / "label"
+            data_dir=VALIDATE_DATA_PATH / "input", label_dir=VALIDATE_DATA_PATH / "labels"
         )
 
         ai_handler.launch_tensorboard_threaded()
