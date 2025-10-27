@@ -5,15 +5,14 @@ from pathlib import Path
 from model import defineModel
 import matplotlib.pyplot as plt
 
-log = get_logger()
+GENEREL_PATH = Path("~/")
+RESULTS_PATH = GENEREL_PATH / "results/"
+TRAINING_DATA_PATH = GENEREL_PATH / "data/"
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate/"
 
-RESULTS_PATH = Path("results/")
+log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
 ntfy = NtfyHandler("ai_template")
-
-TRAINING_DATA_PATH = Path("data/")
-VALIDATE_DATA_PATH = Path("validate/")
-
 
 def main():
     time_started = 0
