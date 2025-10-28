@@ -5,7 +5,8 @@ from pathlib import Path
 from model import defineModel
 import matplotlib.pyplot as plt
 
-GENEREL_PATH = Path("../../")
+# GENEREL_PATH = Path("../../")
+GENEREL_PATH = Path("/scratch") # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data"
