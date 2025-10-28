@@ -17,9 +17,9 @@ ai_handler = AiHandler(RESULTS_PATH)
 ntfy = NtfyHandler("ai_template")
 
 def main():
-    print("OMP_NUM_THREADS:", os.environ.get("OMP_NUM_THREADS"))
-    print("TF_NUM_INTRAOP_THREADS:", os.environ.get("TF_NUM_INTRAOP_THREADS"))
-    print("TF_NUM_INTEROP_THREADS:", os.environ.get("TF_NUM_INTEROP_THREADS"))
+    log.info(f"OMP_NUM_THREADS: {os.environ.get('OMP_NUM_THREADS')}")
+    log.info(f"TF_NUM_INTRAOP_THREADS: {os.environ.get('TF_NUM_INTRAOP_THREADS')}")
+    log.info(f"TF_NUM_INTEROP_THREADS: {os.environ.get('TF_NUM_INTEROP_THREADS')}")
 
     with ai_handler.strategy.scope():
         time_started = 0
