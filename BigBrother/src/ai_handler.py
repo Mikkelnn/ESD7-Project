@@ -196,7 +196,7 @@ class AiHandler():
     
     def __get_checkpoint_callback(self):
         # Include the epoch in the file name (uses `str.format`)
-        checkpoint_path = os.path.join(self.checkpoint_dir, "{epoch:d}.ckpt")
+        checkpoint_path = os.path.join(self.checkpoint_dir, "{epoch:d}.weights.h5")
         
         # Create a callback that saves the model's weights every epoch (period=1)
         cp_callback = keras.callbacks.ModelCheckpoint(
