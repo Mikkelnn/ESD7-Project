@@ -35,7 +35,7 @@ def main():
             data_dir=VALIDATE_DATA_PATH / "input", label_dir=VALIDATE_DATA_PATH / "labels"
         )
 
-        ai_handler.launch_tensorboard_threaded()
+        # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
         history = ai_handler.fit_model(
             compiled_model,
             train_data=labeld_data,

@@ -73,7 +73,7 @@ class AiHandler():
             show_shapes=True,             # Display shape information
             show_layer_names=True,        # Display layer names
             show_layer_activations=True,  # Display activation functions
-            rankdir="LR"                  # Orientation: TB=Top-to-Bottom, LR=Left-to-Right
+            rankdir="TB"                  # Orientation: TB=Top-to-Bottom, LR=Left-to-Right
         )
 
     def print_summary(self, model):
@@ -203,7 +203,7 @@ class AiHandler():
             filepath=checkpoint_path, 
             verbose=1, 
             save_weights_only=True,
-            period=1)
+            save_freq="epoch")
         
         return cp_callback
 
