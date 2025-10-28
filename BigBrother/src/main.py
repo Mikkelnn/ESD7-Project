@@ -52,6 +52,8 @@ def main():
             use_tensorboard=True,
         )
 
+        ai_handler.save_model(compiled_model)
+
         acc = history.history["accuracy"]
         val_acc = history.history["val_accuracy"]
         loss = history.history["loss"]
