@@ -87,8 +87,8 @@ class AiHandler():
 
         self.log.info(f"Compiling model with optimiser: {optimizer}; loss: {loss}; metrics: {metrics}")
 
-        with self.strategy.scope():
-            model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        # with self.strategy.scope():
+        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
             
         return model
 
@@ -113,14 +113,14 @@ class AiHandler():
 
         self.log.info(f"Model training starting...")
 
-        with self.strategy.scope():
-            history = model.fit(
-                train_data,
-                validation_data=val_data,
-                epochs=epochs,
-                batch_size=batch_size,
-                callbacks=callbacks
-            )
+        # with self.strategy.scope():
+        history = model.fit(
+            train_data,
+            validation_data=val_data,
+            epochs=epochs,
+            batch_size=batch_size,
+            callbacks=callbacks
+        )
 
         self.log.info(f"Model training finished...")
 
@@ -242,8 +242,8 @@ class AiHandler():
 
         print(f"Input: {data}")
 
-        with self.strategy.scope():
-            return model.predict(data)
+        # with self.strategy.scope():
+        return model.predict(data)
 
     def dataset_from_directory(self, directory, 
                                image_size=(224, 224), 
