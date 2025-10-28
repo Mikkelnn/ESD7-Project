@@ -49,7 +49,7 @@ class AiHandler():
         self.log.info(f"GPUs {self.gpu_amount}: {self.gpu_list}")
         self.log.info(f"TF intra threads: {tensorflow.config.threading.get_intra_op_parallelism_threads()}")
         self.log.info(f"TF inter threads: {tensorflow.config.threading.get_inter_op_parallelism_threads()}")
-        self.log.info(f"Number of devices: {self.strategy.num_replicas_in_sync}")
+        #self.log.info(f"Number of devices: {self.strategy.num_replicas_in_sync}")
 
     def set_time_start(self):
         """Sets a timestamp for when user marks AI execution to start"""
