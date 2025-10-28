@@ -273,7 +273,7 @@ class AiHandler():
         loader_func_data=None,
         loader_func_label=None,
         batch_size=128,
-        shuffle=True,
+        shuffle=False,
         seed=42
     ):
         """
