@@ -4,7 +4,7 @@ from tensorflow.keras.models import Sequential
 def defineModel():
 
     model = Sequential([
-        Convolution2D(filters=8, kernel_size=(3,3), activation='relu', padding="same", input_shape=(1024, 256)),
+        Convolution2D(filters=8, kernel_size=(3,3), activation='relu', padding="same", input_shape=(1024, 256, 1)),
         MaxPooling2D((2,2), strides=(2,2)), #Half feature set
         Convolution2D(filters=16, kernel_size=(3,3), activation='relu', padding="same"), 
         MaxPooling2D((2,2), strides=(2,2)), #Half feature set

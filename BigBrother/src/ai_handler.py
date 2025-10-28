@@ -289,7 +289,7 @@ class AiHandler():
         assert len(data_files) == len(label_files), "Data and label counts differ"
 
         if loader_func_data is None:
-            loader_func_data = lambda f: np.load(f)  # default expects .npy
+            loader_func_data = lambda f: np.load(f)[..., None] # fix channel dimmention...  # default expects .npy
         if loader_func_label is None:
             loader_func_label = lambda f: np.load(f)  # default expects .npy
 
