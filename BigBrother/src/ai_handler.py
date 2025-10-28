@@ -98,7 +98,7 @@ class AiHandler():
         return model
 
     def fit_model(self, model, train_data, val_data=None,
-                  epochs=10, batch_size=32, use_tensorboard=True, initialEpoch=0):
+                  epochs=10, batch_size=128, use_tensorboard=True, initialEpoch=0):
         """
         Train model with optional validation data and TensorBoard logging.
         initialEpoch is used to set correct count if training is done on previous training.
@@ -252,7 +252,7 @@ class AiHandler():
 
     def dataset_from_directory(self, directory, 
                                image_size=(224, 224), 
-                               batch_size=32,
+                               batch_size=128,
                                validation_split=0.2, 
                                subset="training",
                                seed=42):
@@ -272,7 +272,7 @@ class AiHandler():
         label_dir,
         loader_func_data=None,
         loader_func_label=None,
-        batch_size=32,
+        batch_size=128,
         shuffle=True,
         seed=42
     ):
