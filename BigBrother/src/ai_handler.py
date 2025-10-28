@@ -314,7 +314,8 @@ class AiHandler():
             dataset = dataset.shuffle(len(data_files), seed=seed)
 
         # dataset = dataset.batch(batch_size).prefetch(self.tf.data.AUTOTUNE)
-        
+        dataset = dataset.batch(batch_size)
+
         self.log.info(f"Finished loding training data....")
         
         return dataset
