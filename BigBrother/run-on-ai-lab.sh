@@ -7,7 +7,7 @@ uv sync
 #export TF_NUM_INTEROP_THREADS=2
 
 #Maximum at ai-lab --mem=24G --cpus-per-task=15 --gres=gpu:8
-srun --mem=24G --cpus-per-task=8 --gres=gpu:1 singularity exec --nv \
+srun --mem=24G --cpus-per-task=8 --gres=gpu:5 singularity exec --nv \
      -B ~/:/scratch \
      /ceph/container/tensorflow/tensorflow_24.09.sif \
      /bin/bash -lc ' \
