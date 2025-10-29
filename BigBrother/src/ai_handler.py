@@ -41,7 +41,7 @@ class AiHandler():
         self.gpu_list = self.tf.config.list_physical_devices('GPU')
         self.gpu_amount = len(self.gpu_list)
         self.cpu_amount = len(self.cpu_list)
-        #self.strategy = self.tf.distribute.MirroredStrategy()
+        self.strategy = self.tf.distribute.MirroredStrategy()
 
         self.log.info(f"CUDA built: {self.cuda_built}")
         self.log.info(f"cuDNN loaded: {self.cudnn_loaded}")
@@ -51,8 +51,8 @@ class AiHandler():
         self.log.info(f"TF inter threads: {tensorflow.config.threading.get_inter_op_parallelism_threads()}")
         #self.log.info(f"Number of devices: {self.strategy.num_replicas_in_sync}")
 
-        for gpu in self.gpu_list:
-            self.tf.config.experimental.set_memory_growth(gpu, True)
+        #for gpu in self.gpu_list:
+        #    self.tf.config.experimental.set_memory_growth(gpu, False)
 
     def set_time_start(self):
         """Sets a timestamp for when user marks AI execution to start"""
