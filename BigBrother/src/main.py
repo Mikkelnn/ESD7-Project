@@ -51,7 +51,7 @@ def main():
                 compiled_model,
                 train_data=labeld_data,
                 val_data=labeld_validation,
-                use_tensorboard=True,
+                use_tensorboard=False,
             )
 
             ai_handler.save_model(compiled_model)

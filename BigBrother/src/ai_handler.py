@@ -104,7 +104,7 @@ class AiHandler():
         initialEpoch is used to set correct count if training is done on previous training.
         Returns tf.keras.callbacks.History
         """
-        callbacks = [self.__get_cancel_callback()] #, self.__get_checkpoint_callback()
+        callbacks = [self.__get_cancel_callback(), self.__get_checkpoint_callback()]
 
         if use_tensorboard:
             tensorboard_cb = tensorflow.keras.callbacks.TensorBoard(
