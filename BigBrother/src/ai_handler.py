@@ -124,7 +124,7 @@ class AiHandler():
             validation_data=val_data,
             epochs=epochs,
             batch_size=batch_size,
-            callbacks=callbacks
+            callbacks=callbacks            
         )
 
         self.log.info(f"Model training finished...")
@@ -328,7 +328,7 @@ class AiHandler():
         dataset = (
             dataset
             .map(load_numpy_files, num_parallel_calls=self.tf.data.AUTOTUNE)
-            .cache()
+            .shuffle(buffer_size=len(data_files), reshuffle_each_iteration=True)
             .prefetch(self.tf.data.AUTOTUNE)
         )
 
