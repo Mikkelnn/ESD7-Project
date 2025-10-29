@@ -308,7 +308,7 @@ class AiHandler():
                 self.tf.TensorSpec(shape=data_shape, dtype=self.tf.float32), # data
                 self.tf.TensorSpec(shape=label_shape, dtype=self.tf.float32), # label
             ),
-        )
+        ).cache()
 
         if shuffle:
             dataset = dataset.shuffle(len(data_files), seed=seed)

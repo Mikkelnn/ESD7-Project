@@ -16,7 +16,7 @@ def defineModel():
         Dense(256, activation='relu'),
         Dense(2, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
     ])
-     
+
     #model = Sequential([
     #    InputLayer(input_shape=(2,)),  # two inputs
     #    Dense(2, use_bias=True),
@@ -24,5 +24,5 @@ def defineModel():
     #])
     # model.add(GRU(units=50)) #Adds Grated Recurrent Units (GRU). This is a subtype of Long/Short- Term Memory (LSTM)
     #Note that this only adds a single layer of n neurons.
-    
+
     return model
