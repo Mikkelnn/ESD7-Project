@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm, f, ncf
 
 # Parameters
-SNR_dB = 12.0
+SNR_dB = 10
 SNR = 10**(SNR_dB/10)
 N = 16
 pfa = np.linspace(0, 1, 400)
@@ -37,38 +37,45 @@ Pd_np = pd_np_coherent(pfa, SNR)
 Pd_cafar_ = pd_cafar(pfa, SNR, N, cfar_loss_dB=1.5)
 Pd_ml_ = pd_ml(pfa, SNR)
 
-# Plot
-plt.figure(figsize=(8,6))
-plt.plot(pfa, Pd_np, 'b-',  label='NP')
-plt.plot(pfa, pd_random(pfa), 'k--', label='Random')
-#plt.plot(pfa, Pd_mf_, 'm-', label='Matched')
-plt.plot(pfa, Pd_cafar_, 'r',  label='CA-CFAR')
-plt.plot(pfa, Pd_ml_, 'g',  label='ML')
-plt.scatter(0, 1, color='blue', s=80, label='Perfect')  # Add point at (0,1)
-plt.axvline(x=1e-6, color='magenta', linestyle=':', linewidth=2, label='P_FA target = 1e-6')  # Vertical marker
-plt.text(1e-6, 0.02, 'P_FA=1e-6', color='magenta', rotation=90, va='bottom', ha='right', fontsize=10)
-
-# Crosses and horizontal lines at P_FA=1e-6 for each detector
-cross_colors = ['blue', 'black', 'red', 'green', 'blue']
-cross_labels = ['NP', 'Random', 'CA-CFAR', 'ML', 'Perfect']
-cross_values = [
-    Pd_np[np.searchsorted(pfa, 1e-6)],
-    pd_random(pfa)[np.searchsorted(pfa, 1e-6)],
-    Pd_cafar_[np.searchsorted(pfa, 1e-6)],
-    Pd_ml_[np.searchsorted(pfa, 1e-6)],
+pfa_target = 10e-6
+pfa_target_idx = np.searchsorted(pfa, pfa_target)
+pfa_target_values = [
+    Pd_np[pfa_target_idx],
+    pd_random(pfa)[pfa_target_idx],
+    Pd_cafar_[pfa_target_idx],
+    Pd_ml_[pfa_target_idx],
     1
 ]
 
-for color, label, value in zip(cross_colors, cross_labels, cross_values):
-    plt.scatter(1e-6, value, color=color, s=60, marker='x', label=f'{label} @ P_FA=1e-6')
-    plt.hlines(value, xmin=0, xmax=1, colors=color, linestyles=':', linewidth=1.5, label=f'{label} P_D={value:.3g}')
+plt.figure(figsize=(8, 6))
+
+# Plot ROC curves
+plt.plot(pfa, Pd_np, 'b-', label='NP')
+plt.plot(pfa, pd_random(pfa), 'k--', label='Random')
+plt.plot(pfa, Pd_cafar_, 'r-', label='CA-CFAR')
+plt.plot(pfa, Pd_ml_, 'g-', label='ML')
+
+# Mark P_FA target
+plt.axvline(x=pfa_target, color='magenta', linestyle=':', linewidth=2, label=f'P_FA target = {pfa_target:.0e}')
+plt.text(pfa_target, 0.02, f'P_FA={pfa_target:.0e}', color='magenta', rotation=90, va='bottom', ha='right', fontsize=10)
+
+# Crosses and horizontal lines at P_FA=1e-6 for each detector
+cross_info = [
+    ('blue', 'NP', Pd_np[pfa_target_idx]),
+    ('red', 'CA-CFAR', Pd_cafar_[pfa_target_idx]),
+    ('green', 'ML', Pd_ml_[pfa_target_idx])
+]
+
+for color, label, value in cross_info:
+    plt.scatter(pfa_target, value, color=color, s=60, marker='x', zorder=5)
+    plt.hlines(value, xmin=0, xmax=1, colors=color, linestyles=':', linewidth=1.2, label=f'{label} P_D={value:.3g}')
 
 plt.xlabel('P_FA')
 plt.ylabel('P_D')
-plt.title('ROC Curves')
+plt.title(f'ROC Curves (SNR = {SNR_dB:.1f} dB)')
 plt.ylim(0, 1.05)
 plt.xlim(-0.05, 1)
-plt.grid(True, which='both')
-plt.legend()
+plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)
+plt.legend(loc='lower right', fontsize=10)
 plt.tight_layout()
 plt.show()
