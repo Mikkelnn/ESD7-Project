@@ -41,7 +41,7 @@ class AiHandler():
         self.gpu_list = self.tf.config.list_physical_devices('GPU')
         self.gpu_amount = len(self.gpu_list)
         self.cpu_amount = len(self.cpu_list)
-        #self.strategy = self.tf.distribute.MirroredStrategy()
+        self.strategy = self.tf.distribute.MirroredStrategy()
 
         self.log.info(f"CUDA built: {self.cuda_built}")
         self.log.info(f"cuDNN loaded: {self.cudnn_loaded}")
