@@ -5,6 +5,7 @@ from pathlib import Path
 from model import defineModel
 import os
 import matplotlib.pyplot as plt
+import multiprocessing as mp
 
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
@@ -18,6 +19,7 @@ ntfy = NtfyHandler("ai_template")
 
 
 def main():
+    log.info(f"PYTHON_NUM_THREADS: {mp.cpu_count()}")
     log.info(f"OMP_NUM_THREADS: {os.environ.get('OMP_NUM_THREADS')}")
     log.info(f"TF_NUM_INTRAOP_THREADS: {os.environ.get('TF_NUM_INTRAOP_THREADS')}")
     log.info(f"TF_NUM_INTEROP_THREADS: {os.environ.get('TF_NUM_INTEROP_THREADS')}")
