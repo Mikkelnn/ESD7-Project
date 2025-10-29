@@ -4,14 +4,18 @@ import os, random, shutil
 
 src_root = "training_data"
 dst_root = "validate_data"
-subdirs = ["input", "labels"]
 ratio = 0.15 # validation ratio
 
-for sub in subdirs:
-    src = os.path.join(src_root, sub)
-    dst = os.path.join(dst_root, sub)
-    os.makedirs(dst, exist_ok=True)
-    files = [f for f in os.listdir(src) if os.path.isfile(os.path.join(src, f))]
-    n = int(len(files) * ratio)
-    for f in random.sample(files, n):
-        shutil.move(os.path.join(src, f), os.path.join(dst, f))
+src_inputs = os.path.join(src_root, "input")
+src_labels = os.path.join(src_root, "labels")
+dst_inputs = os.path.join(dst_root, "input")
+dst_labels = os.path.join(dst_root, "labels")
+
+os.makedirs(dst_inputs, exist_ok=True)
+os.makedirs(dst_labels, exist_ok=True)
+
+files = os.listdir(src_inputs) # onlly filenames
+n = int(len(files) * ratio)
+for f in random.sample(files, n):
+    shutil.move(os.path.join(src_inputs, f), os.path.join(dst_inputs, f))
+    shutil.move(os.path.join(src_labels, f), os.path.join(dst_labels, f))
