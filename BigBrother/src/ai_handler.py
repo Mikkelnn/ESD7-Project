@@ -293,10 +293,10 @@ class AiHandler():
         # if loader_func_label is None:
         #     loader_func_label = lambda f: np.load(f)  # default expects .npy
 
-        # first_data = loader_func_data(data_files[0])
-        # first_label = loader_func_label(label_files[0])
-        # data_shape = first_data.shape
-        # label_shape = first_label.shape
+        first_data = loader_func_data(data_files[0])
+        first_label = loader_func_label(label_files[0])
+        data_shape = first_data.shape
+        label_shape = first_label.shape
 
         # def gen():
         #     for d, l in zip(data_files, label_files):
@@ -317,6 +317,11 @@ class AiHandler():
             # Use tf.py_function to run numpy loading in parallel workers
             data = self.tf.py_function(lambda x: np.load(x.numpy().decode())[..., None], [data_path], self.tf.float32)
             label = self.tf.py_function(lambda x: np.load(x.numpy().decode()), [label_path], self.tf.float32)
+            
+            # Set static shapes so TF knows tensor ranks
+            data.set_shape(data_shape)
+            label.set_shape(label_shape)
+
             return data, label
 
         # Apply parallel mapping and prefetch
