@@ -288,10 +288,10 @@ class AiHandler():
         label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
         assert len(data_files) == len(label_files), "Data and label counts differ"
 
-        # if loader_func_data is None:
-        #     loader_func_data = lambda f: np.load(f)[..., None] # fix channel dimmention...  # default expects .npy
-        # if loader_func_label is None:
-        #     loader_func_label = lambda f: np.load(f)  # default expects .npy
+        if loader_func_data is None:
+            loader_func_data = lambda f: np.load(f)[..., None] # fix channel dimmention...  # default expects .npy
+        if loader_func_label is None:
+            loader_func_label = lambda f: np.load(f)  # default expects .npy
 
         first_data = loader_func_data(data_files[0])
         first_label = loader_func_label(label_files[0])
