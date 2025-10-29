@@ -33,7 +33,7 @@ def main():
 
         ai_handler.plot_block_diagram(model)
 
-        compiled_model = ai_handler.compile_model(model)
+        compiled_model = ai_handler.compile_model(model, metrics=["accuracy", "loss", "MeanSquaredError"])
 
         labeld_data = ai_handler.dataset_from_data_and_labels(
             data_dir=TRAINING_DATA_PATH / "input",
