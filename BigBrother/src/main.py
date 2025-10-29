@@ -10,7 +10,7 @@ import multiprocessing as mp
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "training_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data"
 
 log = get_logger()
