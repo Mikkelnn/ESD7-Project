@@ -284,31 +284,48 @@ class AiHandler():
         self.log.info(f"Starting loding training data....")
         
         data_dir, label_dir = Path(data_dir), Path(label_dir)
-        data_files  = sorted(list(data_dir.glob("*")))
-        label_files = sorted(list(label_dir.glob("*")))
+        data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
+        label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
         assert len(data_files) == len(label_files), "Data and label counts differ"
 
-        if loader_func_data is None:
-            loader_func_data = lambda f: np.load(f)[..., None] # fix channel dimmention...  # default expects .npy
-        if loader_func_label is None:
-            loader_func_label = lambda f: np.load(f)  # default expects .npy
+        # if loader_func_data is None:
+        #     loader_func_data = lambda f: np.load(f)[..., None] # fix channel dimmention...  # default expects .npy
+        # if loader_func_label is None:
+        #     loader_func_label = lambda f: np.load(f)  # default expects .npy
 
-        first_data = loader_func_data(data_files[0])
-        first_label = loader_func_label(label_files[0])
-        data_shape = first_data.shape
-        label_shape = first_label.shape
+        # first_data = loader_func_data(data_files[0])
+        # first_label = loader_func_label(label_files[0])
+        # data_shape = first_data.shape
+        # label_shape = first_label.shape
 
-        def gen():
-            for d, l in zip(data_files, label_files):
-                yield loader_func_data(d), loader_func_label(l)
+        # def gen():
+        #     for d, l in zip(data_files, label_files):
+        #         yield loader_func_data(d), loader_func_label(l)
 
-        dataset = self.tf.data.Dataset.from_generator(
-            gen,
-            output_signature=(
-                self.tf.TensorSpec(shape=data_shape, dtype=self.tf.float32), # data
-                self.tf.TensorSpec(shape=label_shape, dtype=self.tf.float32), # label
-            ),
-        ).cache()
+        # dataset = self.tf.data.Dataset.from_generator(
+        #     gen,
+        #     output_signature=(
+        #         self.tf.TensorSpec(shape=data_shape, dtype=self.tf.float32), # data
+        #         self.tf.TensorSpec(shape=label_shape, dtype=self.tf.float32), # label
+        #     ),
+        # ).cache()
+
+        # Create tf.data.Dataset from filenames
+        dataset = self.tf.data.Dataset.from_tensor_slices((data_files, label_files))
+
+        def load_numpy_files(data_path, label_path):
+            # Use tf.py_function to run numpy loading in parallel workers
+            data = self.tf.py_function(lambda x: np.load(x.numpy().decode())[..., None], [data_path], self.tf.float32)
+            label = self.tf.py_function(lambda x: np.load(x.numpy().decode()), [label_path], self.tf.float32)
+            return data, label
+
+        # Apply parallel mapping and prefetch
+        dataset = (
+            dataset
+            .map(load_numpy_files, num_parallel_calls=self.tf.data.AUTOTUNE)
+            .cache()
+            .prefetch(self.tf.data.AUTOTUNE)
+        )
 
         if shuffle:
             dataset = dataset.shuffle(len(data_files), seed=seed)
