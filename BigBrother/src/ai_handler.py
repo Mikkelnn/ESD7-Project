@@ -215,7 +215,7 @@ class AiHandler():
     def save_model(self, model, name="model"):
         """Save model to result path"""
         model_path = self.result_path / f"{name}.keras"
-        weights_path = self.result_path / f"{name}_weights.h5"
+        weights_path = self.result_path / f"{name}_weights.weights.h5"
         
         model.save(model_path)
         model.save_weights(weights_path)
@@ -308,7 +308,7 @@ class AiHandler():
                 self.tf.TensorSpec(shape=data_shape, dtype=self.tf.float32), # data
                 self.tf.TensorSpec(shape=label_shape, dtype=self.tf.float32), # label
             ),
-        )
+        ).cache()
 
         if shuffle:
             dataset = dataset.shuffle(len(data_files), seed=seed)
