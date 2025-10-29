@@ -26,6 +26,7 @@ def main():
 
     with ai_handler.strategy.scope():
         time_started = 0
+        batch_size = 256
 
         try:
             time_started = ai_handler.set_time_start()
@@ -40,10 +41,12 @@ def main():
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
+                batch_size=batch_size,
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
                 data_dir=VALIDATE_DATA_PATH / "input",
                 label_dir=VALIDATE_DATA_PATH / "labels",
+                batch_size=batch_size,
             )
 
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
@@ -52,6 +55,7 @@ def main():
                 train_data=labeld_data,
                 val_data=labeld_validation,
                 use_tensorboard=False,
+                batch_size=batch_size,
             )
 
             ai_handler.save_model(compiled_model)
