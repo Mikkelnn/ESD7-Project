@@ -22,7 +22,8 @@ class AiHandler():
     """Class for helping get Tensorflow hardware and helper functions"""
     def __init__(self, result_path):
         """Initiates AI Handler"""
-        self.time_of_import = time.localtime()        
+        self.time_of_import = time.localtime()       
+        self.base_result_path = result_path
         self.result_path = result_path / self.set_time_start()
         self.result_path.mkdir(parents=True, exist_ok=True)
         self.tensorboard_logdir = self.result_path / "logs"
@@ -227,6 +228,22 @@ class AiHandler():
 
         return model_path
 
+    def load_model(self, directory):
+        """Load model from directory if exists"""
+
+        directory = Path(directory)
+        
+        models = directory.glob("*.keras")
+        model_path = models[0] if any(models) else None 
+
+        weights = directory.glob("*.weights.h5")
+        weights_path = weights[0] if any(weights) else None 
+        
+        if weights_path is None or model_path is None:
+            return None
+        
+        return self.load_model(model_path, model_path)
+
     def load_model(self, model_path, weights_path=None):
         """Load model from file"""
         self.log.info(f"Loading model from: {model_path}")
@@ -284,7 +301,7 @@ class AiHandler():
         """
         
         self.log.info(f"Starting loding training data....")
-        
+
         data_dir, label_dir = Path(data_dir), Path(label_dir)
         data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
         label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
@@ -328,6 +345,55 @@ class AiHandler():
         self.log.info(f"Finished loding training data....")
         
         return dataset
+
+    def find_latest_model(self):
+        """
+        Find latest trained model directory and extract last completed epoch.
+        Returns the loaded model with weights
+        Returns:
+            (found_model: bool, last_epoch: int, model)
+        """
+        RESULTS_PATH = Path(self.base_result_path)
+
+        # --- Step 1: check results dir ---
+        if not RESULTS_PATH.exists() or not any(RESULTS_PATH.iterdir()):
+            self.log.info(f"[ModelSearch] No previous training results found at: {RESULTS_PATH}")
+            return False, 0, None
+
+        try:
+            latest_results = sorted(RESULTS_PATH.iterdir())[-1]
+            checkpoints_dir = latest_results / "checkpoints"
+
+            if not checkpoints_dir.exists() or not any(checkpoints_dir.iterdir()):
+                self.log.info(f"[ModelSearch] Found results folder '{latest_results.name}' but no checkpoints.")
+                return False, 0, None
+
+            # --- Step 2: find latest epoch ---
+            checkpoint_files = list(checkpoints_dir.glob("*"))
+            epochs = []
+            for f in checkpoint_files:
+                try:
+                    epochs.append(int(f.stem))
+                except ValueError:
+                    self.log.info(f"[ModelSearch] Ignoring non-numeric checkpoint file: {f.name}")
+
+            if not epochs:
+                self.log.info(f"[ModelSearch] No valid epoch checkpoints found in {checkpoints_dir}.")
+                return False, 0, None
+
+            last_epoch = max(epochs)
+            self.log.info(f"[ModelSearch] Found previous model '{latest_results.name}' up to epoch {last_epoch}.")
+            model = self.load_model(latest_results)
+            if model is None:
+                self.log.info("ERROR: model not loaded")
+                return False, last_epoch, model
+            
+            return True, last_epoch, model
+
+        except Exception as e:
+            self.log.info(f"[ModelSearch] Error while searching for previous model: {e}")
+            return False, 0, None
+
 
 def _main():
     ai_handler = AiHandler()

@@ -25,15 +25,23 @@ def main():
     log.info(f"TF_NUM_INTEROP_THREADS: {os.environ.get('TF_NUM_INTEROP_THREADS')}")
 
     with ai_handler.strategy.scope():
+        model = None
         time_started = 0
         batch_size = 256
-        epochs = 10
-        initial_epoch=0
-
+        epochs = 10        
+        initial_epoch = 0
+        train_on_latest_result = True
+        
         try:
             time_started = ai_handler.set_time_start()
 
-            model = defineModel()
+            if train_on_latest_result:
+                (found, initial_epoch, model) = ai_handler.find_latest_model()
+                if not found:
+                    exit()
+            else:
+                model = defineModel()
+            
             model.summary()
 
             ai_handler.plot_block_diagram(model)
