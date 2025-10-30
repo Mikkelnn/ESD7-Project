@@ -398,7 +398,7 @@ class AiHandler():
             return True, last_epoch, model
 
         except Exception as e:
-            self.log.info(f"[ModelSearch] Error while searching for previous model: {e}")
+            self.log.error(f"[ModelSearch] Error while searching for previous model: {e}")
             return False, 0, None
 
 
