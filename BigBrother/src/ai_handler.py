@@ -98,11 +98,13 @@ class AiHandler():
         return model
 
     def fit_model(self, model, train_data, val_data=None,
-                  epochs=10, batch_size=64, use_tensorboard=True, initialEpoch=0):
+                  epochs=10, batch_size=64, use_tensorboard=False, initialEpoch=0):
         """
         Train model with optional validation data and TensorBoard logging.
         initialEpoch is used to set correct count if training is done on previous training.
         Returns tf.keras.callbacks.History
+
+        :param use_tensorboard: OBS: This reduces performanc by ~30%; set 'True' when using Tensorboard, remember to call "launch_tensorboard_threaded()".
         """
         callbacks = [self.__get_cancel_callback(), self.__get_checkpoint_callback()]
 
@@ -124,7 +126,8 @@ class AiHandler():
             validation_data=val_data,
             epochs=epochs,
             batch_size=batch_size,
-            callbacks=callbacks            
+            callbacks=callbacks,
+            initial_epoch=initialEpoch
         )
 
         self.log.info(f"Model training finished...")

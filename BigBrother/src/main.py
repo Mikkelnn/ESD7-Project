@@ -27,6 +27,8 @@ def main():
     with ai_handler.strategy.scope():
         time_started = 0
         batch_size = 256
+        epochs = 10
+        initial_epoch=0
 
         try:
             time_started = ai_handler.set_time_start()
@@ -54,8 +56,9 @@ def main():
                 compiled_model,
                 train_data=labeld_data,
                 val_data=labeld_validation,
-                use_tensorboard=False,
+                epochs=epochs,
                 batch_size=batch_size,
+                initialEpoch=initial_epoch
             )
 
             ai_handler.save_model(compiled_model)
