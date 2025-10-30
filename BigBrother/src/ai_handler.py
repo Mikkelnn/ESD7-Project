@@ -293,30 +293,16 @@ class AiHandler():
         if loader_func_label is None:
             loader_func_label = lambda f: np.load(f)  # default expects .npy
 
-        first_data = loader_func_data(data_files[0])
-        first_label = loader_func_label(label_files[0])
-        data_shape = first_data.shape
-        label_shape = first_label.shape
-
-        # def gen():
-        #     for d, l in zip(data_files, label_files):
-        #         yield loader_func_data(d), loader_func_label(l)
-
-        # dataset = self.tf.data.Dataset.from_generator(
-        #     gen,
-        #     output_signature=(
-        #         self.tf.TensorSpec(shape=data_shape, dtype=self.tf.float32), # data
-        #         self.tf.TensorSpec(shape=label_shape, dtype=self.tf.float32), # label
-        #     ),
-        # ).cache()
+        data_shape = loader_func_data(data_files[0]).shape
+        label_shape = loader_func_label(label_files[0]).shape
 
         # Create tf.data.Dataset from filenames
         dataset = self.tf.data.Dataset.from_tensor_slices((data_files, label_files))
 
         def load_numpy_files(data_path, label_path):
             # Use tf.py_function to run numpy loading in parallel workers
-            data = self.tf.py_function(lambda x: np.load(x.numpy().decode())[..., None], [data_path], self.tf.float32)
-            label = self.tf.py_function(lambda x: np.load(x.numpy().decode()), [label_path], self.tf.float32)
+            data = self.tf.py_function(lambda x: loader_func_data(x.numpy().decode()), [data_path], self.tf.float32)
+            label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
             
             # Set static shapes so TF knows tensor ranks
             data.set_shape(data_shape)
