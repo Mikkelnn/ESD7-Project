@@ -34,7 +34,7 @@ class AiHandler():
         self.np = numpy
         self.ps = polars
 
-        self.tf.debugging.set_log_device_placement(True)
+        self.tf.debugging.set_log_device_placement(False) # False to stop noisy stdout
 
         self.cuda_built = self.tf.test.is_built_with_cuda()
         self.cudnn_loaded = self.tf.test.is_built_with_gpu_support()
