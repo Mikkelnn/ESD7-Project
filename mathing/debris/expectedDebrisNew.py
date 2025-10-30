@@ -285,7 +285,7 @@ def movingDebris(R, tilt, rotation):
 def main():
     # E_TrashSingle = singleImage()
     # ESingleOrbit = singleOrbit()
-    movingDebris(50, 90, 0)
+    movingDebris(50, 45, 0)
 
 
 
