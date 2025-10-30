@@ -379,19 +379,19 @@ class AiHandler():
             epochs = []
             for f in checkpoint_files:
                 try:
-                    epochs.append(int(f.stem))
+                    epochs.append(int(f.name.split('.')[0]))
                 except ValueError:
-                    self.log.info(f"[ModelSearch] Ignoring non-numeric checkpoint file: {f.name}")
+                    self.log.warning(f"[ModelSearch] Ignoring non-numeric checkpoint file: {f.name}")
 
             if not epochs:
-                self.log.info(f"[ModelSearch] No valid epoch checkpoints found in {checkpoints_dir}.")
+                self.log.warning(f"[ModelSearch] No valid epoch checkpoints found in {checkpoints_dir}.")
                 return False, 0, None
 
             last_epoch = max(epochs)
             self.log.info(f"[ModelSearch] Found previous model '{latest_results.name}' up to epoch {last_epoch}.")
             model = self.load_model(latest_results)
             if model is None:
-                self.log.info("ERROR: model not loaded")
+                self.log.error("model not loaded")
                 return False, last_epoch, model
             
             return True, last_epoch, model
