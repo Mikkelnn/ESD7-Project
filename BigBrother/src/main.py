@@ -28,7 +28,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 256
-        epochs = 10        
+        epochs = 100        
         initial_epoch = 0
         train_on_latest_result = True
         
