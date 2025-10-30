@@ -15,7 +15,7 @@ r_lower = 180e3 + r_Earth
 r_upper = 2000e3 + r_Earth
 V_LEO = (4.0/3.0) * np.pi * (np.power(r_upper, 3) - np.power(r_lower, 3))
 
-trash_LEO = 934000
+trash_LEO = 1036500
 density = trash_LEO / V_LEO
 
 ant_range = 1000.0
@@ -32,9 +32,10 @@ def f1Integral(r):
 
 
 def singleImage():
+    print(f"V_LEO = {V_LEO} Debris density = {density}")
     V_ant = (np.pi / 3.0) * (ant_range ** 3) * np.tan(theta_HPBW/2) * np.tan(phi_HPBW/2)   # correct truncated-cone volume
     E_trashImage = density * V_ant
-    print(f"Single image expected debris: {E_trashImage:.4e}")
+    print(f"Single image expected debris: {E_trashImage:.4e} Antenna volume: {V_ant}")
     return E_trashImage
 
 
@@ -278,13 +279,13 @@ def movingDebris(R, tilt, rotation):
     print(f"Common repeat time ≈ {t_common:.3f} s (ratio ≈ {info['frac']}, error={info['approx_error']:.2e})")
 
     # --- Plot orbits ---
-    # plot_orbits(debrisPos, antPos, T)
+    plot_orbits(debrisPos, antPos, T)
 
 
 def main():
     # E_TrashSingle = singleImage()
     # ESingleOrbit = singleOrbit()
-    movingDebris(50, 0, 0)
+    movingDebris(50, 45, 0)
 
 
 
