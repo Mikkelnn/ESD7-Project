@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm, f, ncf
 
 # Parameters
-SNR_dB = 10
+SNR_dB = 5
 SNR = 10**(SNR_dB/10)
 N = 16
 pfa = np.linspace(0, 1, 400)
@@ -51,13 +51,13 @@ plt.figure(figsize=(8, 6))
 
 # Plot ROC curves
 plt.plot(pfa, Pd_np, 'b-', label='NP')
-plt.plot(pfa, pd_random(pfa), 'k--', label='Random')
+plt.plot(pfa, pd_random(pfa), 'y-', label='Random')
 plt.plot(pfa, Pd_cafar_, 'r-', label='CA-CFAR')
 plt.plot(pfa, Pd_ml_, 'g-', label='ML')
 
 # Mark P_FA target
-plt.axvline(x=pfa_target, color='magenta', linestyle=':', linewidth=2, label=f'P_FA target = {pfa_target:.0e}')
-plt.text(pfa_target, 0.02, f'P_FA={pfa_target:.0e}', color='magenta', rotation=90, va='bottom', ha='right', fontsize=10)
+plt.axvline(x=pfa_target, color='magenta', linestyle=':', linewidth=2, label=f'P_FA = {pfa_target:.0e}')
+plt.text(pfa_target, 0.02, f'P_FA = {pfa_target:.0e}', color='magenta', rotation=90, va='bottom', ha='right', fontsize=10)
 
 # Crosses and horizontal lines at P_FA=1e-6 for each detector
 cross_info = [
