@@ -276,8 +276,7 @@ class AiHandler():
         loader_func_data=None,
         loader_func_label=None,
         batch_size=64,
-        shuffle=False,
-        seed=42
+        shuffle=False
     ):
         """
         Create dataset from two directories: one for data, one for labels.

@@ -44,11 +44,13 @@ def main():
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
+                shuffle=True
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
                 data_dir=VALIDATE_DATA_PATH / "input",
                 label_dir=VALIDATE_DATA_PATH / "labels",
                 batch_size=batch_size,
+                shuffle=True
             )
 
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
