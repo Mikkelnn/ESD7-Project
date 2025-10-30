@@ -39,6 +39,8 @@ def main():
                 (found, initial_epoch, model) = ai_handler.find_latest_model()
                 if not found:
                     exit()
+                
+                epochs += initial_epoch
             else:
                 model = defineModel()
             
