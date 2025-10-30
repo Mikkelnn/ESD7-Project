@@ -228,7 +228,7 @@ class AiHandler():
 
         return model_path
 
-    def load_model(self, directory):
+    def load_model_directory(self, directory):
         """Load model from directory if exists"""
 
         directory = Path(directory)
@@ -390,7 +390,7 @@ class AiHandler():
 
             last_epoch = max(epochs)
             self.log.info(f"[ModelSearch] Found previous model '{latest_results.name}' up to epoch {last_epoch}.")
-            model = self.load_model(latest_results)
+            model = self.load_model_directory(latest_results)
             if model is None:
                 self.log.error("model not loaded")
                 return False, last_epoch, model
