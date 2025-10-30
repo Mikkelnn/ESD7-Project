@@ -327,13 +327,12 @@ class AiHandler():
         # Apply parallel mapping and prefetch
         dataset = (
             dataset
-            .map(load_numpy_files, num_parallel_calls=15) # self.tf.data.AUTOTUNE
-            .shuffle(buffer_size=len(data_files), reshuffle_each_iteration=True)
-            .prefetch(self.tf.data.AUTOTUNE)
+            .map(load_numpy_files, num_parallel_calls=self.tf.data.AUTOTUNE)
+            .cache()
         )
 
         if shuffle:
-            dataset = dataset.shuffle(len(data_files), seed=seed)
+            dataset = dataset.shuffle(buffer_size=len(data_files), reshuffle_each_iteration=True)
 
         dataset = dataset.batch(batch_size).prefetch(self.tf.data.AUTOTUNE)
         # dataset = dataset.batch(batch_size)
