@@ -232,17 +232,18 @@ class AiHandler():
         """Load model from directory if exists"""
 
         directory = Path(directory)
-        
-        models = directory.glob("*.keras")
-        model_path = models[0] if any(models) else None 
+        model_files = list(directory.glob("*.keras"))
+        weights_files = list(directory.glob("*.weights.h5"))
 
-        weights = directory.glob("*.weights.h5")
-        weights_path = weights[0] if any(weights) else None 
-        
-        if weights_path is None or model_path is None:
+        model_path = model_files[0] if model_files else None
+        weights_path = weights_files[0] if weights_files else None
+
+        if not model_path or not weights_path:
+            self.log.warning(f"[ModelLoad] No model/weights found in: {directory}")
             return None
-        
-        return self.load_model(model_path, model_path)
+
+        self.log.info(f"[ModelLoad] Loading model: {model_path.name}, weights: {weights_path.name}")
+        return self.load_model(model_path, weights_path)
 
     def load_model(self, model_path, weights_path=None):
         """Load model from file"""
