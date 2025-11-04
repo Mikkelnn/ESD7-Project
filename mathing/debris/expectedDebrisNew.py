@@ -32,6 +32,7 @@ def f1Integral(r):
 
 
 def singleImage():
+    print(ant_orbit_time)
     print(f"V_LEO = {V_LEO} Debris density = {density}")
     V_ant = (np.pi / 3.0) * (ant_range ** 3) * np.tan(theta_HPBW/2) * np.tan(phi_HPBW/2)   # correct truncated-cone volume
     E_trashImage = density * V_ant
@@ -283,9 +284,9 @@ def movingDebris(R, tilt, rotation):
 
 
 def main():
-    # E_TrashSingle = singleImage()
+    E_TrashSingle = singleImage()
     # ESingleOrbit = singleOrbit()
-    movingDebris(50, 45, 0)
+    # movingDebris(50, 45, 0)
 
 
 
