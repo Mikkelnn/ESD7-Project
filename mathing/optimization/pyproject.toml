@@ -1,0 +1,8 @@
+[project]
+name = "optimization"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "scipy>=1.16.3",
+    "sympy>=1.14.0",
+]
