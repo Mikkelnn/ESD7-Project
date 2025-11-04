@@ -42,7 +42,9 @@ pfa_target_values = [
     1
 ]
 
-plt.figure(figsize=(8, 6))
+font_size = 30
+
+plt.figure(figsize=(6, 6))
 
 # Plot ROC curves
 plt.plot(pfa, Pd_np, 'b-', label='NP')
@@ -52,7 +54,7 @@ plt.plot(pfa, Pd_ml_, 'g-', label='ML')
 
 # Mark P_FA target
 plt.axvline(x=pfa_target, color='magenta', linestyle=':', linewidth=2, label=f'P_FA = {pfa_target:.0e}')
-plt.text(pfa_target, 0.02, f'P_FA = {pfa_target:.0e}', color='magenta', rotation=90, va='bottom', ha='right', fontsize=10)
+plt.text(pfa_target, 0.02, f'P_FA = {pfa_target:.0e}', color='magenta', rotation=90, va='bottom', ha='right', fontsize=font_size)
 
 # Crosses and horizontal lines at P_FA=1e-6 for each detector
 cross_info = [
@@ -65,12 +67,13 @@ for color, label, value in cross_info:
     plt.scatter(pfa_target, value, color=color, s=60, marker='x', zorder=5)
     plt.hlines(value, xmin=0, xmax=1, colors=color, linestyles=':', linewidth=1.2, label=f'{label} P_D={value:.3g}')
 
-plt.xlabel('P_FA')
-plt.ylabel('P_D')
-plt.title(f'ROC Curves (SNR = {SNR_dB:.1f} dB)')
+plt.xlabel('P_FA', fontsize=font_size)
+plt.ylabel('P_D', fontsize=font_size)
+plt.title(f'ROC Curves (SNR = {SNR_dB:.1f} dB)', fontsize=font_size)
 plt.ylim(0, 1.05)
 plt.xlim(-0.05, 1)
 plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)
-plt.legend(loc='lower right', fontsize=10)
+plt.legend(loc='lower right', fontsize=font_size*0.9)
+plt.tick_params(axis='both', which='major', labelsize=font_size)
 plt.tight_layout()
 plt.show()
