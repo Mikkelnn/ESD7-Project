@@ -9,17 +9,23 @@ import random as rn
 
 # Import your simulation function from separate file
 from simulation import runSimulation
+from dsp_mini import range_doppler_fft
 
 # -------------------------------
 # Disk Monitor
 # -------------------------------
 def disk_monitor(root_path, flag, check_interval=1):
     """Continuously update flag: True if disk < 90%, False if >= 90%"""
+    _, init_disk_used, _ = shutil.disk_usage(root_path)
     while flag.value:
         total, used, free = shutil.disk_usage(root_path)
-        used_percent = used / total * 100
-        flag.value = used_percent < 98
-        # path =  os.path.join(root_path, "baseband")
+        # used_percent = used / total * 100
+        # flag.value = used_percent < 98
+
+        disk_used_Byte = (used - init_disk_used)
+        flag.value = disk_used_Byte < 100e9 # 100GB in bytes 
+
+        # path =  os.path.join(root_path, "input")
         # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
         time.sleep(check_interval)
     print("Disk monitor exiting.")
@@ -30,12 +36,12 @@ def disk_monitor(root_path, flag, check_interval=1):
 def generate_batch(worker_seed):
     """Generate a random batch of targets"""
     rn.seed(worker_seed + int(time.time() * 1000) % 1000000)
-    n_targets = rn.randint(0, 3)
-    data = np.zeros((n_targets, 3), dtype=np.int16)
+    n_targets = rn.randint(0, 1)
+    data = np.zeros((n_targets, 3)) #, dtype=np.int16)
     for j in range(n_targets):
         data[j, 0] = rn.randint(100, 800)   # range
         data[j, 1] = rn.randint(0, 7500)    # velocity
-        data[j, 2] = rn.randint(-15, 15)    # angle
+        data[j, 2] = 0 #rn.randint(-15, 15)    # angle
     return data
 
 # def serialize_example_binary(data: np.ndarray):
@@ -51,8 +57,8 @@ def generate_batch(worker_seed):
 # -------------------------------
 def run_worker(root_path, worker_id, disk_flag):
     # os.makedirs(root_path, exist_ok=True)
-    params_path = os.path.join(root_path, "params")
-    baseband_path = os.path.join(root_path, "baseband")
+    params_path = os.path.join(root_path, "labels")
+    baseband_path = os.path.join(root_path, "input")
     print(f"Worker {worker_id} started (PID {os.getpid()})")
 
     while disk_flag.value:  # read shared flag instead of calling disk_usage
@@ -62,7 +68,16 @@ def run_worker(root_path, worker_id, disk_flag):
 
         # Call your simulation function
         baseband = runSimulation(params)
+        baseband = range_doppler_fft(baseband)
+        baseband = baseband / np.max(baseband)
+
         # Write params as raw-binary TFRecord file with UUID
+        # Normalize params
+        if len(params) == 0:
+             params = [0, 0] # output for no targets
+        else:
+             params = [params[0][0] / 800.0, params[0][1] / 7500.0] # normalize for a target
+
         # params_filename = os.path.join(params_path, f"{local_uuid}.tfrecord")
         # with tf.io.TFRecordWriter(params_filename) as writer:
         #     writer.write(serialize_example_binary(params))
@@ -84,9 +99,9 @@ def run_worker(root_path, worker_id, disk_flag):
 # Main
 # -------------------------------
 if __name__ == "__main__":
-    root_path = "./sim_output"  # Change to desired folder
-    os.makedirs(os.path.join(root_path, "params"), exist_ok=True)
-    os.makedirs(os.path.join(root_path, "baseband"), exist_ok=True)
+    root_path = "../../training_data"  # Change to desired folder
+    os.makedirs(os.path.join(root_path, "labels"), exist_ok=True)
+    os.makedirs(os.path.join(root_path, "input"), exist_ok=True)
 
     # Shared flag to indicate if disk has space
     with mp.Manager() as manager:

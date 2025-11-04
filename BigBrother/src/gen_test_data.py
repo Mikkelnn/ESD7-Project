@@ -17,7 +17,7 @@ for i in range(num_samples):
     y = np.array([x1 + x2, x1 - x2]) # sum and difference
 
     # Save input and label with matching filenames
-    np.save(f"data/data/sample_{100+i}.npy", x)
-    np.save(f"data/label/sample_{100+i}.npy", y)
+    np.save(f"data/data/sample_{i}.npy", x)
+    np.save(f"data/label/sample_{i}.npy", y)
 
-print("100 samples generated in 'data' and 'label' folders.")
+print(f"{num_samples} samples generated in 'data' and 'label' folders.")

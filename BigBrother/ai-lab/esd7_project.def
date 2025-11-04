@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%files
+    ../../BigBrother /BigBrother
+
+%environment
+    export TF_ENABLE_ONEDNN_OPTS=0
+    export BigBrother=$HOME/BigBrother
+
+%post
+    mkdir -p /scratch/BigBrother/tmp
+
+    cd /BigBrother/
+ 
+    apt-get update
+    apt-get upgrade -y
+    apt-get install curl make findutils -y
+
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+       
+    $HOME/.local/bin/uv sync --no-cache
+
+%test
+    $HOME/.local/bin/uv run python --version
+
+%labels
+    Author kban20@student.aau.dk
+    Version v0.0.1
+
+%help
+    This is a template container for easy use on ai-lab

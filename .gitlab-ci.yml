@@ -1,0 +1,58 @@
+stages:
+  - lint
+  - datagen
+  - run
+  - clean
+
+lint:
+  stage: lint
+  tags: [gpu]
+  image: bigbrother:latest
+  script:
+    - cd BigBrother 
+    - uv sync
+    - make lint
+  rules:
+    - when: always
+
+datagen:
+  stage: datagen
+  tags: [gpu]
+  image: bigbrother:latest
+  script:
+    - cd BigBrother/src
+    - uv run gen_test_data.py
+  rules:
+  - when: always
+  artifacts:
+    untracked: false
+    when: always
+    access: all
+    paths:
+      - BigBrother/src/data/
+    expire_in: "0.5 hrs"
+
+run:
+  stage: run
+  tags: [gpu]
+  image: bigbrother:latest
+  script:
+    - cd BigBrother
+    - make docker_run
+  rules:
+    - when: always
+  artifacts:
+    untracked: false
+    when: always
+    access: all
+    paths:
+      - BigBrother/results/
+    expire_in: "4 mos"
+
+clean:
+  stage: clean
+  tags: [gpu]
+  script:
+    - docker system prune -f
+  rules:
+    - when: always

@@ -1,0 +1,7 @@
+nvidia-cuda-toolkit
+nvidia-container-toolkit
+build-essential
+curl
+make
+build-essential
+graphviz

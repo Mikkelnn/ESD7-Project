@@ -26,6 +26,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 radarsimpy/
+radarsimpy.*
 .venv
 sim_output
 
@@ -223,3 +224,8 @@ wheels/
 
 parquet
 *.zip
+
+builds
+*.npy
+*.err
+*.out
