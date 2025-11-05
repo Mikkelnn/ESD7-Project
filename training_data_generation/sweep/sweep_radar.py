@@ -20,6 +20,10 @@ prp=4.8e-6 # Pulse Repetition Period
 pulses = 128
 
 fs = 45e6 # 50e6 # IF fs
+tx_power_dbm = 40 # 40
+rf_gain = 20
+baseband_gain = 30
+
 
 r_max = (c * t_chirp) / 2 # calculate the maximum range
 delta_R = c / (2 * bw)  # Calculate range resolution (meters / bin)
@@ -62,17 +66,24 @@ def frame_simulation(target_list, hpbw_az_deg, hpbw_el_deg, t_offset=0, steering
 
 
     rx_channels = []
-    for idx in range(0, N_rx):
-        rx_channels.append(
-            dict(
-                location=(0, wavelength / 2 * idx - (N_rx - 1) * wavelength / 4, 0),
-            )
-        )
+    rx_channels.append(dict(
+            location=(0, 0, 0), 
+            azimuth_angle=az_angle,
+            azimuth_pattern=az_gain,
+            elevation_angle=el_angle,
+            elevation_pattern=el_gain,
+        ))
+    # for idx in range(0, N_rx):
+    #     rx_channels.append(
+    #         dict(
+    #             location=(0, wavelength / 2 * idx - (N_rx - 1) * wavelength / 4, 0),
+    #         )
+    #     )
 
     tx = Transmitter(
         f=[f_c - (bw/2), f_c + (bw/2)],
         t=[0, t_chirp],
-        tx_power=40, # 40
+        tx_power=tx_power_dbm,
         prp=prp,
         pulses=pulses,
         channels=tx_channels
@@ -81,9 +92,9 @@ def frame_simulation(target_list, hpbw_az_deg, hpbw_el_deg, t_offset=0, steering
     rx = Receiver(
         fs=fs,
         noise_figure=0, # 8
-        rf_gain=20,
+        rf_gain=rf_gain,
         load_resistor=50,
-        baseband_gain=30,
+        baseband_gain=baseband_gain,
         channels=rx_channels
     )
 
@@ -135,23 +146,32 @@ angle_step = 5
 steering_angles = np.arange(-max_abs_angle_deg, max_abs_angle_deg + angle_step, angle_step)
 
 target_list = [
+    # dict(
+    #     location=(10, -5, 0),
+    #     speed=(0, 750, 0),
+    #     rcs=10,
+    #     phase=0,
+    # ),
+    # dict(
+    #     location=(-5, -5, 3),
+    #     speed=(350, -350, -350),
+    #     rcs=10,
+    #     phase=0,
+    # ),
     dict(
-        location=(10, -5, 0),
-        speed=(0, 750, 0),
-        rcs=10,
-        phase=0,
-    ),
-    dict(
-        location=(-5, -5, 3),
-        speed=(350, -350, -350),
-        rcs=10,
+        location=(1000, 0, 0),
+        speed=(0, 0, 0),
+        rcs=-54.60,
         phase=0,
     ),
 ]
+steering_angles = [0]
 
 basebands, frames = sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles, include_noise=False, render=False, show_progress=True)
 
 # TODO: Save baseband to disk
+
+np.save("test.npy", basebands)
 
 if frames is not None:
     save_frames_mp4(frames)

@@ -18,17 +18,46 @@ def radiation_pattern(hpbw_deg, include_sidelobes=False, steering_angle_deg=0, t
         gain = np.exp(-0.5 * (theta / sigma)**2)
 
     gain /= np.max(gain)
-    gain_db = 10 * np.log10(np.clip(gain, 1e-6, 1))  # avoid log(0)
+    gain_db = 20 * np.log10(np.clip(gain, 1e-6, 1)) + 10.97 # avoid log(0)
     return theta, gain_db
 
 
-def plot_cartesian(ax, theta, gain_db, title, xlabel):
+def plot_cartesian(ax, theta, gain_db, title, xlabel, hpbw_lines=True):
     ax.plot(theta, gain_db)
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel('Gain (dB)')
-    ax.set_ylim(-40, 0)
+    ax.set_ylim(-40, 15)
     ax.grid(True)
+
+    if hpbw_lines:
+        # Determine -3 dB level relative to peak
+        peak = np.max(gain_db)
+        level = peak - 3
+
+        # Horizontal line at -3 dB relative level
+        ax.axhline(level, color='r', linestyle='--', linewidth=1)
+
+        # Find intersection points
+        diff = gain_db - level
+        sign_changes = np.where(np.diff(np.sign(diff)))[0]
+
+        intersections = []
+        for i in sign_changes:
+            x0, x1 = theta[i], theta[i + 1]
+            y0, y1 = gain_db[i], gain_db[i + 1]
+            x_cross = x0 + (x1 - x0) * (level - y0) / (y1 - y0)
+            intersections.append(x_cross)
+
+        # Vertical lines at intersections
+        for x in intersections:
+            ax.axvline(x, color='r', linestyle='--', linewidth=1)
+
+        # Annotate HPBW if two crossings exist
+        if len(intersections) >= 2:
+            hpbw = abs(intersections[-1] - intersections[0])
+            ax.text(0.05, 0.9, f'HPBW ≈ {hpbw:.2f}°', transform=ax.transAxes, color='r')
+        
 
 def plot_polar(ax, theta, gain_db, title):
     # Convert -90–90° to 0–180° span for plotting
@@ -42,8 +71,8 @@ def plot_polar(ax, theta, gain_db, title):
     ax.grid(True)
 
 def plot_pattern(hpbw_az_deg, hpbw_el_deg):
-    theta_el, gain_el = radiation_pattern(hpbw_az_deg, include_sidelobes=True, steering_angle_deg=50)
-    theta_az, gain_az = radiation_pattern(hpbw_el_deg, include_sidelobes=False)
+    theta_el, gain_el = radiation_pattern(hpbw_el_deg, include_sidelobes=True, steering_angle_deg=0)
+    theta_az, gain_az = radiation_pattern(hpbw_az_deg, include_sidelobes=False)
 
     fig = plt.figure(figsize=(10, 8))
 
@@ -56,8 +85,8 @@ def plot_pattern(hpbw_az_deg, hpbw_el_deg):
 
     # Elevation
     ax3 = fig.add_subplot(2, 2, 3)
-    plot_cartesian(ax3, theta_el, gain_el, f'Elevation Pattern (HPBW={hpbw_el_deg}°)', 'Elevation Angle (°)')
-
+    plot_cartesian(ax3, theta_el, gain_el, f'Elevation Pattern (HPBW={hpbw_el_deg}°)', 'Elevation Angle (°)', hpbw_lines=True)
+    
     ax4 = fig.add_subplot(2, 2, 4, projection='polar')
     plot_polar(ax4, theta_el, gain_el, 'Elevation Polar')
 
@@ -68,4 +97,4 @@ def plot_pattern(hpbw_az_deg, hpbw_el_deg):
 
 # Example usage:
 if __name__ == "__main__":
-    plot_pattern(hpbw_az_deg=27, hpbw_el_deg=88)
+    plot_pattern(hpbw_az_deg=88, hpbw_el_deg=27)
