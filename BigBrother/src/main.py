@@ -29,7 +29,7 @@ def main():
     with ai_handler.strategy.scope():
         model = None
         time_started = 0
-        batch_size = 256
+        batch_size = 128
         epochs = 100
         initial_epoch = 0
         train_on_latest_result = False
