@@ -6,6 +6,8 @@ from model import defineModel
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
+import numpy as np
+import math
 
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
@@ -28,21 +30,27 @@ def main():
         model = None
         time_started = 0
         batch_size = 256
-        epochs = 100        
+        epochs = 100
         initial_epoch = 0
-        train_on_latest_result = True
+        train_on_latest_result = False
         
+        max_range = 1000 # m
+        max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
+    
+        num_range_out = max_range / 10 #
+        num_velocity_out = max_velocity / 50 #
+        output_size = num_range_out + num_velocity_out
+
         try:
             time_started = ai_handler.set_time_start()
 
             if train_on_latest_result:
                 (found, initial_epoch, model) = ai_handler.find_latest_model()
+                epochs += initial_epoch
                 if not found:
                     exit()
-                
-                epochs += initial_epoch
             else:
-                model = defineModel()
+                model = defineModel(output_size)
             
             model.summary()
 
@@ -50,17 +58,29 @@ def main():
 
             compiled_model = ai_handler.compile_model(model, metrics=["accuracy", "MeanSquaredError"])
 
+            def loader_func_label(f): 
+                label = np.load(f)
+                label = np.multiply(label, [800.0 / 10, 7500.0 / 50]) # Load and scale to relative idx
+                label = np.add(label, [0, num_range_out])
+
+                output = np.zeros((output_size))
+                output[max(0, min(int(label[0]), num_range_out))] = 1
+                output[max(num_range_out, min(int(label[1]), output_size))] = 1
+                return output
+
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=True
+                shuffle=True,
+                loader_func_label=loader_func_label
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
                 data_dir=VALIDATE_DATA_PATH / "input",
                 label_dir=VALIDATE_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=True
+                shuffle=True,
+                loader_func_label=loader_func_label
             )
 
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
