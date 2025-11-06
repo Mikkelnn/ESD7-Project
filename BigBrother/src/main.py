@@ -37,8 +37,8 @@ def main():
         max_range = 1000 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
     
-        num_range_out = max_range / 10 #
-        num_velocity_out = max_velocity / 50 #
+        num_range_out = int(max_range / 10) #
+        num_velocity_out = int(max_velocity / 50) #
         output_size = num_range_out + num_velocity_out
 
         try:
