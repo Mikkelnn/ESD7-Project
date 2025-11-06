@@ -61,11 +61,12 @@ def main():
             def loader_func_label(f): 
                 label = np.load(f)
                 label = np.multiply(label, [800.0 / 10, 7500.0 / 50]) # Load and scale to relative idx
-                label = np.add(label, [0, num_range_out])
+                label = np.floor(label)
+                label = np.add(label, [0, num_range_out-1])
 
                 output = np.zeros((output_size))
-                output[max(0, min(int(label[0]), num_range_out))] = 1
-                output[max(num_range_out, min(int(label[1]), output_size))] = 1
+                output[max(0, min(int(label[0]), num_range_out-1))] = 1
+                output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
                 return output
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
