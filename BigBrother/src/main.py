@@ -30,9 +30,9 @@ def main():
         model = None
         time_started = 0
         batch_size = 128 # Decrease as model get larger to fit in GPU memory
-        epochs = 100
+        epochs = 1
         initial_epoch = 0
-        train_on_latest_result = True
+        train_on_latest_result = False
         
         max_range = 1000 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
