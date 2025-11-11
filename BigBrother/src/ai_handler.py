@@ -14,6 +14,7 @@ import signal
 import subprocess
 import sys
 import numpy as np
+from datetime import datetime
 log.info("Finalised importing AI libs")
 
 #tf.config.optimizer.set_jit(True)  #Global jit optimiser
@@ -368,7 +369,7 @@ class AiHandler():
                 self.log.info(f"[ModelSearch] No previous model directories found (excluding current run).")
                 return False, 0, None
 
-            latest_results = sorted(all_results)[-1] # exclude current result dir
+            latest_results = sorted(all_results, key=lambda x: datetime.strptime(x, "%d-%m-%Y_%H:%M:%S"), reverse=True)[0]
             checkpoints_dir = latest_results / "checkpoints"
 
             if not checkpoints_dir.exists() or not any(checkpoints_dir.iterdir()):
