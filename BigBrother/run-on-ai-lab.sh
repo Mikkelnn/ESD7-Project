@@ -14,3 +14,4 @@ sbatch run_batch.sh
 #        export TF_NUM_INTRAOP_THREADS=${SLURM_CPUS_PER_TASK}
 #        export TF_NUM_INTEROP_THREADS=2
 #        source /scratch/ESD7-Project/BigBrother/.venv/bin/activate && python /scratch/ESD7-Project/BigBrother/src/main.py
+#      '

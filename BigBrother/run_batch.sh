@@ -10,10 +10,11 @@
 
 # Run Python script in container
 singularity exec --nv \
-     -B ~/:/scratch \
-     /ceph/container/tensorflow/tensorflow_24.09.sif \
-     /bin/bash -lc ' \
-       export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
-       export TF_NUM_INTRAOP_THREADS=${SLURM_CPUS_PER_TASK}
-       export TF_NUM_INTEROP_THREADS=2
-       source /scratch/ESD7-Project/BigBrother/.venv/bin/activate && python /scratch/ESD7-Project/BigBrother/src/main.py
+    -B ~/:/scratch \
+    /ceph/container/tensorflow/tensorflow_24.09.sif \
+    /bin/bash -lc ' \
+      export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+      export TF_NUM_INTRAOP_THREADS=${SLURM_CPUS_PER_TASK}
+      export TF_NUM_INTEROP_THREADS=2
+      source /scratch/ESD7-Project/BigBrother/.venv/bin/activate && python /scratch/ESD7-Project/BigBrother/src/main.py
+    '
