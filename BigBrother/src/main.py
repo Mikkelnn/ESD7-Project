@@ -29,10 +29,10 @@ def main():
     with ai_handler.strategy.scope():
         model = None
         time_started = 0
-        batch_size = 128 # Decrease as model get larger to fit in GPU memory
-        epochs = 100
+        batch_size = 32 # Decrease as model get larger to fit in GPU memory
+        epochs = 110
         initial_epoch = 0
-        train_on_latest_result = True
+        train_on_latest_result = False
         
         max_range = 1000 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
