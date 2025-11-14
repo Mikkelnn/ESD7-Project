@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
+from tensorflow.keras.layers import Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
 from tensorflow.keras.models import Sequential
 
 def defineModel(output_size):
