@@ -133,38 +133,39 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            ntfy.post(  # Remember the message is markdown format
-                title=f"Results of ML {time_started}",
-                message=(
-                    f"**Start time:** {time_started}\n"
-                    f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
-                    f"**Results saved to:** `{ai_handler.result_path}`\n\n"
-                ),
-            )
+            # ntfy.post(  # Remember the message is markdown format
+            #     title=f"Results of ML {time_started}",
+            #     message=(
+            #         f"**Start time:** {time_started}\n"
+            #         f"**Time spent:** {ai_handler.time_diff()} seconds\n\n"
+            #         f"**Results saved to:** `{ai_handler.result_path}`\n\n"
+            #     ),
+            # )
 
-            ntfy.post_image(
-                ai_handler.result_path / "model_block_diagram.png",
-                title=f"Model block diagram {time_started}",
-                compress=True,
-            )
-            ntfy.post_image(
-                ai_handler.result_path / "loss.png", title="Loss diagram", compress=True
-            )
-            ntfy.post_image(
-                ai_handler.result_path / "accuracy.png",
-                title="Accuracy diagram",
-                compress=True,
-            )
+            # ntfy.post_image(
+            #     ai_handler.result_path / "model_block_diagram.png",
+            #     title=f"Model block diagram {time_started}",
+            #     compress=True,
+            # )
+            # ntfy.post_image(
+            #     ai_handler.result_path / "loss.png", title="Loss diagram", compress=True
+            # )
+            # ntfy.post_image(
+            #     ai_handler.result_path / "accuracy.png",
+            #     title="Accuracy diagram",
+            #     compress=True,
+            # )
         except Exception as e:
-            ntfy.post(
-                title=f"Error during model training {time_started}",
-                message=f"An error occurred: {e}",
-            )
-            ntfy.post_image(
-                ai_handler.result_path / "model_block_diagram.png",
-                title=f"Model block diagram {time_started}",
-                compress=True,
-            )
+            pass
+            # ntfy.post(
+            #     title=f"Error during model training {time_started}",
+            #     message=f"An error occurred: {e}",
+            # )
+            # ntfy.post_image(
+            #     ai_handler.result_path / "model_block_diagram.png",
+            #     title=f"Model block diagram {time_started}",
+            #     compress=True,
+            # )
 
 
 def load_predict():
