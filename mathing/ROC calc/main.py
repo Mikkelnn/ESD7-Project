@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm, f, ncf
+from scipy.special import erfc
 
 # Parameters
 SNR_dB = 10
@@ -8,8 +9,11 @@ SNR = 10**(SNR_dB/10)
 N = 16
 pfa = np.linspace(0, 1, 400)
 
-def pd_np_coherent(pfa, snr):
-    return norm.sf(norm.isf(pfa) - np.sqrt(snr))
+#def pd_np_coherent(pfa, snr):
+#    return norm.sf(norm.isf(pfa) - np.sqrt(snr))
+
+def pd_np_coherent(pfa, snr, mu,tau):
+    return erfc((mu-np.log(tau))/(2*snr))
 
 #def pd_mf(pfa, snr, mismatch=1.0):
 #    return norm.sf(norm.isf(pfa) - np.sqrt(mismatch*snr))
