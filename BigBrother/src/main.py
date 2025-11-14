@@ -58,7 +58,7 @@ def main():
             ai_handler.plot_block_diagram(model)
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=kl.binary_focal_crossentropy(gamma=2.0, from_logits=True), 
+                                # loss=kl.binary_focal_crossentropy(gamma=2.0, from_logits=True), 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
@@ -76,14 +76,14 @@ def main():
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=True,
+                shuffle=False,
                 loader_func_label=loader_func_label
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
                 data_dir=VALIDATE_DATA_PATH / "input",
                 label_dir=VALIDATE_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=True,
+                shuffle=False,
                 loader_func_label=loader_func_label
             )
 
@@ -159,11 +159,11 @@ def main():
             #     compress=True,
             # )
         except Exception as e:
-            pass
-            # ntfy.post(
-            #     title=f"Error during model training {time_started}",
-            #     message=f"An error occurred: {e}",
-            # )
+            # pass
+            ntfy.post(
+                title=f"Error during model training {time_started}",
+                message=f"An error occurred: {e}",
+            )
             # ntfy.post_image(
             #     ai_handler.result_path / "model_block_diagram.png",
             #     title=f"Model block diagram {time_started}",
