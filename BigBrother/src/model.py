@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
+from tensorflow.keras.layers import Model, Conv2D, Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
 from tensorflow.keras.models import Sequential
 
 
