@@ -80,7 +80,7 @@ def main():
                 output_range[max(0, min(int(label[0]), num_range_out-1))] = 1
                 output_velocity[max(0, min(int(label[1]), num_velocity_out-1))] = 1
 
-                return np.array([output_range, num_velocity_out])
+                return output_range, num_velocity_out
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
