@@ -4,7 +4,10 @@ from tensorflow.keras.models import Sequential
 def defineModel(output_size):
 
     model = Sequential([
-        Dense(256, input_shape=(1024, 256, 1), activation='sigmoid'),
+        Flatten(input_shape=(1024, 256, 1)),
+        Dense(256, activation='sigmoid'),
+        Dense(256, activation='sigmoid'),
+        Dense(256, activation='sigmoid'),
         Dense(256, activation='sigmoid'),
         Dense(256, activation='sigmoid'),
         Dense(256, activation='sigmoid'),
