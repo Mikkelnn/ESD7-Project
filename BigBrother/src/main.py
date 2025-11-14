@@ -57,8 +57,13 @@ def main():
 
             ai_handler.plot_block_diagram(model)
 
+            focal_loss = kl.BinaryFocalCrossentropy(
+                alpha=0.25,
+                gamma=2.0,
+            )
+
             compiled_model = ai_handler.compile_model(model, 
-                                # loss=kl.binary_focal_crossentropy(gamma=2.0, from_logits=True), 
+                                loss=focal_loss, 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
