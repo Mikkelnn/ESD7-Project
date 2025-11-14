@@ -1,5 +1,5 @@
-from tensorflow.keras.layers import Model, Conv2D, Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
+from tensorflow.keras.models import Sequential, Model
 
 
 def defineModel(range_bins, doppler_bins):
