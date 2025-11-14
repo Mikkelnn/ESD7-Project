@@ -40,7 +40,7 @@ def main():
     
         num_range_out = int(max_range / 10) #
         num_velocity_out = int(max_velocity / 50) #
-        output_size = num_range_out + num_velocity_out
+        # output_size = num_range_out + num_velocity_out
 
         try:
             time_started = ai_handler.set_time_start()
@@ -51,7 +51,7 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel(output_size)
+                model = defineModel(num_range_out, num_velocity_out)
             
             model.summary()
 
@@ -72,10 +72,15 @@ def main():
                 label = np.floor(label)
                 label = np.add(label, [0, num_range_out-1])
 
-                output = np.zeros((output_size))
-                output[max(0, min(int(label[0]), num_range_out-1))] = 1
-                output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
-                return output
+                # output = np.zeros((output_size))
+                # output[max(0, min(int(label[0]), num_range_out-1))] = 1
+                # output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
+                output_range = np.zeros(num_range_out)
+                output_velocity = np.zeros(num_velocity_out)
+                output_range[max(0, min(int(label[0]), num_range_out-1))] = 1
+                output_velocity[max(0, min(int(label[1]), num_velocity_out-1))] = 1
+
+                return np.array([output_range, num_velocity_out])
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
