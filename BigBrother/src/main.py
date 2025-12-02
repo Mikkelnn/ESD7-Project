@@ -31,7 +31,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 110
+        epochs = 100
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -92,7 +92,7 @@ def main():
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=True,
+                shuffle=False,
                 loader_func_label=loader_func_label
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
