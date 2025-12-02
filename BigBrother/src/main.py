@@ -92,7 +92,7 @@ def main():
 
             def loader_func_data(f): 
                 data = np.load(f)[... , None]
-                return = np.nan_to_num(data, nan=0.0)
+                return np.nan_to_num(data, nan=0.0)
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
