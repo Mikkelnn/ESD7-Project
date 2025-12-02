@@ -69,7 +69,10 @@ def run_worker(root_path, worker_id, disk_flag):
         # Call your simulation function
         baseband = runSimulation(params)
         baseband = range_doppler_fft(baseband)
-        baseband = baseband / np.max(baseband)
+
+        max_val = np.max(baseband)
+        if max_val != 0:
+            baseband = baseband / max_val  # Normalize 
 
         # Write params as raw-binary TFRecord file with UUID
         # Normalize params
