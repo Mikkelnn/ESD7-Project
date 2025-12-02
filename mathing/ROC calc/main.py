@@ -1,19 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm, f, ncf
-from scipy.special import erfc
+from scipy.special import erfc, erf
+from scipy.constants import k
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # Parameters
-SNR_dB = 10
+Bw = 20e6
+Temp = 300
+noiseFloor = 10 * np.log10(k * Temp * Bw)
+
+SNR_dB = 0
 SNR = 10**(SNR_dB/10)
 N = 16
-pfa = np.linspace(0, 1, 400)
+pfa = np.linspace(0, 1, 4000000)
+
+cm = np.array([[899989800,99999980],[40,160]])
+disp = ConfusionMatrixDisplay(cm)
+disp.plot()
 
 #def pd_np_coherent(pfa, snr):
 #    return norm.sf(norm.isf(pfa) - np.sqrt(snr))
 
-def pd_np_coherent(pfa, snr, mu,tau):
-    return erfc((mu-np.log(tau))/(2*snr))
+#def pd_np_coherent(snr, mu, tau):
+#    return erf(((mu**2)-np.log(tau))/2*snr)
+
+def pd_np_coherent(pfa, snr):
+    # Standard NP detector for coherent integration
+    return norm.sf(norm.isf(pfa) - np.sqrt(snr))
 
 #def pd_mf(pfa, snr, mismatch=1.0):
 #    return norm.sf(norm.isf(pfa) - np.sqrt(mismatch*snr))
@@ -31,12 +45,13 @@ def pd_random(pfa):
     return pfa
 
 # Curves
+#Pd_np = pd_np_coherent(SNR, 1, 0.5)
 Pd_np = pd_np_coherent(pfa, SNR)
 #Pd_mf_ = pd_mf(pfa, SNR, mismatch=0.99)
 Pd_cafar_ = pd_cafar(pfa, SNR, N, cfar_loss_dB=1.5)
 Pd_ml_ = pd_ml(pfa, SNR)
 
-pfa_target = 10e-6
+pfa_target = 10e-2
 pfa_target_idx = np.searchsorted(pfa, pfa_target)
 pfa_target_values = [
     Pd_np[pfa_target_idx],
