@@ -69,17 +69,32 @@ def defineModel_single_target_detector():
 
     model = Sequential([
         Input(shape=(1024, 256, 1)),
-        Convolution2D(filters=32, kernel_size=(80, 20), activation='relu', padding="same"),
-        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
-        Convolution2D(filters=16, kernel_size=(40,10), activation='relu', padding="same"), 
-        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
-        Convolution2D(filters=32, kernel_size=(20,5), activation='relu', padding="same"),
-        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
-        Convolution2D(filters=64, kernel_size=(5,2), activation='relu', padding="same"),
+
+        # Block 1
+        Conv2D(32, (3, 3), activation='relu', padding="same"),
+        Conv2D(32, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 1)),  # (1024, 256) -> (512, 256)
+
+        # Block 2
+        Conv2D(64, (3, 3), activation='relu', padding="same"),
+        Conv2D(64, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (512, 256) -> (256, 128)
+
+        # Block 3
+        Conv2D(128, (3, 3), activation='relu', padding="same"),
+        Conv2D(128, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (256, 128) -> (128, 64)
+
+        # Block 4
+        Conv2D(256, (3, 3), activation='relu', padding="same"),
+        Conv2D(256, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (128, 64) -> (64, 32)
+
         Flatten(),
         Dense(256, activation='relu'),
         Dense(256, activation='relu'),
-        Dense(2, activation='softmax')
+        Dense(2, activation='sigmoid'),
     ])
 
     return model
+
