@@ -111,13 +111,6 @@ def main():
                 loader_func_data=loader_func_data
             )
 
-            x, y = next(iter(labeld_data))
-            print("x nan:", ai_handler.tf.math.reduce_any(ai_handler.tf.math.is_nan(x)))
-            print("y nan:", ai_handler.tf.math.reduce_any(ai_handler.tf.math.is_nan(y)))
-            print("pred nan:", ai_handler.tf.math.reduce_any(ai_handler.tf.math.is_nan(model(x))))
-
-            exit()
-
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
             history = ai_handler.fit_model(
                 compiled_model,
