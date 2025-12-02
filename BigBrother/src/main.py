@@ -63,7 +63,7 @@ def main():
             #     alpha=0.25
             # )
 
-            ce = kl.CategoricalCrossentropy(reduction=tf.keras.losses.Reduction.NONE)
+            ce = kl.CategoricalCrossentropy(reduction=kl.Reduction.NONE)
             bce = kl.BinaryCrossentropy()
 
             def masked_range_loss(y_true, y_pred):
@@ -71,15 +71,15 @@ def main():
                 object_flag = y_true[:, :1]                         # shape (batch, 1)
                 range_label = y_true[:, 1:]                         # shape (batch, range_bins)
                 loss = ce(range_label, y_pred)                      # shape (batch,)
-                loss = loss * tf.squeeze(object_flag, axis=-1)      # mask
-                return tf.reduce_mean(loss)
+                loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)      # mask
+                return ai_handler.tf.reduce_mean(loss)
 
             def masked_doppler_loss(y_true, y_pred):
                 object_flag = y_true[:, :1]
                 doppler_label = y_true[:, 1:]
                 loss = ce(doppler_label, y_pred)
-                loss = loss * tf.squeeze(object_flag, axis=-1)
-                return tf.reduce_mean(loss)
+                loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)
+                return ai_handler.tf.reduce_mean(loss)
 
             compiled_model = ai_handler.compile_model(model, 
                                 optimizer=ko.Adam(1e-4),                                
@@ -108,13 +108,13 @@ def main():
                 # else:
                 #     return np.array([0,1])
                 
-                object_present = np.array([0], dtype=np.float32)
+                target_present = np.array([0], dtype=np.float32)
                 range_label = np.zeros(num_range_out, dtype=np.float32)
                 doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
 
                 # --- Object presence ---
                 if np.sum(label) != 0:
-                    object_present[0] = 1 # target present
+                    target_present[0] = 1 # target present
 
                     # --- Scale label to relative bin index ---
                     # Example scaling, adjust factors to your bin definitions
@@ -133,6 +133,9 @@ def main():
                     # --- Create one-hot vectors ---
                     range_label[label_idx[0]] = 1.0
                     doppler_label[label_idx[1]] = 1.0
+
+                range_label = np.concatenate([target_present, range_label], axis=-1)
+                doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
 
                 # --- Return as dict for 3-head model ---
                 return {
