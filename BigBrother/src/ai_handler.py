@@ -87,7 +87,7 @@ class AiHandler():
         "Print a summary of the model to the internal logger as [INFO]"
         model.summary(print_fn=self.log.info)
 
-    def compile_model(self, model, loss, optimizer="adam", metrics=None):
+    def compile_model(self, model, loss, optimizer, metrics=None):
         """Compile model with defaults or user settings"""
         if metrics is None:
             metrics = ["mae"]

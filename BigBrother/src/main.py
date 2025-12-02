@@ -9,6 +9,7 @@ import multiprocessing as mp
 import numpy as np
 import math
 import keras.losses as kl
+import keras.optimiser as ko
 
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
@@ -57,13 +58,14 @@ def main():
 
             ai_handler.plot_block_diagram(model)
 
-            # focal_loss = kl.BinaryFocalCrossentropy(
-            #     alpha=0.25,
-            #     gamma=2.0,
-            # )
+            loss = kl.CategoricalFocalCrossentropy(
+                gamma=2.0,
+                alpha=0.25
+            )
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=kl.BinaryFocalCrossentropy(), 
+                                loss=loss, 
+                                optimizer=ko.Adam(1e-4),
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
