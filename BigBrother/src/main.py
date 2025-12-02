@@ -9,7 +9,7 @@ import multiprocessing as mp
 import numpy as np
 import math
 import keras.losses as kl
-import keras.optimiser as ko
+import keras.optimizers as ko
 
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
