@@ -87,7 +87,7 @@ class AiHandler():
         "Print a summary of the model to the internal logger as [INFO]"
         model.summary(print_fn=self.log.info)
 
-    def compile_model(self, model, loss, optimizer, metrics=None):
+    def compile_model(self, model, optimizer, loss, loss_weights, metrics=None):
         """Compile model with defaults or user settings"""
         if metrics is None:
             metrics = ["mae"]
@@ -95,7 +95,7 @@ class AiHandler():
         self.log.info(f"Compiling model with optimiser: {optimizer}; loss: {loss}; metrics: {metrics}")
 
         # with self.strategy.scope():
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        model.compile(optimizer=optimizer, loss=loss, loss_weights=loss_weights, metrics=metrics)
 
         return model
 

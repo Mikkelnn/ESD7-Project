@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel, defineModel_single_target_detector
+from model import defineModel_singel_target_estimate, defineModel_single_target_detector
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -36,7 +36,7 @@ def main():
         initial_epoch = 0
         train_on_latest_result = False
         
-        max_range = 1000 # m
+        max_range = 800 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
     
         num_range_out = int(max_range / 10) #
@@ -52,43 +52,94 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel_single_target_detector() # num_range_out, num_velocity_out
+                model = defineModel_singel_target_estimate(num_range_out, num_velocity_out) # defineModel_single_target_detector()
             
             model.summary()
 
             ai_handler.plot_block_diagram(model)
 
-            loss = kl.CategoricalFocalCrossentropy(
-                gamma=2.0,
-                alpha=0.25
-            )
+            # loss = kl.CategoricalFocalCrossentropy(
+            #     gamma=2.0,
+            #     alpha=0.25
+            # )
+
+            ce = kl.CategoricalCrossentropy(reduction=tf.keras.losses.Reduction.NONE)
+            bce = kl.BinaryCrossentropy()
+
+            def masked_range_loss(y_true, y_pred):
+                # y_true = [object_flag, one_hot_range]
+                object_flag = y_true[:, :1]                         # shape (batch, 1)
+                range_label = y_true[:, 1:]                         # shape (batch, range_bins)
+                loss = ce(range_label, y_pred)                      # shape (batch,)
+                loss = loss * tf.squeeze(object_flag, axis=-1)      # mask
+                return tf.reduce_mean(loss)
+
+            def masked_doppler_loss(y_true, y_pred):
+                object_flag = y_true[:, :1]
+                doppler_label = y_true[:, 1:]
+                loss = ce(doppler_label, y_pred)
+                loss = loss * tf.squeeze(object_flag, axis=-1)
+                return tf.reduce_mean(loss)
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=loss, 
-                                optimizer=ko.Adam(1e-5),
-                                metrics=["accuracy"])
+                                optimizer=ko.Adam(1e-4),                                
+                                loss={
+                                    "target_present": bce,
+                                    "range_head":     masked_range_loss,
+                                    "doppler_head":   masked_doppler_loss
+                                },
+                                loss_weights={
+                                    "target_present": 1.0,
+                                    "range_head":     1.0,
+                                    "doppler_head":   1.0
+                                },
+                                metrics={
+                                    "target_present": ["accuracy"],
+                                    "range_head":     ["accuracy"],
+                                    "doppler_head":   ["accuracy"]
+                                })
+
 
             def loader_func_label(f): 
-                label = np.load(f)
+                label = np.load(f) # shape (2,) → [range, velocity]
                 
-                if (sum(label) < 1):
-                    return np.array([1,0])
-                else:
-                    return np.array([0,1])
+                # if (sum(label) == 0):
+                #     return np.array([1,0])
+                # else:
+                #     return np.array([0,1])
                 
-                # label = np.multiply(label, [800.0 / 10, 7500.0 / 50]) # Load and scale to relative idx
-                # label = np.floor(label)
-                # label = np.add(label, [0, num_range_out-1])
+                object_present = np.array([0], dtype=np.float32)
+                range_label = np.zeros(num_range_out, dtype=np.float32)
+                doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
 
-                # # output = np.zeros((output_size))
-                # # output[max(0, min(int(label[0]), num_range_out-1))] = 1
-                # # output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
-                # output_range = np.zeros(num_range_out)
-                # output_velocity = np.zeros(num_velocity_out)
-                # output_range[max(0, min(int(label[0]), num_range_out-1))] = 1
-                # output_velocity[max(0, min(int(label[1]), num_velocity_out-1))] = 1
+                # --- Object presence ---
+                if np.sum(label) != 0:
+                    object_present[0] = 1 # target present
 
-                # return output_range, num_velocity_out
+                    # --- Scale label to relative bin index ---
+                    # Example scaling, adjust factors to your bin definitions
+                    label_scaled = np.array([
+                        label[0] * num_range_out,    # range scale
+                        label[1] * num_velocity_out  # doppler scale
+                    ])
+
+                    # --- Floor to nearest bin index ---
+                    label_idx = np.floor(label_scaled).astype(int)
+
+                    # --- Clip to valid range ---
+                    label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
+                    label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
+
+                    # --- Create one-hot vectors ---
+                    range_label[label_idx[0]] = 1.0
+                    doppler_label[label_idx[1]] = 1.0
+
+                # --- Return as dict for 3-head model ---
+                return {
+                    "target_present": target_present,
+                    "range_head": range_label,
+                    "doppler_head": doppler_label
+                }
 
             def loader_func_data(f): 
                 data = np.load(f)[... , None]

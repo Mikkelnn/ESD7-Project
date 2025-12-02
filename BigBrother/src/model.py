@@ -2,11 +2,11 @@ from tensorflow.keras.layers import Conv2D, Input, Dropout, MaxPooling2D, Convol
 from tensorflow.keras.models import Sequential, Model
 
 
-def defineModel(range_bins, doppler_bins):
+def defineModel_singel_target_estimate(range_bins, doppler_bins):
     inputs = Input(shape=(1024, 256, 1))
 
-    x = Conv2D(16, (5,5), activation='relu', padding='same')(inputs)
-    x = MaxPooling2D((2,2))(x)
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = MaxPooling2D((2,1))(x) # (1024, 256) -> (512, 256)
 
     x = Conv2D(32, (3,3), activation='relu', padding='same')(x)
     x = MaxPooling2D((2,2))(x)
@@ -19,6 +19,10 @@ def defineModel(range_bins, doppler_bins):
 
     x = Flatten()(x)
     x = Dense(256, activation='relu')(x)
+    x = Dense(256, activation='relu')(x)
+
+    # --- Target-present head ---
+    target_out = Dense(1, activation='sigmoid', name="target_present")(x)
 
     # --- Range head ---
     range_out = Dense(range_bins, activation='softmax', name="range_head")(x)
@@ -26,7 +30,7 @@ def defineModel(range_bins, doppler_bins):
     # --- Doppler head ---
     doppler_out = Dense(doppler_bins, activation='softmax', name="doppler_head")(x)
 
-    model = Model(inputs, [range_out, doppler_out])
+    model = Model(inputs, [target_out, range_out, doppler_out])
 
     return model
 
