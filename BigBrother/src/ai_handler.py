@@ -96,7 +96,7 @@ class AiHandler():
 
         # with self.strategy.scope():
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
-            
+
         return model
 
     def fit_model(self, model, train_data, val_data=None,

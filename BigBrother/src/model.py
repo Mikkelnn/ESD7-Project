@@ -93,7 +93,7 @@ def defineModel_single_target_detector():
         Flatten(),
         Dense(256, activation='relu'),
         Dense(256, activation='relu'),
-        Dense(2, activation='sigmoid'),
+        Dense(2, activation='softmax'),
     ])
 
     return model

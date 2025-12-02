@@ -13,8 +13,8 @@ import keras.losses as kl
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "training_data" # "validate_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data" 
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -57,19 +57,19 @@ def main():
 
             ai_handler.plot_block_diagram(model)
 
-            # focal_loss = kl.BinaryFocalCrossentropy(
-            #     alpha=0.25,
-            #     gamma=2.0,
-            # )
+            focal_loss = kl.BinaryFocalCrossentropy(
+                alpha=0.25,
+                gamma=2.0,
+            )
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=kl.BinaryCrossentropy(), 
+                                loss=focal_loss, 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
                 label = np.load(f)
                 
-                if (sum(label) == 0):
+                if (sum(label) < 1):
                     return np.array([1,0])
                 else:
                     return np.array([0,1])
@@ -92,7 +92,7 @@ def main():
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=False,
+                shuffle=True,
                 loader_func_label=loader_func_label
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
