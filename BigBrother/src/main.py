@@ -65,8 +65,8 @@ def main():
 
             compiled_model = ai_handler.compile_model(model, 
                                 loss=loss, 
-                                optimizer=ko.Adam(1e-4),
-                                metrics=["accuracy", "MeanSquaredError"])
+                                optimizer=ko.Adam(1e-5),
+                                metrics=["accuracy"])
 
             def loader_func_label(f): 
                 label = np.load(f)
