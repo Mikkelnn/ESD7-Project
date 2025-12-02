@@ -57,13 +57,13 @@ def main():
 
             ai_handler.plot_block_diagram(model)
 
-            focal_loss = kl.BinaryFocalCrossentropy(
-                alpha=0.25,
-                gamma=2.0,
-            )
+            # focal_loss = kl.BinaryFocalCrossentropy(
+            #     alpha=0.25,
+            #     gamma=2.0,
+            # )
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=focal_loss, 
+                                loss=kl.BinaryFocalCrossentropy(), 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
@@ -92,7 +92,7 @@ def main():
                 data_dir=TRAINING_DATA_PATH / "input",
                 label_dir=TRAINING_DATA_PATH / "labels",
                 batch_size=batch_size,
-                shuffle=False,
+                shuffle=True,
                 loader_func_label=loader_func_label
             )
             labeld_validation = ai_handler.dataset_from_data_and_labels(
