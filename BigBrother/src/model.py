@@ -62,3 +62,24 @@ def defineModel_bigCNN(output_size):
     ])
 
     return model
+
+
+
+def defineModel_single_target_detector():
+
+    model = Sequential([
+        Input(shape=(1024, 256, 1)),
+        Convolution2D(filters=32, kernel_size=(80, 20), activation='relu', padding="same"),
+        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
+        Convolution2D(filters=16, kernel_size=(40,10), activation='relu', padding="same"), 
+        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
+        Convolution2D(filters=32, kernel_size=(20,5), activation='relu', padding="same"),
+        MaxPooling2D((2,2), strides=(2,2)), #Half feature set
+        Convolution2D(filters=64, kernel_size=(5,2), activation='relu', padding="same"),
+        Flatten(),
+        Dense(256, activation='relu'),
+        Dense(256, activation='relu'),
+        Dense(2, activation='softmax')
+    ])
+
+    return model

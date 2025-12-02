@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel
+from model import defineModel, defineModel_single_target_detector
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -51,36 +51,42 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel(num_range_out, num_velocity_out)
+                model = defineModel_single_target_detector() # num_range_out, num_velocity_out
             
             model.summary()
 
             ai_handler.plot_block_diagram(model)
 
-            focal_loss = kl.BinaryFocalCrossentropy(
-                alpha=0.25,
-                gamma=2.0,
-            )
+            # focal_loss = kl.BinaryFocalCrossentropy(
+            #     alpha=0.25,
+            #     gamma=2.0,
+            # )
 
             compiled_model = ai_handler.compile_model(model, 
-                                loss=focal_loss, 
+                                # loss=focal_loss, 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
                 label = np.load(f)
-                label = np.multiply(label, [800.0 / 10, 7500.0 / 50]) # Load and scale to relative idx
-                label = np.floor(label)
-                label = np.add(label, [0, num_range_out-1])
+                
+                if (sum(label) == 0):
+                    return np.array([1,0])
+                else:
+                    return np.array([0,1])
+                
+                # label = np.multiply(label, [800.0 / 10, 7500.0 / 50]) # Load and scale to relative idx
+                # label = np.floor(label)
+                # label = np.add(label, [0, num_range_out-1])
 
-                # output = np.zeros((output_size))
-                # output[max(0, min(int(label[0]), num_range_out-1))] = 1
-                # output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
-                output_range = np.zeros(num_range_out)
-                output_velocity = np.zeros(num_velocity_out)
-                output_range[max(0, min(int(label[0]), num_range_out-1))] = 1
-                output_velocity[max(0, min(int(label[1]), num_velocity_out-1))] = 1
+                # # output = np.zeros((output_size))
+                # # output[max(0, min(int(label[0]), num_range_out-1))] = 1
+                # # output[max(num_range_out, min(int(label[1]), output_size-1))] = 1
+                # output_range = np.zeros(num_range_out)
+                # output_velocity = np.zeros(num_velocity_out)
+                # output_range[max(0, min(int(label[0]), num_range_out-1))] = 1
+                # output_velocity[max(0, min(int(label[1]), num_velocity_out-1))] = 1
 
-                return output_range, num_velocity_out
+                # return output_range, num_velocity_out
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
                 data_dir=TRAINING_DATA_PATH / "input",
