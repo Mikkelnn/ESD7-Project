@@ -326,9 +326,14 @@ class AiHandler():
             data = self.tf.py_function(lambda x: loader_func_data(x.numpy().decode()), [data_path], self.tf.float32)
             # label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
             
-            # Load label dict directly
+            def load_label_pyfunc(path):
+                d = loader_func_label(path.numpy().decode())
+                # return a tuple in a consistent order
+                return tuple(d[k].astype("float32") for k in label_keys)
+
+            # Load label dict directly # lambda x: loader_func_label(x.numpy().decode()),
             label_dict = self.tf.py_function(
-                lambda x: loader_func_label(x.numpy().decode()),
+                load_label_pyfunc,
                 [label_path],
                 Tout=[self.tf.float32 for _ in label_keys]
             )
