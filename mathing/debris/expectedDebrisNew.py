@@ -15,10 +15,10 @@ r_lower = 180e3 + r_Earth
 r_upper = 2000e3 + r_Earth
 V_LEO = (4.0/3.0) * np.pi * (np.power(r_upper, 3) - np.power(r_lower, 3))
 
-trash_LEO = 1036500
+trash_LEO = 1036500 + 170000000
 density = trash_LEO / V_LEO
 
-ant_range = 1000.0
+ant_range = 10000.0
 ant_orbit = r_Earth + 550e3
 theta_HPBW = np.deg2rad(27.0)
 phi_HPBW   = np.deg2rad(88.0)
@@ -284,9 +284,9 @@ def movingDebris(R, tilt, rotation):
 
 
 def main():
-    # E_TrashSingle = singleImage()
+    E_TrashSingle = singleImage()
     # ESingleOrbit = singleOrbit()
-    movingDebris(1000, 0, 0)
+    # movingDebris(1000, 0, 0)
 
 
 
