@@ -63,7 +63,7 @@ def main():
             # )
 
             compiled_model = ai_handler.compile_model(model, 
-                                # loss=focal_loss, 
+                                loss=kl.BinaryCrossentropy(), 
                                 metrics=["accuracy", "MeanSquaredError"])
 
             def loader_func_label(f): 
