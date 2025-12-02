@@ -63,7 +63,7 @@ def main():
             #     alpha=0.25
             # )
 
-            ce = kl.CategoricalCrossentropy(reduction=kl.Reduction.NONE)
+            ce = kl.CategoricalCrossentropy(reduction=None)
             bce = kl.BinaryCrossentropy()
 
             def masked_range_loss(y_true, y_pred):
