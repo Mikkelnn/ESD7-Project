@@ -227,10 +227,9 @@ def main():
                 
             # Detect head names
             heads = sorted({
-                k.split("_")[0]
+                k.rsplit("_", 1)[0]
                 for k in history_dict.keys()
-                if (k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_")
-                and k not in ["loss", "accuracy"]
+                if ((k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_"))
             })
 
             # ---- ACCURACY PLOT (all heads) ----
