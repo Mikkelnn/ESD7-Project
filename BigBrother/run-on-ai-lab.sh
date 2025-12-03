@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# uv sync
+uv sync
 
 sbatch run_batch.sh
 

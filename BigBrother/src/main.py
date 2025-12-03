@@ -32,7 +32,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 100
+        epochs = 2
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -238,6 +238,7 @@ def main():
             # )
         except Exception as e:
             # pass
+            print(e)
             ntfy.post(
                 title=f"Error during model training {time_started}",
                 message=f"An error occurred: {e}",
