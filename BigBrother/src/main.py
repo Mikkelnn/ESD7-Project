@@ -328,7 +328,68 @@ def load_predict():
     res = ai_handler.predict(model, [0.1, 0.3])
     print(res)
 
+def confusion_matrix():
+    actual = [[0,1],[0,1],[0,1],[1,0],[0,1],[1,0],[1,0],[0,1],[1,0],[1,0]] # TODO Need to load in and make range from 0-1 to 0 or 1 
+    predictions = [[0,1],[0,1],[0,1],[1,0],[0,1],[1,0],[1,0],[1,0],[0,1]] # TODO Need to load in and make range from 0-1 to 0 or 1
+
+    N = 0
+    count = 0
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
+
+    if len(predictions) == len(actual):
+        N = len(predictions)
+    else:
+        N = min(len(predictions), len(actual))
+
+    for act, pre in zip(actual, predictions):
+        if np.array_equal(act, [0,1]) and np.array_equal(pre, [0,1]):
+            TP += 1
+        elif np.array_equal(act, [0,1]) and np.array_equal(pre, [1,0]):
+            FN += 1
+        elif np.array_equal(act, [1,0]) and np.array_equal(pre, [0,1]):
+            FP += 1
+        elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
+            TN += 1
+
+        count += 1
+
+        if N == count: # This is used if predictions and actual does not have same length
+            break
+
+    TP /= N
+    FP /= N
+    TN /= N
+    FN /= N
+
+    cm = np.array([[TP, FN], [FP, TN]])
+
+    # Save
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cm, cmap='viridis')
+
+    # Add numbers in the middle of tiles
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            plt.text(j, i, f"{cm[i, j]:.2f}", ha='center', va='center', color='black', fontsize=16)
+
+    # Add axis actual
+    plt.xticks([0, 1], ['1', '0'])
+    plt.yticks([0, 1], ['1', '0'])
+    plt.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
+    plt.gca().xaxis.set_label_position('top')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.gca().spines[:].set_visible(False)
+
+    plt.savefig(ai_handler.result_path / "confusion_matrix.svg", format="svg")
+    plt.close()
+    
+    return cm
 
 if __name__ == "__main__":
     # load_predict()
     main()
+    #_ = confusion_matrix()
