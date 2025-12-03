@@ -6,7 +6,7 @@
 #SBATCH --mem=24G
 #SBATCH --cpus-per-task=15
 #SBATCH --gres=gpu:1
-#SBATCH --time=12:00:00
+#SBATCH --time=04:00:00
 
 # Run Python script in container
 singularity exec --nv \
