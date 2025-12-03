@@ -175,44 +175,111 @@ def main():
                 initialEpoch=initial_epoch
             )
 
-            ai_handler.save_model(compiled_model)
-
-            acc = history.history["accuracy"]
-            val_acc = history.history["val_accuracy"]
-            loss = history.history["loss"]
-            val_loss = history.history["val_loss"]
-            epochs = range(1, len(acc) + 1)
-
-            for i in epochs:
-                log.info(
-                    f"Epoch {i}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, accuracy {acc[i - 1]}, validation accuracy {val_acc[i - 1]}"
-                )
-
             ai_handler.set_time_stop()
+            
+            ai_handler.save_model(compiled_model)
+            
+            # acc = history.history["accuracy"]
+            # val_acc = history.history["val_accuracy"]
+            # loss = history.history["loss"]
+            # val_loss = history.history["val_loss"]
+            # epochs = range(1, len(acc) + 1)
 
-            # Plot and save accuracy figure
-            plt.figure(figsize=(8, 5))
-            plt.plot(epochs, acc, label="Training Accuracy")
-            plt.plot(epochs, val_acc, label="Validation Accuracy")
-            plt.title("Model Accuracy")
+            # for i in epochs:
+            #     log.info(
+            #         f"Epoch {i}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, accuracy {acc[i - 1]}, validation accuracy {val_acc[i - 1]}"
+            #     )
+
+
+            # # Plot and save accuracy figure
+            # plt.figure(figsize=(8, 5))
+            # plt.plot(epochs, acc, label="Training Accuracy")
+            # plt.plot(epochs, val_acc, label="Validation Accuracy")
+            # plt.title("Model Accuracy")
+            # plt.xlabel("Epoch")
+            # plt.ylabel("Accuracy")
+            # plt.legend()
+            # plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
+            # plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
+            # plt.close()
+
+            # # Plot and save loss figure
+            # plt.figure(figsize=(8, 5))
+            # plt.plot(epochs, loss, label="Training Loss")
+            # plt.plot(epochs, val_loss, label="Validation Loss")
+            # plt.title("Model Loss")
+            # plt.xlabel("Epoch")
+            # plt.ylabel("Loss")
+            # plt.legend()
+            # plt.savefig(ai_handler.result_path / "loss.svg", format="svg")
+            # plt.savefig(ai_handler.result_path / "loss.png", format="png")
+            # plt.close()
+
+            history_dict = history.history
+            epochs = range(1, len(history_dict["loss"]) + 1)
+
+            # Log all metrics
+            for i in epochs:
+                log_line = [f"Epoch {i}:"]
+                for k, v in history_dict.items():
+                    log_line.append(f"{k}={v[i-1]}")
+                log.info(", ".join(log_line))
+                
+            # Detect head names
+            heads = sorted({
+                k.split("_")[0]
+                for k in history_dict.keys()
+                if (k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_")
+                and k not in ["loss", "accuracy"]
+            })
+
+            # ---- ACCURACY PLOT (all heads) ----
+            plt.figure(figsize=(10, 6))
+
+            for h in heads:
+                train = history_dict.get(f"{h}_accuracy")
+                val = history_dict.get(f"val_{h}_accuracy")
+
+                if train is not None:
+                    plt.plot(epochs, train, label=f"{h} train acc")
+                if val is not None:
+                    plt.plot(epochs, val, "--", label=f"{h} val acc")
+
             plt.xlabel("Epoch")
             plt.ylabel("Accuracy")
+            plt.title("Accuracy per Head")
             plt.legend()
             plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
             plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
             plt.close()
 
-            # Plot and save loss figure
-            plt.figure(figsize=(8, 5))
-            plt.plot(epochs, loss, label="Training Loss")
-            plt.plot(epochs, val_loss, label="Validation Loss")
-            plt.title("Model Loss")
+
+            # ---- LOSS PLOT (all heads + total) ----
+            plt.figure(figsize=(10, 6))
+
+            # Global total loss if present
+            if "loss" in history_dict:
+                plt.plot(epochs, history_dict["loss"], label="total train loss")
+            if "val_loss" in history_dict:
+                plt.plot(epochs, history_dict["val_loss"], "--", label="total val loss")
+
+            for h in heads:
+                train = history_dict.get(f"{h}_loss")
+                val = history_dict.get(f"val_{h}_loss")
+
+                if train is not None:
+                    plt.plot(epochs, train, label=f"{h} train loss")
+                if val is not None:
+                    plt.plot(epochs, val, "--", label=f"{h} val loss")
+
             plt.xlabel("Epoch")
             plt.ylabel("Loss")
+            plt.title("Loss per Head")
             plt.legend()
             plt.savefig(ai_handler.result_path / "loss.svg", format="svg")
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
+
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",
@@ -238,7 +305,6 @@ def main():
             # )
         except Exception as e:
             # pass
-            print(e)
             ntfy.post(
                 title=f"Error during model training {time_started}",
                 message=f"An error occurred: {e}",
