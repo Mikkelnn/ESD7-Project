@@ -165,6 +165,12 @@ def main():
                 loader_func_data=loader_func_data
             )
 
+            data, lbl = next(iter(labeld_data))
+            print(lbl["target_present"][0])
+            print(lbl["range_head"][0].numpy().sum())
+            print(lbl["doppler_head"][0].numpy().sum())
+            exit()
+
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
             history = ai_handler.fit_model(
                 compiled_model,
