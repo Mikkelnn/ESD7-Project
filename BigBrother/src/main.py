@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel_singel_target_estimate, defineModel_single_target_detector
+from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -10,9 +10,11 @@ import numpy as np
 import math
 import keras.losses as kl
 import keras.optimizers as ko
+from tqdm import tqdm
+
 
 # GENEREL_PATH = Path("../../")
-GENEREL_PATH = Path("/scratch")  # Use full path for correct mapping on ai-lab container
+GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data" 
@@ -32,7 +34,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 2
+        epochs = 50
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -52,97 +54,100 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel_singel_target_estimate(num_range_out, num_velocity_out) # defineModel_single_target_detector()
+                model = defineModel_smallCNN()
+                # model = defineModel_singel_target_estimate(num_range_out, num_velocity_out) # defineModel_single_target_detector()
             
             model.summary()
 
             ai_handler.plot_block_diagram(model)
 
-            # loss = kl.CategoricalFocalCrossentropy(
-            #     gamma=2.0,
-            #     alpha=0.25
-            # )
+            loss = kl.CategoricalFocalCrossentropy(
+                gamma=2.0,
+                alpha=0.25
+            )
 
-            ce = kl.CategoricalCrossentropy(reduction=None)
-            bce = kl.BinaryCrossentropy()
+            # ce = kl.CategoricalCrossentropy(reduction=None)
+            # bce = kl.BinaryCrossentropy()
 
-            def masked_range_loss(y_true, y_pred):
-                # y_true = [object_flag, one_hot_range]
-                object_flag = y_true[:, :1]                         # shape (batch, 1)
-                range_label = y_true[:, 1:]                         # shape (batch, range_bins)
-                loss = ce(range_label, y_pred)                      # shape (batch,)
-                loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)      # mask
-                return ai_handler.tf.reduce_mean(loss)
+            # def masked_range_loss(y_true, y_pred):
+            #     # y_true = [object_flag, one_hot_range]
+            #     object_flag = y_true[:, 0]                         # shape (batch, 1)
+            #     range_label = y_true[:, 1:]                         # shape (batch, range_bins)
+            #     loss = ce(range_label, y_pred)                      # shape (batch,)
+            #     loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)      # mask
+            #     return ai_handler.tf.reduce_mean(loss)
 
-            def masked_doppler_loss(y_true, y_pred):
-                object_flag = y_true[:, :1]
-                doppler_label = y_true[:, 1:]
-                loss = ce(doppler_label, y_pred)
-                loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)
-                return ai_handler.tf.reduce_mean(loss)
+            # def masked_doppler_loss(y_true, y_pred):
+            #     object_flag = y_true[:, 0]
+            #     doppler_label = y_true[:, 1:]
+            #     loss = ce(doppler_label, y_pred)
+            #     loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)
+            #     return ai_handler.tf.reduce_mean(loss)
 
-            compiled_model = ai_handler.compile_model(model, 
-                                optimizer=ko.Adam(1e-4),                                
-                                loss={
-                                    "target_present": bce,
-                                    "range_head":     masked_range_loss,
-                                    "doppler_head":   masked_doppler_loss
-                                },
-                                loss_weights={
-                                    "target_present": 1.0,
-                                    "range_head":     1.0,
-                                    "doppler_head":   1.0
-                                },
-                                metrics={
-                                    "target_present": ["accuracy"],
-                                    "range_head":     ["accuracy"],
-                                    "doppler_head":   ["accuracy"]
-                                })
+            # compiled_model = ai_handler.compile_model(model, 
+            #                     optimizer=ko.Adam(1e-4),                                
+            #                     loss={
+            #                         "target_present": bce,
+            #                         "range_head":     masked_range_loss,
+            #                         "doppler_head":   masked_doppler_loss
+            #                     },
+            #                     loss_weights={
+            #                         "target_present": 1.0,
+            #                         "range_head":     1.0,
+            #                         "doppler_head":   1.0
+            #                     },
+            #                     metrics={
+            #                         "target_present": ["accuracy"],
+            #                         "range_head":     ["accuracy"],
+            #                         "doppler_head":   ["accuracy"]
+            #                     })
+            
+            compiled_model = ai_handler.compile_model(model,
+                                    optimizer=ko.Adam(1e-4),
+                                    loss=loss,
+                                    metrics=["accuracy"]
+                                    )
 
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
+                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
-                # if (sum(label) == 0):
-                #     return np.array([1,0])
-                # else:
-                #     return np.array([0,1])
-                
-                target_present = np.array([0], dtype=np.float32)
-                range_label = np.zeros(num_range_out, dtype=np.float32)
-                doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
+                # target_present = np.array([0], dtype=np.float32)
+                # range_label = np.zeros(num_range_out, dtype=np.float32)
+                # doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
 
-                # --- Object presence ---
-                if np.sum(label) != 0:
-                    target_present[0] = 1 # target present
+                # # --- Object presence ---
+                # if np.sum(label) != 0:
+                #     target_present[0] = 1 # target present
 
-                    # --- Scale label to relative bin index ---
-                    # Example scaling, adjust factors to your bin definitions
-                    label_scaled = np.array([
-                        label[0] * num_range_out,    # range scale
-                        label[1] * num_velocity_out  # doppler scale
-                    ])
+                #     # --- Scale label to relative bin index ---
+                #     # Example scaling, adjust factors to your bin definitions
+                #     label_scaled = np.array([
+                #         label[0] * num_range_out,    # range scale
+                #         label[1] * num_velocity_out  # doppler scale
+                #     ])
 
-                    # --- Floor to nearest bin index ---
-                    label_idx = np.floor(label_scaled).astype(int)
+                #     # --- Floor to nearest bin index ---
+                #     label_idx = np.floor(label_scaled).astype(int)
 
-                    # --- Clip to valid range ---
-                    label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
-                    label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
+                #     # --- Clip to valid range ---
+                #     label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
+                #     label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
 
-                    # --- Create one-hot vectors ---
-                    range_label[label_idx[0]] = 1.0
-                    doppler_label[label_idx[1]] = 1.0
+                #     # --- Create one-hot vectors ---
+                #     range_label[label_idx[0]] = 1.0
+                #     doppler_label[label_idx[1]] = 1.0
 
-                range_label = np.concatenate([target_present, range_label], axis=-1)
-                doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
+                # range_label = np.concatenate([target_present, range_label], axis=-1)
+                # doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
 
-                # --- Return as dict for 3-head model ---
-                return {
-                    "target_present": target_present,
-                    "range_head": range_label,
-                    "doppler_head": doppler_label
-                }
+                # # --- Return as dict for 3-head model ---
+                # return {
+                #     "target_present": target_present,
+                #     "range_head": range_label,
+                #     "doppler_head": doppler_label
+                # }
 
             def loader_func_data(f): 
                 data = np.load(f)[... , None]
@@ -185,106 +190,107 @@ def main():
             
             ai_handler.save_model(compiled_model)
             
-            # acc = history.history["accuracy"]
-            # val_acc = history.history["val_accuracy"]
-            # loss = history.history["loss"]
-            # val_loss = history.history["val_loss"]
-            # epochs = range(1, len(acc) + 1)
+            acc = history.history["accuracy"]
+            val_acc = history.history["val_accuracy"]
+            loss = history.history["loss"]
+            val_loss = history.history["val_loss"]
+            epochs = range(1, len(acc) + 1)
 
-            # for i in epochs:
-            #     log.info(
-            #         f"Epoch {i}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, accuracy {acc[i - 1]}, validation accuracy {val_acc[i - 1]}"
-            #     )
-
-
-            # # Plot and save accuracy figure
-            # plt.figure(figsize=(8, 5))
-            # plt.plot(epochs, acc, label="Training Accuracy")
-            # plt.plot(epochs, val_acc, label="Validation Accuracy")
-            # plt.title("Model Accuracy")
-            # plt.xlabel("Epoch")
-            # plt.ylabel("Accuracy")
-            # plt.legend()
-            # plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
-            # plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
-            # plt.close()
-
-            # # Plot and save loss figure
-            # plt.figure(figsize=(8, 5))
-            # plt.plot(epochs, loss, label="Training Loss")
-            # plt.plot(epochs, val_loss, label="Validation Loss")
-            # plt.title("Model Loss")
-            # plt.xlabel("Epoch")
-            # plt.ylabel("Loss")
-            # plt.legend()
-            # plt.savefig(ai_handler.result_path / "loss.svg", format="svg")
-            # plt.savefig(ai_handler.result_path / "loss.png", format="png")
-            # plt.close()
-
-            history_dict = history.history
-            epochs = range(1, len(history_dict["loss"]) + 1)
-
-            # Log all metrics
             for i in epochs:
-                log_line = [f"Epoch {i}:"]
-                for k, v in history_dict.items():
-                    log_line.append(f"{k}={v[i-1]}")
-                log.info(", ".join(log_line))
-                
-            # Detect head names
-            heads = sorted({
-                k.rsplit("_", 1)[0]
-                for k in history_dict.keys()
-                if ((k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_"))
-            })
+                log.info(
+                    f"Epoch {i}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, accuracy {acc[i - 1]}, validation accuracy {val_acc[i - 1]}"
+                )
 
-            # ---- ACCURACY PLOT (all heads) ----
-            plt.figure(figsize=(10, 6))
 
-            for h in heads:
-                train = history_dict.get(f"{h}_accuracy")
-                val = history_dict.get(f"val_{h}_accuracy")
-
-                if train is not None:
-                    plt.plot(epochs, train, label=f"{h} train acc")
-                if val is not None:
-                    plt.plot(epochs, val, "--", label=f"{h} val acc")
-
+            # Plot and save accuracy figure
+            plt.figure(figsize=(8, 5))
+            plt.plot(epochs, acc, label="Training Accuracy")
+            plt.plot(epochs, val_acc, label="Validation Accuracy")
+            plt.title("Model Accuracy")
             plt.xlabel("Epoch")
             plt.ylabel("Accuracy")
-            plt.title("Accuracy per Head")
             plt.legend()
             plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
             plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
             plt.close()
 
-
-            # ---- LOSS PLOT (all heads + total) ----
-            plt.figure(figsize=(10, 6))
-
-            # Global total loss if present
-            if "loss" in history_dict:
-                plt.plot(epochs, history_dict["loss"], label="total train loss")
-            if "val_loss" in history_dict:
-                plt.plot(epochs, history_dict["val_loss"], "--", label="total val loss")
-
-            for h in heads:
-                train = history_dict.get(f"{h}_loss")
-                val = history_dict.get(f"val_{h}_loss")
-
-                if train is not None:
-                    plt.plot(epochs, train, label=f"{h} train loss")
-                if val is not None:
-                    plt.plot(epochs, val, "--", label=f"{h} val loss")
-
+            # Plot and save loss figure
+            plt.figure(figsize=(8, 5))
+            plt.plot(epochs, loss, label="Training Loss")
+            plt.plot(epochs, val_loss, label="Validation Loss")
+            plt.title("Model Loss")
             plt.xlabel("Epoch")
             plt.ylabel("Loss")
-            plt.title("Loss per Head")
             plt.legend()
             plt.savefig(ai_handler.result_path / "loss.svg", format="svg")
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
+            # history_dict = history.history
+            # epochs = range(1, len(history_dict["loss"]) + 1)
+
+            # # Log all metrics
+            # for i in epochs:
+            #     log_line = [f"Epoch {i}:"]
+            #     for k, v in history_dict.items():
+            #         log_line.append(f"{k}={v[i-1]}")
+            #     log.info(", ".join(log_line))
+                
+            # # Detect head names
+            # heads = sorted({
+            #     k.rsplit("_", 1)[0]
+            #     for k in history_dict.keys()
+            #     if ((k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_"))
+            # })
+
+            # # ---- ACCURACY PLOT (all heads) ----
+            # plt.figure(figsize=(10, 6))
+
+            # for h in heads:
+            #     train = history_dict.get(f"{h}_accuracy")
+            #     val = history_dict.get(f"val_{h}_accuracy")
+
+            #     if train is not None:
+            #         plt.plot(epochs, train, label=f"{h} train acc")
+            #     if val is not None:
+            #         plt.plot(epochs, val, "--", label=f"{h} val acc")
+
+            # plt.xlabel("Epoch")
+            # plt.ylabel("Accuracy")
+            # plt.title("Accuracy per Head")
+            # plt.legend()
+            # plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
+            # plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
+            # plt.close()
+
+
+            # # ---- LOSS PLOT (all heads + total) ----
+            # plt.figure(figsize=(10, 6))
+
+            # # Global total loss if present
+            # if "loss" in history_dict:
+            #     plt.plot(epochs, history_dict["loss"], label="total train loss")
+            # if "val_loss" in history_dict:
+            #     plt.plot(epochs, history_dict["val_loss"], "--", label="total val loss")
+
+            # for h in heads:
+            #     train = history_dict.get(f"{h}_loss")
+            #     val = history_dict.get(f"val_{h}_loss")
+
+            #     if train is not None:
+            #         plt.plot(epochs, train, label=f"{h} train loss")
+            #     if val is not None:
+            #         plt.plot(epochs, val, "--", label=f"{h} val loss")
+
+            # plt.xlabel("Epoch")
+            # plt.ylabel("Loss")
+            # plt.title("Loss per Head")
+            # plt.legend()
+            # plt.savefig(ai_handler.result_path / "loss.svg", format="svg")
+            # plt.savefig(ai_handler.result_path / "loss.png", format="png")
+            # plt.close()
+
+            confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",
@@ -329,22 +335,29 @@ def load_predict():
     print(res)
 
 def confusion_matrix():
-    actual = [[0,1],[0,1],[0,1],[1,0],[0,1],[1,0],[1,0],[0,1],[1,0],[1,0]] # TODO Need to load in and make range from 0-1 to 0 or 1 
-    predictions = [[0,1],[0,1],[0,1],[1,0],[0,1],[1,0],[1,0],[1,0],[0,1]] # TODO Need to load in and make range from 0-1 to 0 or 1
+    modelPath = ai_handler.result_path
 
-    N = 0
-    count = 0
-    TP = 0
-    FP = 0
-    TN = 0
-    FN = 0
+    model = ai_handler.load_model_directory(modelPath)
+    
+    def loader_func_data(f): 
+        data = np.load(f)[... , None]
+        return np.nan_to_num(data, nan=0.0)
 
-    if len(predictions) == len(actual):
-        N = len(predictions)
-    else:
-        N = min(len(predictions), len(actual))
+    def loader_func_label(f):
+        return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
 
-    for act, pre in zip(actual, predictions):
+    data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
+    data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
+    label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
+    assert len(data_files) == len(label_files), "Data and label counts differ"
+
+    N, TP, FP, TN, FN = len(data_files), 0, 0, 0, 0
+
+    for data_file, label_file in tqdm(zip(data_files, label_files), total=N):
+        pre = ai_handler.predict(model, loader_func_data(data_file))
+        pre = np.round(pre).astype(int).flatten()
+        act = loader_func_label(label_file)
+
         if np.array_equal(act, [0,1]) and np.array_equal(pre, [0,1]):
             TP += 1
         elif np.array_equal(act, [0,1]) and np.array_equal(pre, [1,0]):
@@ -354,15 +367,10 @@ def confusion_matrix():
         elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
             TN += 1
 
-        count += 1
-
-        if N == count: # This is used if predictions and actual does not have same length
-            break
-
-    TP /= N
-    FP /= N
-    TN /= N
-    FN /= N
+    TP /= (TP + FN)
+    FN /= (TP + FN)
+    FP /= (FP + TN)
+    TN /= (FP + TN)
 
     cm = np.array([[TP, FN], [FP, TN]])
 
@@ -392,4 +400,4 @@ def confusion_matrix():
 if __name__ == "__main__":
     # load_predict()
     main()
-    #_ = confusion_matrix()
+    # _ = confusion_matrix()

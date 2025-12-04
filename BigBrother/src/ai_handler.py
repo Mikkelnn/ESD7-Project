@@ -87,7 +87,7 @@ class AiHandler():
         "Print a summary of the model to the internal logger as [INFO]"
         model.summary(print_fn=self.log.info)
 
-    def compile_model(self, model, optimizer, loss, loss_weights, metrics=None):
+    def compile_model(self, model, optimizer, loss, loss_weights=None, metrics=None):
         """Compile model with defaults or user settings"""
         if metrics is None:
             metrics = ["mae"]
@@ -267,10 +267,10 @@ class AiHandler():
         if len(data.shape) == len(model.input_shape) - 1:
             data = np.expand_dims(data, axis=0)
 
-        print(f"Input: {data}")
+        # print(f"Input: {data}")
 
         # with self.strategy.scope():
-        return model.predict(data)
+        return model.predict(data, verbose=0)
 
     def dataset_from_directory(self, directory, 
                                image_size=(224, 224), 
@@ -324,7 +324,7 @@ class AiHandler():
         def load_numpy_files(data_path, label_path):
             # Use tf.py_function to run numpy loading in parallel workers
             data = self.tf.py_function(lambda x: loader_func_data(x.numpy().decode()), [data_path], self.tf.float32)
-            # label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
+            label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
             
             def load_label_pyfunc(path):
                 d = loader_func_label(path.numpy().decode())
@@ -332,26 +332,26 @@ class AiHandler():
                 return tuple(d[k].astype("float32") for k in label_keys)
 
             # Load label dict directly # lambda x: loader_func_label(x.numpy().decode()),
-            label_dict = self.tf.py_function(
-                load_label_pyfunc,
-                [label_path],
-                Tout=[self.tf.float32 for _ in label_keys]
-            )
+            # label_dict = self.tf.py_function(
+            #     load_label_pyfunc,
+            #     [label_path],
+            #     Tout=[self.tf.float32 for _ in label_keys]
+            # )
 
             # Map the returned tuple back to the dict keys            
-            label_dict = {k: v for k, v in zip(label_keys, label_dict)}
+            # label_dict = {k: v for k, v in zip(label_keys, label_dict)}
 
             # Set shapes for TF
-            data.set_shape(data_shape)
-            for k, v in label_dict.items():
-                v.set_shape(label_sample[k].shape)
+            # data.set_shape(data_shape)
+            # for k, v in label_dict.items():
+            #     v.set_shape(label_sample[k].shape)
                 
 
             # Set static shapes so TF knows tensor ranks
-            # data.set_shape(data_shape)
-            # label.set_shape(label_shape)
+            data.set_shape(data_shape)
+            label.set_shape(label_shape)
 
-            return data, label_dict
+            return data, label # label_dict
 
         # Apply parallel mapping and prefetch
         dataset = (

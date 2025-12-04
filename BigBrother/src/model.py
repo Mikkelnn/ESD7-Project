@@ -34,15 +34,16 @@ def defineModel_singel_target_estimate(range_bins, doppler_bins):
 
     return model
 
-def defineModel_smallCNN(output_size):
+def defineModel_smallCNN():
 
     model = Sequential([
         Input(shape=(1024, 256, 1)),
-        Convolution2D(filters=2, kernel_size=(2, 2), activation='relu', padding="same"),
+        Convolution2D(filters=16, kernel_size=(3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 1)),  # (1024, 256) -> (512, 256)
+        Convolution2D(filters=32, kernel_size=(3, 3), activation='relu', padding="same"),
         Flatten(),
-        Dense(512, activation='relu'),
         Dense(256, activation='relu'),
-        Dense(output_size, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
+        Dense(2, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
     ])
 
     return model
