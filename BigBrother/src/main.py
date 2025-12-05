@@ -348,6 +348,10 @@ def confusion_matrix():
     def loader_func_label(f):
         return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
 
+    def safe_divide(a, b):
+        result = np.nan_to_num(np.divide(a, b), nan=0)
+        return result
+
     data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
     data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
     label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
@@ -369,10 +373,13 @@ def confusion_matrix():
         elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
             TN += 1
 
-    TP /= (TP + FN)
-    FN /= (TP + FN)
-    FP /= (FP + TN)
-    TN /= (FP + TN)
+    TPFM = TP + FN
+    FPFM = FP + TN
+
+    TP = safe_divide(TP, TPFM)
+    FN = safe_divide(FN, TPFM)
+    FP = safe_divide(FP, FPFM)
+    TN = safe_divide(TN, FPFM)
 
     cm = np.array([[TP, FN], [FP, TN]])
 
