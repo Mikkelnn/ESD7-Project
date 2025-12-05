@@ -346,53 +346,67 @@ def confusion_matrix():
         return np.nan_to_num(data, nan=0.0)
 
     def loader_func_label(f):
-        return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
-
-    def safe_divide(a, b):
-        result = np.nan_to_num(np.divide(a, b), nan=0)
-        return result
+        arr = np.load(f)
+        # class 0: no debris (sum == 0), class 1: debris present (sum != 0)
+        return 0 if (np.sum(arr) == 0) else 1
+    
+        #return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
 
     data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
     data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
     label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
     assert len(data_files) == len(label_files), "Data and label counts differ"
 
-    N, TP, FP, TN, FN = len(data_files), 0, 0, 0, 0
+    # N, TP, FP, TN, FN = len(data_files), 0, 0, 0, 0
 
-    for data_file, label_file in tqdm(zip(data_files, label_files), total=N):
+    y_true = []
+    y_pred = []
+
+    for data_file, label_file in tqdm(zip(data_files, label_files), total=len(data_files)):
         pre = ai_handler.predict(model, loader_func_data(data_file))
-        pre = np.round(pre).astype(int).flatten()
-        act = loader_func_label(label_file)
+        pre_idx = int(np.argmax(pre, axis=-1)) 
+        act_idx = loader_func_label(label_file) 
 
-        if np.array_equal(act, [0,1]) and np.array_equal(pre, [0,1]):
-            TP += 1
-        elif np.array_equal(act, [0,1]) and np.array_equal(pre, [1,0]):
-            FN += 1
-        elif np.array_equal(act, [1,0]) and np.array_equal(pre, [0,1]):
-            FP += 1
-        elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
-            TN += 1
+        y_true.append(act_idx)
+        y_pred.append(pre_idx)
 
-    TPFM = TP + FN
-    FPFM = FP + TN
+        #if np.array_equal(act, [0,1]) and np.array_equal(pre, [0,1]):
+        #    TP += 1
+        #elif np.array_equal(act, [0,1]) and np.array_equal(pre, [1,0]):
+        #    FN += 1
+        #elif np.array_equal(act, [1,0]) and np.array_equal(pre, [0,1]):
+        #    FP += 1
+        #elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
+        #    TN += 1
 
-    TP = safe_divide(TP, TPFM)
-    FN = safe_divide(FN, TPFM)
-    FP = safe_divide(FP, FPFM)
-    TN = safe_divide(TN, FPFM)
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
 
-    cm = np.array([[TP, FN], [FP, TN]])
+    #TP /= (TP + FN)
+    #FN /= (TP + FN)
+    #FP /= (FP + TN)
+    #TN /= (FP + TN)
+    
+    cm_counts = confusion_matrix(y_true, y_pred, labels=[1, 0])
 
-    # Save
+    #cm = np.array([[TP, FN], [FP, TN]])
+    
+    TP, FN = cm_counts[0]
+    FP, TN = cm_counts[1]
+    
+    # Optionally normalize per row (true class)
+    cm_norm = cm_counts.astype(float)
+    cm_norm[0] /= (TP + FN) if (TP + FN) > 0 else 1.0  # positive class row
+    cm_norm[1] /= (FP + TN) if (FP + TN) > 0 else 1.0  # negative class row
+
+    # Plot normalized confusion matrix
     plt.figure(figsize=(6, 6))
-    plt.imshow(cm, cmap='viridis')
+    plt.imshow(cm_norm, cmap='viridis', vmin=0.0, vmax=1.0)
 
-    # Add numbers in the middle of tiles
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            plt.text(j, i, f"{cm[i, j]:.2f}", ha='center', va='center', color='black', fontsize=16)
+    for i in range(cm_norm.shape[0]):
+        for j in range(cm_norm.shape[1]):
+            plt.text(j, i, f"{cm_norm[i, j]:.2f}", ha='center', va='center', color='black', fontsize=16)
 
-    # Add axis actual
     plt.xticks([0, 1], ['1', '0'])
     plt.yticks([0, 1], ['1', '0'])
     plt.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
@@ -403,8 +417,34 @@ def confusion_matrix():
 
     plt.savefig(ai_handler.result_path / "confusion_matrix.svg", format="svg")
     plt.close()
+
+    return cm_counts, cm_norm
+
+
+
+    # Save
+    #plt.figure(figsize=(6, 6))
+    #plt.imshow(cm, cmap='viridis')
+
+    # Add numbers in the middle of tiles
+    #for i in range(cm.shape[0]):
+    #    for j in range(cm.shape[1]):
+    #        plt.text(j, i, f"{cm[i, j]:.2f}", ha='center', va='center', color='black', fontsize=16)
+
+    # Add axis actual
+    #plt.xticks([0, 1], ['1', '0'])
+    #plt.yticks([0, 1], ['1', '0'])
+    #plt.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
+    #plt.gca().xaxis.set_label_position('top')
+    #plt.xlabel('Predicted')
+    #plt.ylabel('Actual')
+    #plt.gca().spines[:].set_visible(False)
+
+    #plt.savefig(ai_handler.result_path / "confusion_matrix.svg", format="svg")
+    #plt.close()
     
-    return cm
+    #return cm
+
 
 if __name__ == "__main__":
     # load_predict()
