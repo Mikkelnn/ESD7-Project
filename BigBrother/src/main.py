@@ -11,6 +11,7 @@ import math
 import keras.losses as kl
 import keras.optimizers as ko
 from tqdm import tqdm
+import sklearn.metrics as sklearn
 
 
 # GENEREL_PATH = Path("../../")
@@ -387,7 +388,7 @@ def confusion_matrix():
     #FP /= (FP + TN)
     #TN /= (FP + TN)
     
-    cm_counts = confusion_matrix(y_true, y_pred, labels=[1, 0])
+    cm_counts = sklearn.confusion_matrix(y_true, y_pred, labels=[1, 0])
 
     #cm = np.array([[TP, FN], [FP, TN]])
     
