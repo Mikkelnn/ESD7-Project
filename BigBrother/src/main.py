@@ -170,11 +170,11 @@ def main():
                 loader_func_data=loader_func_data
             )
 
-            data, lbl = next(iter(labeld_data))
-            print(lbl["target_present"][0])
-            print(lbl["range_head"][0].numpy().sum())
-            print(lbl["doppler_head"][0].numpy().sum())
-            exit()
+            # data, lbl = next(iter(labeld_data))
+            # print(lbl["target_present"][0])
+            # print(lbl["range_head"][0].numpy().sum())
+            # print(lbl["doppler_head"][0].numpy().sum())
+            # exit()
 
             # ai_handler.launch_tensorboard_threaded() # Not supported on AI-LAB
             history = ai_handler.fit_model(
@@ -316,10 +316,12 @@ def main():
             # )
         except Exception as e:
             # pass
-            ntfy.post(
-                title=f"Error during model training {time_started}",
-                message=f"An error occurred: {e}",
-            )
+            log.error(f"An error occurred during model training: {e}")
+
+            # ntfy.post(
+            #     title=f"Error during model training {time_started}",
+            #     message=f"An error occurred: {e}",
+            # )
             # ntfy.post_image(
             #     ai_handler.result_path / "model_block_diagram.png",
             #     title=f"Model block diagram {time_started}",
