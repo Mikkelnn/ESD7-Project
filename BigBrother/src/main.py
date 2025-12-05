@@ -34,7 +34,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 50
+        epochs = 2
         initial_epoch = 0
         train_on_latest_result = False
         
