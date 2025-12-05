@@ -315,7 +315,7 @@ class AiHandler():
             loader_func_label = lambda f: np.load(f)  # default expects .npy
 
         data_shape = loader_func_data(data_files[0]).shape
-        label_shape = loader_func_data(label_files[0]).shape
+        label_shape = loader_func_label(label_files[0]).shape
 
         # label_sample = loader_func_label(label_files[0])
         # label_keys = list(label_sample.keys())
