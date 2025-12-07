@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN
+from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN, defineModel_singel_target_estimate_descreete
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -55,7 +55,7 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel_singel_target_estimate(num_range_out, num_velocity_out) # defineModel_single_target_detector()
+                model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
             model.summary()
@@ -82,22 +82,34 @@ def main():
             def range_acc_mask(y_true, y_pred):
                 return ai_handler.tf.keras.metrics.categorical_accuracy(y_true[:, 1:], y_pred)
 
+            def masked_mse(y_true, y_pred):
+                presence = y_true["target_present"]  # shape (batch,1)
+                coords_true = y_true["coords"]       # shape (batch,2)
+                loss = ai_handler.tf.reduce_mean(ai_handler.tf.square(coords_true - y_pred), axis=-1)
+                return ai_handler.tf.reduce_sum(loss * ai_handler.tf.squeeze(presence, -1)) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
+
             compiled_model = ai_handler.compile_model(model, 
                                 optimizer=ko.Adam(1e-4),                                
                                 loss={
                                     "target_present": bce,
-                                    "range_head":     masked_loss,
-                                    "doppler_head":   masked_loss
+                                    "coords": masked_mse,
+                                    "heatmap": None
+                                    # "range_head":     masked_loss,
+                                    # "doppler_head":   masked_loss
                                 },
                                 loss_weights={
                                     "target_present": 1.0,
-                                    "range_head":     1.0,
-                                    "doppler_head":   1.0
+                                    "coords": 5.0,
+                                    "heatmap": 0.0
+                                    # "range_head":     1.0,
+                                    # "doppler_head":   1.0
                                 },
                                 metrics={
                                     "target_present": ["accuracy"],
-                                    "range_head":     [range_acc_mask],
-                                    "doppler_head":   [range_acc_mask]
+                                    "coords": ["mae"],  # regression error in normalized [0,1] units
+                                    "heatmap": []       # optional, usually none
+                                    # "range_head":     [range_acc_mask],
+                                    # "doppler_head":   [range_acc_mask]
                                 })
             
             # compiled_model = ai_handler.compile_model(model,
@@ -112,39 +124,43 @@ def main():
                 # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
                 target_present = np.array([0], dtype=np.float32)
-                range_label = np.zeros(num_range_out, dtype=np.float32)
-                doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
+                # range_label = np.zeros(num_range_out, dtype=np.float32)
+                # doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
+                
+                coords = np.zeros(2, dtype=np.float32)
 
                 # --- Object presence ---
                 if np.sum(label) != 0:
                     target_present[0] = 1 # target present
-
+                    coords = label
                     # --- Scale label to relative bin index ---
                     # Example scaling, adjust factors to your bin definitions
-                    label_scaled = np.array([
-                        label[0] * num_range_out,    # range scale
-                        label[1] * num_velocity_out  # doppler scale
-                    ])
+                #     label_scaled = np.array([
+                #         label[0] * num_range_out,    # range scale
+                #         label[1] * num_velocity_out  # doppler scale
+                #     ])
 
-                    # --- Floor to nearest bin index ---
-                    label_idx = np.floor(label_scaled).astype(int)
+                #     # --- Floor to nearest bin index ---
+                #     label_idx = np.floor(label_scaled).astype(int)
 
-                    # --- Clip to valid range ---
-                    label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
-                    label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
+                #     # --- Clip to valid range ---
+                #     label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
+                #     label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
 
-                    # --- Create one-hot vectors ---
-                    range_label[label_idx[0]] = 1.0
-                    doppler_label[label_idx[1]] = 1.0
+                #     # --- Create one-hot vectors ---
+                #     range_label[label_idx[0]] = 1.0
+                #     doppler_label[label_idx[1]] = 1.0
 
-                range_label = np.concatenate([target_present, range_label], axis=-1)
-                doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
+                # range_label = np.concatenate([target_present, range_label], axis=-1)
+                # doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
 
                 # --- Return as dict for 3-head model ---
                 return {
                     "target_present": target_present,
-                    "range_head": range_label,
-                    "doppler_head": doppler_label
+                    "coords": coords.astype(np.float32),
+                    # "heatmap": np.zeros((64, 32, 1), dtype=np.float32)  # optional
+                    # "range_head": range_label,
+                    # "doppler_head": doppler_label
                 }
 
             def loader_func_data(f): 

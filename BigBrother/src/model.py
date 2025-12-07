@@ -1,8 +1,64 @@
-from tensorflow.keras.layers import Conv2D, Input, Dropout, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GRU
+from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D
 from tensorflow.keras.models import Sequential, Model
+import tensorflow as tf #noqa
 
+class SoftArgmax2D(Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-def defineModel_singel_target_estimate(range_bins, doppler_bins):
+    def call(self, heatmap):
+        # heatmap: (B, H, W, 1)
+        heatmap = tf.squeeze(heatmap, axis=-1)               # (B, H, W)
+        prob = tf.nn.softmax(tf.reshape(heatmap, [tf.shape(heatmap)[0], -1]), axis=-1)
+                                                             # (B, H*W)
+
+        H = tf.shape(heatmap)[1]
+        W = tf.shape(heatmap)[2]
+
+        # coordinate grid
+        xs = tf.linspace(0.0, 1.0, W)
+        ys = tf.linspace(0.0, 1.0, H)
+        grid_x, grid_y = tf.meshgrid(xs, ys)
+
+        grid = tf.stack([tf.reshape(grid_y, [-1]), tf.reshape(grid_x, [-1])], axis=1)
+        # shape (H*W, 2) → (range, doppler) in normalized [0..1]
+
+        coords = tf.matmul(prob, tf.cast(grid, tf.float32))  # (B, 2)
+        return coords
+    
+def defineModel_singel_target_estimate():
+    inputs = Input(shape=(1024, 256, 1))
+
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = MaxPooling2D((2,1))(x)   # (1024,256) -> (512,256)
+
+    x = Conv2D(32, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)   # (512,256) -> (256,128)
+
+    x = Conv2D(64, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)   # (256,128) -> (128,64)
+
+    x = Conv2D(128, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)   # (128,64) -> (64,32)
+
+    # --- Heatmap head ---
+    heatmap = Conv2D(1, (1,1), activation=None, name="heatmap_logits")(x)
+    # shape: (batch, 64, 32, 1)
+
+    # --- Soft-argmax localization (normalized [0..1] range+doppler) ---
+    coords = SoftArgmax2D(name="coords")(heatmap)
+
+    # coords = (batch, 2) → [range_norm, doppler_norm]
+
+    # --- Target-present head (use pooled CNN features) ---
+    p = GlobalAveragePooling2D()(x)
+    target_out = Dense(1, activation='sigmoid', name="target_present")(p)
+
+    # Final model
+    model = Model(inputs, [target_out, coords, heatmap])
+    return model
+
+def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
     inputs = Input(shape=(1024, 256, 1))
 
     x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
