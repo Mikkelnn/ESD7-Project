@@ -17,8 +17,8 @@ import sklearn.metrics as sklearn
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data" # 
-VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data" # "training_data" # 
+VALIDATE_DATA_PATH = GENEREL_PATH / "training_data" # "validate_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
