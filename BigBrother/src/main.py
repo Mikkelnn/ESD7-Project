@@ -83,10 +83,11 @@ def main():
                 return ai_handler.tf.keras.metrics.categorical_accuracy(y_true[:, 1:], y_pred)
 
             def masked_mse(y_true, y_pred):
-                presence = y_true["target_present"]  # shape (batch,1)
-                coords_true = y_true["coords"]       # shape (batch,2)
+                presence = y_true[:, 0]          # first column = target_present
+                coords_true = y_true[:, 1:]      # remaining = coordinates
                 loss = ai_handler.tf.reduce_mean(ai_handler.tf.square(coords_true - y_pred), axis=-1)
-                return ai_handler.tf.reduce_sum(loss * ai_handler.tf.squeeze(presence, -1)) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
+                loss = loss * presence           # zero out absent targets
+                return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
             compiled_model = ai_handler.compile_model(model, 
                                 optimizer=ko.Adam(1e-4),                                
@@ -157,7 +158,7 @@ def main():
                 # --- Return as dict for 3-head model ---
                 return {
                     "target_present": target_present,
-                    "coords": coords.astype(np.float32),
+                    "coords": np.concatenate([target_present, coords.astype(np.float32)], axis=-1),
                     # "heatmap": np.zeros((64, 32, 1), dtype=np.float32)  # optional
                     # "range_head": range_label,
                     # "doppler_head": doppler_label
