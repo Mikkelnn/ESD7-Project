@@ -392,7 +392,7 @@ class AiHandler():
                 self.log.info(f"[ModelSearch] No previous model directories found (excluding current run).")
                 return False, 0, None
 
-            latest_results = sorted(all_results, key=lambda x: datetime.strptime(x.name, "%d-%m-%Y_%H:%M:%S"), reverse=True)[0]
+            latest_results = sorted(all_results, key=lambda x: datetime.strptime(x.name.rsplit('_', 1)[0], "%d-%m-%Y_%H:%M:%S"), reverse=True)[0]
             checkpoints_dir = latest_results / "checkpoints"
 
             if not checkpoints_dir.exists() or not any(checkpoints_dir.iterdir()):
