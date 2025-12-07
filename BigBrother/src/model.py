@@ -5,6 +5,11 @@ import tensorflow as tf #noqa
 
 def residual_block(x, filters, kernel_size=(3,3)):
     shortcut = x
+
+    # If channels do NOT match, project shortcut
+    if shortcut.shape[-1] != filters:
+        shortcut = Conv2D(filters, (1,1), padding='same', activation=None)(shortcut)
+
     x = Conv2D(filters, kernel_size, padding='same', activation=None)(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
