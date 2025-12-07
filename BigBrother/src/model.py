@@ -1,6 +1,75 @@
-from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D
+from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D, Add, Activation, BatchNormalization, Reshape, Lambda
 from tensorflow.keras.models import Sequential, Model
 import tensorflow as tf #noqa
+
+
+def residual_block(x, filters, kernel_size=(3,3)):
+    shortcut = x
+    x = Conv2D(filters, kernel_size, padding='same', activation=None)(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = Conv2D(filters, kernel_size, padding='same', activation=None)(x)
+    x = BatchNormalization()(x)
+    # add shortcut
+    x = Add()([x, shortcut])
+    x = Activation('relu')(x)
+    return x
+
+def soft_argmax_2d(heatmap):
+    """
+    Converts a 2D heatmap to normalized coordinates [0,1].
+    heatmap: (batch, H, W, 1)
+    Returns (batch, 2) -> [row_norm, col_norm]
+    """
+    heatmap = tf.squeeze(heatmap, axis=-1)  # shape (batch, H, W)
+    heatmap = tf.nn.softmax(tf.reshape(heatmap, [tf.shape(heatmap)[0], -1]), axis=-1)
+    H = tf.shape(heatmap)[1]
+    W = tf.shape(heatmap)[2] if len(heatmap.shape) > 2 else tf.shape(heatmap)[1]
+    heatmap_2d = tf.reshape(heatmap, [tf.shape(heatmap)[0], H, W])
+    # row and col grids
+    rows = tf.linspace(0.0, 1.0, H)
+    cols = tf.linspace(0.0, 1.0, W)
+    row_coords = tf.reduce_sum(tf.reduce_sum(heatmap_2d, axis=2) * rows[None, :], axis=1)
+    col_coords = tf.reduce_sum(tf.reduce_sum(heatmap_2d, axis=1) * cols[None, :], axis=1)
+    return tf.stack([row_coords, col_coords], axis=-1)
+
+def define_robust_model(use_heatmap=True):
+    inputs = Input(shape=(1024, 256, 1))
+
+    # --- Initial conv layers ---
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = MaxPooling2D((2,1))(x)  # (1024,256)->(512,256)
+
+    x = Conv2D(32, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Residual blocks ---
+    x = residual_block(x, 64)
+    x = MaxPooling2D((2,2))(x)
+
+    x = residual_block(x, 128)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Flatten for dense layers ---
+    flat = Flatten()(x)
+    shared_dense = Dense(256, activation='relu')(flat)
+    shared_dense = Dense(256, activation='relu')(shared_dense)
+
+    # --- Target presence head ---
+    target_out = Dense(1, activation='sigmoid', name="target_present")(shared_dense)
+
+    # --- Coordinate head ---
+    if use_heatmap:
+        # Predict 2D heatmap
+        heatmap = Conv2D(1, (1,1), activation='relu', padding='same')(x)
+        coords_out = Lambda(soft_argmax_2d, name="coords")(heatmap)
+    else:
+        # Direct regression
+        coords_out = Dense(2, activation='sigmoid', name="coords")(shared_dense)
+
+    model = Model(inputs, [target_out, coords_out])
+    return model
+
 
 class SoftArgmax2D(Layer):
     def __init__(self, **kwargs):

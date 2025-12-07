@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN, defineModel_singel_target_estimate_descreete
+from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN, defineModel_singel_target_estimate_descreete, define_robust_model
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -17,8 +17,8 @@ import sklearn.metrics as sklearn
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data" # "training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "training_data"  # "validate_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data" # 
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -35,7 +35,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 200
+        epochs = 100
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -55,7 +55,8 @@ def main():
                 if not found:
                     exit()
             else:
-                model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
+                model = define_robust_model(use_heatmap=True)
+                # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
             model.summary()
