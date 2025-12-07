@@ -89,6 +89,13 @@ def main():
                 loss = loss * presence           # zero out absent targets
                 return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
+            def masked_mae(y_true, y_pred):
+                presence = y_true[:, 0]
+                coords_true = y_true[:, 1:]
+                loss = ai_handler.tf.reduce_mean(ai_handler.tf.abs(coords_true - y_pred), axis=-1)
+                masked_loss = loss * presence
+                return ai_handler.tf.reduce_sum(masked_loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
+
             compiled_model = ai_handler.compile_model(model, 
                                 optimizer=ko.Adam(1e-4),                                
                                 loss={
@@ -107,7 +114,7 @@ def main():
                                 },
                                 metrics={
                                     "target_present": ["accuracy"],
-                                    "coords": ["mae"],  # regression error in normalized [0,1] units
+                                    "coords": [masked_mae],  # regression error in normalized [0,1] units
                                     # "heatmap": []       # optional, usually none
                                     # "range_head":     [range_acc_mask],
                                     # "doppler_head":   [range_acc_mask]
