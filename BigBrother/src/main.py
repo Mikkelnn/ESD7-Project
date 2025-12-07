@@ -93,21 +93,21 @@ def main():
                                 loss={
                                     "target_present": bce,
                                     "coords": masked_mse,
-                                    "heatmap": None
+                                    # "heatmap": None
                                     # "range_head":     masked_loss,
                                     # "doppler_head":   masked_loss
                                 },
                                 loss_weights={
                                     "target_present": 1.0,
                                     "coords": 5.0,
-                                    "heatmap": 0.0
+                                    # "heatmap": 0.0
                                     # "range_head":     1.0,
                                     # "doppler_head":   1.0
                                 },
                                 metrics={
                                     "target_present": ["accuracy"],
                                     "coords": ["mae"],  # regression error in normalized [0,1] units
-                                    "heatmap": []       # optional, usually none
+                                    # "heatmap": []       # optional, usually none
                                     # "range_head":     [range_acc_mask],
                                     # "doppler_head":   [range_acc_mask]
                                 })

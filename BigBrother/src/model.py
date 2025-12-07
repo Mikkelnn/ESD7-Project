@@ -55,7 +55,7 @@ def defineModel_singel_target_estimate():
     target_out = Dense(1, activation='sigmoid', name="target_present")(p)
 
     # Final model
-    model = Model(inputs, [target_out, coords, heatmap])
+    model = Model(inputs, [target_out, coords]) # [target_out, coords, heatmap]
     return model
 
 def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
