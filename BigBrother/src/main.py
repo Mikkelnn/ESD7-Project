@@ -17,8 +17,8 @@ import sklearn.metrics as sklearn
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data" 
+TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data" # "training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "training_data"  # "validate_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -35,9 +35,9 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 10
+        epochs = 100
         initial_epoch = 0
-        train_on_latest_result = False
+        train_on_latest_result = True
         
         max_range = 800 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
@@ -262,24 +262,32 @@ def main():
             heads = sorted({
                 k.rsplit("_", 1)[0]
                 for k in history_dict.keys()
-                if ((k.endswith("_accuracy") or k.endswith("_loss")) and not k.startswith("val_"))
+                if ((k.endswith("_accuracy") or k.endswith("_mae") or k.endswith("_loss")) and not k.startswith("val_"))
             })
 
             # ---- ACCURACY PLOT (all heads) ----
             plt.figure(figsize=(10, 6))
 
             for h in heads:
-                train = history_dict.get(f"{h}_accuracy")
-                val = history_dict.get(f"val_{h}_accuracy")
+                # Try to find the metric, fallback to loss if metric missing
+                if f"{h}_accuracy" in history_dict:
+                    train = history_dict[f"{h}_accuracy"]
+                    val = history_dict.get(f"val_{h}_accuracy")
+                    label = f"{h} (accuracy)"
+                elif f"{h}_mae" in history_dict:
+                    train = history_dict[f"{h}_mae"]
+                    val = history_dict.get(f"val_{h}_mae")
+                    label = f"{h} (MAE)"
+                else:
+                    continue
 
-                if train is not None:
-                    plt.plot(epochs, train, label=f"{h} train acc")
+                plt.plot(epochs, train, "o-", label=f"train {label}")
                 if val is not None:
-                    plt.plot(epochs, val, "--", label=f"{h} val acc")
+                    plt.plot(epochs, val, "x--", label=f"val {label}")
 
-            plt.xlabel("Epoch")
-            plt.ylabel("Accuracy")
-            plt.title("Accuracy per Head")
+            plt.xlabel("Epochs")
+            plt.ylabel("Metric")
+            plt.title("Training Metrics per Head")
             plt.legend()
             plt.savefig(ai_handler.result_path / "accuracy.svg", format="svg")
             plt.savefig(ai_handler.result_path / "accuracy.png", format="png")
