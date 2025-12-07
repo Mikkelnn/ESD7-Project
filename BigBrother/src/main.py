@@ -56,7 +56,7 @@ def main():
                     exit()
             else:
                 model = defineModel_singel_target_estimate(num_range_out, num_velocity_out) # defineModel_single_target_detector()
-                model = defineModel_smallCNN()
+                # model = defineModel_smallCNN()
             
             model.summary()
 
