@@ -20,23 +20,33 @@ def residual_block(x, filters, kernel_size=(3,3)):
     x = Activation('relu')(x)
     return x
 
-def soft_argmax_2d(heatmap):
-    """
-    Converts a 2D heatmap to normalized coordinates [0,1].
-    heatmap: (batch, H, W, 1)
-    Returns (batch, 2) -> [row_norm, col_norm]
-    """
-    heatmap = tf.squeeze(heatmap, axis=-1)  # shape (batch, H, W)
-    heatmap = tf.nn.softmax(tf.reshape(heatmap, [tf.shape(heatmap)[0], -1]), axis=-1)
-    H = tf.shape(heatmap)[1]
-    W = tf.shape(heatmap)[2] if len(heatmap.shape) > 2 else tf.shape(heatmap)[1]
-    heatmap_2d = tf.reshape(heatmap, [tf.shape(heatmap)[0], H, W])
-    # row and col grids
-    rows = tf.linspace(0.0, 1.0, H)
-    cols = tf.linspace(0.0, 1.0, W)
-    row_coords = tf.reduce_sum(tf.reduce_sum(heatmap_2d, axis=2) * rows[None, :], axis=1)
-    col_coords = tf.reduce_sum(tf.reduce_sum(heatmap_2d, axis=1) * cols[None, :], axis=1)
-    return tf.stack([row_coords, col_coords], axis=-1)
+def softargmax2d(heatmap):
+    # heatmap: (B, H, W, 1)
+
+    shape = tf.shape(heatmap)
+    B = shape[0]
+    H = shape[1]
+    W = shape[2]
+
+    # reshape to (B, H*W)
+    flat = tf.reshape(heatmap, (B, H*W))
+    flat = tf.nn.softmax(flat, axis=-1)
+
+    # coordinate grids
+    xs = tf.linspace(0.0, 1.0, W)
+    ys = tf.linspace(0.0, 1.0, H)
+
+    # meshgrid -> (H, W)
+    xs, ys = tf.meshgrid(xs, ys)
+
+    xs = tf.reshape(xs, (H*W,))
+    ys = tf.reshape(ys, (H*W,))
+
+    # expected coordinate
+    x = tf.reduce_sum(flat * xs, axis=1, keepdims=True)
+    y = tf.reduce_sum(flat * ys, axis=1, keepdims=True)
+
+    return tf.concat([x, y], axis=1)
 
 def define_robust_model(use_heatmap=True):
     inputs = Input(shape=(1024, 256, 1))
@@ -67,7 +77,7 @@ def define_robust_model(use_heatmap=True):
     if use_heatmap:
         # Predict 2D heatmap
         heatmap = Conv2D(1, (1,1), activation='relu', padding='same')(x)
-        coords_out = Lambda(soft_argmax_2d, name="coords")(heatmap)
+        coords_out = Lambda(softargmax2d, name="coords")(heatmap)
     else:
         # Direct regression
         coords_out = Dense(2, activation='sigmoid', name="coords")(shared_dense)
