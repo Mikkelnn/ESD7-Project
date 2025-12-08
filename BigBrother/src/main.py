@@ -15,8 +15,8 @@ import sklearn.metrics as sklearn
 import shutil
 
 
-# GENEREL_PATH = Path("../../")
-GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
+GENEREL_PATH = Path("../../")
+# GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
@@ -62,7 +62,7 @@ def main():
             
             model.summary()
 
-            ai_handler.plot_block_diagram(model)
+            # ai_handler.plot_block_diagram(model)
 
             # loss = kl.CategoricalFocalCrossentropy(
             #     gamma=2.0,
@@ -362,7 +362,7 @@ def main():
         finally:
             # copy logfiles
             src_dir = os.path.dirname(os.path.abspath(__file__))
-            for f in ["log..log", "my_job.err", "my_job.out"]:
+            for f in ["log.log", "my_job.err", "my_job.out"]:
                 src = os.path.join(src_dir, f)
                 if os.path.isfile(src):
                     shutil.copy2(src, ai_handler.result_path)
