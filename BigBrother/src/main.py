@@ -15,8 +15,8 @@ import sklearn.metrics as sklearn
 import shutil
 
 
-GENEREL_PATH = Path("../../")
-# GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
+# GENEREL_PATH = Path("../../")
+GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
@@ -56,7 +56,7 @@ def main():
                 if not found:
                     exit()
             else:
-                model = define_robust_model_v2(use_heatmap=True)
+                model = define_robust_model_v2(use_heatmap=False)
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
