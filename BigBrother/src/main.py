@@ -2,7 +2,7 @@ from ai_handler import AiHandler
 from ntfy import NtfyHandler
 from logger import get_logger
 from pathlib import Path
-from model import defineModel_singel_target_estimate, defineModel_single_target_detector, defineModel_smallCNN, defineModel_singel_target_estimate_descreete, define_robust_model
+from model import *
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -17,8 +17,8 @@ import sklearn.metrics as sklearn
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "big_training_data" # "training_data" # 
-VALIDATE_DATA_PATH = GENEREL_PATH / "training_data" # "validate_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -55,7 +55,7 @@ def main():
                 if not found:
                     exit()
             else:
-                model = define_robust_model(use_heatmap=True)
+                model = define_robust_model_v2(use_heatmap=True)
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
@@ -98,7 +98,7 @@ def main():
                 return ai_handler.tf.reduce_sum(masked_loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
             compiled_model = ai_handler.compile_model(model, 
-                                optimizer=ko.Adam(1e-4),                                
+                                optimizer=ko.Adam(learning_rate=1e-4, clipnorm=1.0),
                                 loss={
                                     "target_present": bce,
                                     "coords": masked_mse,
@@ -107,8 +107,8 @@ def main():
                                     # "doppler_head":   masked_loss
                                 },
                                 loss_weights={
-                                    "target_present": 1.0,
-                                    "coords": 5.0,
+                                    "target_present": 10.0,
+                                    "coords": 1.0,
                                     # "heatmap": 0.0
                                     # "range_head":     1.0,
                                     # "doppler_head":   1.0

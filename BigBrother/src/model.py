@@ -1,9 +1,39 @@
-from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D, Add, Activation, BatchNormalization, Reshape, Lambda
+from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D, Multiply, Add, Activation, BatchNormalization, Reshape, Lambda
 from tensorflow.keras.models import Sequential, Model
 import tensorflow as tf #noqa
 
 
-def residual_block(x, filters, kernel_size=(3,3)):
+def residual_block_v2(x, filters, kernel_size=(3,3), reduction=8):
+    shortcut = x
+
+    # --- Project shortcut if channel mismatch ---
+    if shortcut.shape[-1] != filters:
+        shortcut = Conv2D(filters, (1,1), padding='same', use_bias=False)(shortcut)
+        shortcut = BatchNormalization()(shortcut)
+
+    # --- Conv 1 ---
+    y = Conv2D(filters, kernel_size, padding='same', use_bias=False)(x)
+    y = BatchNormalization()(y)
+    y = Activation('relu')(y)
+
+    # --- Conv 2 ---
+    y = Conv2D(filters, kernel_size, padding='same', use_bias=False)(y)
+    y = BatchNormalization()(y)
+
+    # --- Squeeze & Excitation ---
+    se = GlobalAveragePooling2D()(y)
+    se = Dense(filters // reduction, activation='relu')(se)
+    se = Dense(filters, activation='sigmoid')(se)
+    se = Reshape((1,1,filters))(se)
+    y = Multiply()([y, se])
+
+    # --- Merge + final activation ---
+    out = Add()([y, shortcut])
+    out = Activation('relu')(out)
+
+    return out
+
+def residual_block_v1(x, filters, kernel_size=(3,3)):
     shortcut = x
 
     # If channels do NOT match, project shortcut
@@ -48,7 +78,50 @@ def softargmax2d(heatmap):
 
     return tf.concat([x, y], axis=1)
 
-def define_robust_model(use_heatmap=True):
+def define_robust_model_v2(use_heatmap=True):
+    inputs = Input(shape=(1024, 256, 1))
+
+    # --- Initial conv layers ---
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)    
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = MaxPooling2D((2,1))(x)  # (1024,256)->(512,256)
+
+    x = Conv2D(64, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Residual blocks ---
+    x = residual_block_v2(x, 64)
+    x = MaxPooling2D((2,2))(x)
+
+    x = residual_block_v2(x, 128)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Flatten for dense layers ---
+    flat = Flatten()(x)
+
+    # --- Target presence head ---
+    target_out_head = Dense(256, activation='relu')(flat)
+    target_out = Dense(1, activation='sigmoid', name="target_present")(target_out_head)
+
+    # --- Coordinate head ---
+    if use_heatmap:
+        # Predict 2D heatmap
+        heatmap = Conv2D(64, (3,3), padding='same', activation='relu')(x)
+        heatmap = Conv2D(64, (3,3), padding='same', activation='relu')(heatmap)
+        heatmap = Conv2D(32, (3,3), padding='same', activation='relu')(heatmap)
+        heatmap = Conv2D(1, (1,1), activation='relu', padding='same')(heatmap)
+        coords_out = Lambda(softargmax2d, name="coords")(heatmap)
+    else:
+        # Direct regression
+        shared_dense = Dense(256, activation='relu')(flat)
+        shared_dense = Dense(256, activation='relu')(shared_dense)
+        coords_out = Dense(2, activation='sigmoid', name="coords")(shared_dense)
+
+    model = Model(inputs, [target_out, coords_out])
+    return model
+
+def define_robust_model_v1(use_heatmap=True):
     inputs = Input(shape=(1024, 256, 1))
 
     # --- Initial conv layers ---
@@ -59,10 +132,10 @@ def define_robust_model(use_heatmap=True):
     x = MaxPooling2D((2,2))(x)
 
     # --- Residual blocks ---
-    x = residual_block(x, 64)
+    x = residual_block_v1(x, 64)
     x = MaxPooling2D((2,2))(x)
 
-    x = residual_block(x, 128)
+    x = residual_block_v1(x, 128)
     x = MaxPooling2D((2,2))(x)
 
     # --- Flatten for dense layers ---
@@ -84,7 +157,6 @@ def define_robust_model(use_heatmap=True):
 
     model = Model(inputs, [target_out, coords_out])
     return model
-
 
 class SoftArgmax2D(Layer):
     def __init__(self, **kwargs):
