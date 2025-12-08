@@ -12,6 +12,7 @@ import keras.losses as kl
 import keras.optimizers as ko
 from tqdm import tqdm
 import sklearn.metrics as sklearn
+import shutil
 
 
 # GENEREL_PATH = Path("../../")
@@ -258,7 +259,7 @@ def main():
                 for k, v in history_dict.items():
                     log_line.append(f"{k}={v[i-1]}")
                 log.info(", ".join(log_line))
-                
+
             # Detect head names
             heads = sorted({
                 k.rsplit("_", 1)[0]
@@ -358,6 +359,13 @@ def main():
             #     title=f"Model block diagram {time_started}",
             #     compress=True,
             # )
+        finally:
+            # copy logfiles
+            src_dir = os.path.dirname(os.path.abspath(__file__))
+            for f in ["log..log", "my_job.err", "my_job.out"]:
+                src = os.path.join(src_dir, f)
+                if os.path.isfile(src):
+                    shutil.copy2(src, ai_handler.result_path)
 
 
 def load_predict():
