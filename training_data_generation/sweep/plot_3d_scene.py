@@ -5,7 +5,7 @@ import io
 # from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 
 def plot_radar_scene(radar, targets, show_pattern=False, pulse_idx=None, t_offset=0):
     """
@@ -125,3 +125,9 @@ def save_frames_mp4(frames, path=None):
         for frame in frames:
             plt.imshow(frame)
             writer.grab_frame()
+
+def show_all_figs(frames):
+    for i, frame in enumerate(frames):
+        plt.figure(i)
+        plt.imshow(frame)
+    plt.show()

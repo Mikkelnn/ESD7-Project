@@ -8,8 +8,10 @@ import numpy as np
 import random as rn
 
 # Import your simulation function from separate file
-from simulation import runSimulation
+# from simulation import runSimulation
+from sweep.sweep_radar import simulate_sweep_targets
 from dsp_mini import range_doppler_fft
+from numpy.random import default_rng
 
 # -------------------------------
 # Disk Monitor
@@ -23,7 +25,7 @@ def disk_monitor(root_path, flag, check_interval=1):
         # flag.value = used_percent < 98
 
         disk_used_Byte = (used - init_disk_used)
-        flag.value = disk_used_Byte < 100e9 # 100GB in bytes 
+        flag.value = disk_used_Byte < 60e9 # 100GB in bytes 
 
         # path =  os.path.join(root_path, "input")
         # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
@@ -33,15 +35,14 @@ def disk_monitor(root_path, flag, check_interval=1):
 # -------------------------------
 # Simulation Utilities
 # -------------------------------
-def generate_batch(worker_seed):
+def generate_batch(rng):
     """Generate a random batch of targets"""
-    rn.seed(worker_seed + int(time.time() * 1000) % 1000000)
-    n_targets = rn.randint(0, 1)
+    n_targets = rng.integers(0, 1)
     data = np.zeros((n_targets, 3)) #, dtype=np.int16)
     for j in range(n_targets):
-        data[j, 0] = rn.randint(100, 800)   # range
-        data[j, 1] = rn.randint(0, 7500)    # velocity
-        data[j, 2] = 0 #rn.randint(-15, 15)    # angle
+        data[j, 0] = rng.integers(100, 1000)   # range
+        data[j, 1] = rng.integers(0, 7500) # velocity
+        data[j, 2] = rng.integers(0, 359)      # angle
     return data
 
 # def serialize_example_binary(data: np.ndarray):
@@ -52,6 +53,18 @@ def generate_batch(worker_seed):
 #     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
 #     return example_proto.SerializeToString()
 
+def add_noise(voltage_3d, noise_floor_dbm, rng, R=50):
+    # noise power in watts
+    P_noise = 10**((noise_floor_dbm - 30) / 10.0)
+
+    # RMS voltage of noise
+    V_rms = np.sqrt(P_noise * R)
+
+    # generate Gaussian noise with this RMS
+    noise = rng.normal(loc=0.0, scale=V_rms, size=voltage_3d.shape)
+
+    return voltage_3d + noise
+
 # -------------------------------
 # Worker
 # -------------------------------
@@ -61,25 +74,33 @@ def run_worker(root_path, worker_id, disk_flag):
     baseband_path = os.path.join(root_path, "input")
     print(f"Worker {worker_id} started (PID {os.getpid()})")
 
+    # unique seed per worker
+    rng = default_rng(worker_id + int(time.time() * 1000) % 1000000)
+
     while disk_flag.value:  # read shared flag instead of calling disk_usage
         local_uuid = uuid.uuid4()
         # Generate random parameters
-        params = generate_batch(worker_seed=worker_id)
+        params = generate_batch(rng)
 
         # Call your simulation function
-        baseband = runSimulation(params)
-        baseband = range_doppler_fft(baseband)
-
-        max_val = np.max(baseband)
-        if max_val != 0:
-            baseband = baseband / max_val  # Normalize 
+        # baseband = runSimulation(params)
+        baseband = simulate_sweep_targets(params)
+        baseband = add_noise(baseband, noise_floor_dbm=-100, rng=rng)
+        
+        baseband_ffts = []
+        for i in range(len(baseband)):
+            baseband_fft = range_doppler_fft(baseband[i])
+            max_val = np.max(baseband_fft)
+            if max_val != 0:
+                baseband_fft /= max_val  # Normalize
+            baseband_ffts.append(baseband_fft) 
 
         # Write params as raw-binary TFRecord file with UUID
         # Normalize params
         if len(params) == 0:
              params = [0, 0] # output for no targets
         else:
-             params = [params[0][0] / 800.0, params[0][1] / 7500.0] # normalize for a target
+             params = [params[0][0] / 1000.0, params[0][1] / 7500.0] # normalize for a target
 
         # params_filename = os.path.join(params_path, f"{local_uuid}.tfrecord")
         # with tf.io.TFRecordWriter(params_filename) as writer:
@@ -94,7 +115,7 @@ def run_worker(root_path, worker_id, disk_flag):
         #     writer.write(serialize_example_binary(baseband))
         baseband_filename = os.path.join(baseband_path, f"{local_uuid}.npy")
         with open(baseband_filename, 'wb') as f:
-                np.save(f, baseband)
+                np.save(f, baseband_ffts)
 
     print(f"Worker {worker_id} stopped (disk >= 90%)")
 

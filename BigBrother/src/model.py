@@ -246,7 +246,35 @@ def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
 
     return model
 
-def defineModel_smallCNN():
+def defineModel_single_target_detector_sweep():
+
+    model = Sequential([
+        Input(shape=(1024, 256, 21)),
+        
+        # Block 1
+        Conv2D(32, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 1)),  # (1024, 256) -> (512, 256)
+
+        # Block 2
+        Conv2D(64, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (512, 256) -> (256, 128)
+
+        # Block 3
+        Conv2D(128, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (256, 128) -> (128, 64)
+
+        # Block 4
+        Conv2D(256, (3, 3), activation='relu', padding="same"),
+        MaxPooling2D(pool_size=(2, 2)),  # (128, 64) -> (64, 32)
+        
+        Flatten(),
+        Dense(256, activation='relu'),
+        Dense(2, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
+    ])
+
+    return model
+
+def defineModel_single_target_detector_frame():
 
     model = Sequential([
         Input(shape=(1024, 256, 1)),
@@ -296,7 +324,7 @@ def defineModel_bigCNN(output_size):
 
 
 
-def defineModel_single_target_detector():
+def defineModel_single_target_detector_doubleConv():
 
     model = Sequential([
         Input(shape=(1024, 256, 1)),

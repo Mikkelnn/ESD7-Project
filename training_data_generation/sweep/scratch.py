@@ -62,4 +62,7 @@ def plot_for_report():
     plt.show()
 
 
-plot_for_report()
+# plot_for_report()
+
+res = np.arange(-50, 55, 5)
+print(res, len(res))

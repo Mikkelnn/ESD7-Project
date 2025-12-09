@@ -2,8 +2,8 @@ import numpy as np
 import math
 from tqdm import tqdm
 
-from radiation_pattern import radiation_pattern
-from plot_3d_scene import  plot_radar_scene, save_frames_mp4
+from .radiation_pattern import radiation_pattern
+from .plot_3d_scene import  plot_radar_scene, save_frames_mp4, show_all_figs
 
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -104,11 +104,7 @@ def frame_simulation(target_list, hpbw_az_deg, hpbw_el_deg, t_offset=0, steering
     pulse_start = wf["pulse_start_time"]
     wf_prp = wf["prp"]
     end_of_last_pulse = pulse_start[-1] + wf_prp[-1]
-
-    # calculate new target location based on t_offset
-    for target in target_list:
-        target["location"] = tuple([target["location"][i] + (target["speed"][i] * t_offset) for i in range(3)])
-
+    
     data = sim_radar(radar, target_list)
     if include_noise:
         baseband = data["baseband"] + data["noise"]
@@ -117,6 +113,10 @@ def frame_simulation(target_list, hpbw_az_deg, hpbw_el_deg, t_offset=0, steering
 
     if render:
         fig = plot_radar_scene(radar, target_list, show_pattern=True, pulse_idx=None, t_offset=t_offset)
+
+    # calculate new target location based on t_offset
+    for target in target_list:
+        target["location"] = tuple([target["location"][i] + (target["speed"][i] * end_of_last_pulse) for i in range(3)])
 
     return (baseband, end_of_last_pulse, fig)
 
@@ -135,43 +135,45 @@ def sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles=[], 
         if render:            
             frames.append(frame)
 
-    return (basebands, frames)
+    return (np.array(basebands), frames)
 
 
 hpbw_el_deg = 27
 hpbw_az_deg = 88
 
-max_abs_angle_deg = 55
+max_abs_angle_deg = 50
 angle_step = 5
 steering_angles = np.arange(-max_abs_angle_deg, max_abs_angle_deg + angle_step, angle_step)
+time_to_center = (pulses * prp * len(steering_angles)) / 2
 
-target_list = [
-    # dict(
-    #     location=(10, -5, 0),
-    #     speed=(0, 750, 0),
-    #     rcs=10,
-    #     phase=0,
-    # ),
-    # dict(
-    #     location=(-5, -5, 3),
-    #     speed=(350, -350, -350),
-    #     rcs=10,
-    #     phase=0,
-    # ),
-    dict(
-        location=(1000, 0, 0),
-        speed=(0, 0, 0),
-        rcs=-54.60,
-        phase=0,
-    ),
-]
-steering_angles = [0]
+def simulate_sweep_targets(targets):
+    target_list = list([]) 
+    for target in targets:
+        speed = target[1]
+        angel_rad = np.radians(target[2])
+        
+        distance_to_reach_center = time_to_center * speed
+        y_start = distance_to_reach_center * np.sin(angel_rad - np.pi)
+        z_start = distance_to_reach_center * np.cos(angel_rad - np.pi)
 
-basebands, frames = sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles, include_noise=False, render=False, show_progress=True)
+        target_list.append(
+            dict(
+                location=(target[0], y_start, z_start),
+                speed=(0, np.sin(angel_rad) * speed, np.cos(angel_rad) * speed),
+                rcs=-54.60,
+                phase=0,
+            )
+        )
+
+    baseband, frames = sweep_simulation(target_list, hpbw_az_deg, hpbw_el_deg, steering_angles, include_noise=False, render=False, show_progress=False)
+    return baseband
+
 
 # TODO: Save baseband to disk
 
-np.save("test.npy", basebands)
+# basebands, frames = simulate_sweep_targets([[5, 1000, 90]])
+# np.save("test.npy", basebands)
 
-if frames is not None:
-    save_frames_mp4(frames)
+# if frames is not None:
+#     save_frames_mp4(frames)
+#     # show_all_figs(frames)
