@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import multiprocessing as mp
 import numpy as np
 import math
+from sklearn.metrics import roc_curve, auc
 import keras.losses as kl
 import keras.optimizers as ko
 from tqdm import tqdm
@@ -368,9 +369,7 @@ def main():
                     shutil.copy2(src, ai_handler.result_path)
 
 
-def load_predict():
-    modelPath = "results/26-09-2025_12:15:53/sum_diff_model.keras"
-
+def load_predict(modelPath = "results/26-09-2025_12:15:53/sum_diff_model.keras"):
     model = ai_handler.load_model(modelPath)
     res = ai_handler.predict(model, [0.1, 0.3])
     print(res)
@@ -459,8 +458,6 @@ def confusion_matrix():
 
     return cm_counts, cm_norm
 
-
-
     # Save
     #plt.figure(figsize=(6, 6))
     #plt.imshow(cm, cmap='viridis')
@@ -483,6 +480,65 @@ def confusion_matrix():
     #plt.close()
     
     #return cm
+
+def roc(modelPath: str):
+
+    model = ai_handler.load_model(modelPath)
+
+    # Prepare validation data
+    def loader_func_data(f):
+        data = np.load(f)[..., None]
+        return np.nan_to_num(data, nan=0.0)
+
+    def loader_func_label(f):
+        arr = np.load(f)
+        # class 0: no debris (sum == 0), class 1: debris present (sum != 0)
+        return 0 if (np.sum(arr) == 0) else 1
+
+    data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
+    data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
+    label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
+    assert len(data_files) == len(label_files), "Data and label counts differ"
+
+    y_true = []
+    y_score = []
+
+    for data_file, label_file in tqdm(zip(data_files, label_files), total=len(data_files)):
+        # Predict probability for class 1 (debris present)
+        pred = ai_handler.predict(model, loader_func_data(data_file))
+        # If output is shape (2,), use softmax or sigmoid output
+        if pred.shape[-1] == 2:
+            score = float(pred[0][1]) if pred.ndim == 2 else float(pred[1])
+        else:
+            score = float(pred.ravel()[0])
+        y_score.append(score)
+        y_true.append(loader_func_label(label_file))
+
+    y_true = np.array(y_true)
+    y_score = np.array(y_score)
+
+    # ROC curve
+    fpr, tpr, thresholds = roc_curve(y_true, y_score)
+    roc_auc = auc(fpr, tpr)
+
+    log.info("fpr:", fpr)
+    log.info("tpr:", tpr)
+    log.info("thresholds:", thresholds)
+    log.info("roc_auc:", roc_auc)
+
+    # Plot
+    plt.figure(figsize=(7, 7))
+    plt.plot(fpr, tpr, label=f"AUC = {roc_auc:.3f}")
+    plt.plot([0, 1], [0, 1], 'k--')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC Curve")
+    plt.legend(loc="lower right")
+    plt.grid(True)
+    plt.savefig(ai_handler.result_path / "roc_curve.svg", format="svg")
+    plt.close()
+    print(f"ROC AUC: {roc_auc:.3f}")
+    return fpr, tpr, thresholds, roc_auc
 
 
 if __name__ == "__main__":
