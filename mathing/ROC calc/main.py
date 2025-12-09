@@ -10,7 +10,7 @@ Bw = 20e6
 Temp = 300
 noiseFloor = 10 * np.log10(k * Temp * Bw)
 
-SNR_dB = 0
+SNR_dB = 10
 SNR = 10**(SNR_dB/10)
 N = 16
 pfa = np.linspace(0, 1, 4000000)
