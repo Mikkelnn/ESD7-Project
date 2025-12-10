@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0" version="29.2.6">
   <diagram name="Page-1" id="nxzR441HdhHo9-c4kuPa">
-    <mxGraphModel dx="891" dy="437" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1501" dy="736" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,27 +8,47 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Project Font;" value="Target Detection" vertex="1">
-          <mxGeometry height="60" width="120" x="120" y="360" as="geometry" />
+          <mxGeometry height="60" width="120" x="240" y="370" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-7" edge="1" parent="1" source="g5hUdo45FqjBKwT4jDmV-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Project Font;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="390" as="targetPoint" />
+            <mxPoint x="670" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Project Font;" value="Target Localization" vertex="1">
-          <mxGeometry height="60" width="120" x="320" y="360" as="geometry" />
+          <mxGeometry height="60" width="120" x="440" y="370" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="Target detected" vertex="1">
-          <mxGeometry height="30" width="60" x="250" y="350" as="geometry" />
+          <mxGeometry height="30" width="60" x="370" y="360" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="&lt;div&gt;Target&amp;nbsp;&lt;/div&gt;&lt;div&gt;Range &amp;amp; Velocity&lt;/div&gt;" vertex="1">
-          <mxGeometry height="30" width="100" x="450" y="351" as="geometry" />
+          <mxGeometry height="30" width="100" x="570" y="361" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=12 12;fontFamily=Project Font;" value="" vertex="1">
-          <mxGeometry height="110" width="470" x="100" y="330" as="geometry" />
+          <mxGeometry height="130" width="550" x="140" y="340" as="geometry" />
         </mxCell>
         <mxCell id="g5hUdo45FqjBKwT4jDmV-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="ML" vertex="1">
-          <mxGeometry height="30" width="60" x="305" y="290" as="geometry" />
+          <mxGeometry height="30" width="60" x="385" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="Mf7xOEwH456FNuYwbIxA-1" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Project Font;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="399.8" as="sourcePoint" />
+            <mxPoint x="240" y="399.8" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mf7xOEwH456FNuYwbIxA-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="RADAR image" vertex="1">
+          <mxGeometry height="30" width="60" x="170" y="361" as="geometry" />
+        </mxCell>
+        <mxCell id="Mf7xOEwH456FNuYwbIxA-3" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Project Font;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="g5hUdo45FqjBKwT4jDmV-2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="450" />
+              <mxPoint x="400" y="450" />
+              <mxPoint x="400" y="415" />
+            </Array>
+            <mxPoint x="200" y="399.8" as="sourcePoint" />
+            <mxPoint x="280" y="399.8" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
