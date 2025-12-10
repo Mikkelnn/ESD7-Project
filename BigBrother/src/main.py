@@ -19,8 +19,8 @@ import shutil
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "big_training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "training_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -130,14 +130,20 @@ def main():
             
             compiled_model = ai_handler.compile_model(model,
                                     optimizer=ko.Adam(1e-4),
-                                    loss=loss,
-                                    metrics=["accuracy"]
+                                    loss=kl.Huber(delta=1.0),
+                                    metrics=[
+                                        ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
+                                        ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
+                                    ]
+                                    # loss=loss,
+                                    # metrics=["accuracy"]
                                     )
 
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
+                return label
+                # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
                 # target_present = np.array([0], dtype=np.float32)
                 # range_label = np.zeros(num_range_out, dtype=np.float32)
