@@ -37,15 +37,15 @@ def main():
         model = None
         time_started = 0
         batch_size = 32 # Decrease as model get larger to fit in GPU memory
-        epochs = 100
+        epochs = 10
         initial_epoch = 0
         train_on_latest_result = False
         
-        max_range = 800 # m
-        max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
+        # max_range = 800 # m
+        # max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
     
-        num_range_out = int(max_range / 10) #
-        num_velocity_out = int(max_velocity / 50) #
+        # num_range_out = int(max_range / 10) #
+        # num_velocity_out = int(max_velocity / 50) #
         # output_size = num_range_out + num_velocity_out
 
         try:
@@ -57,18 +57,22 @@ def main():
                 if not found:
                     exit()
             else:
-                model = define_robust_model_v2(use_heatmap=False)
+                # model = define_sweep_single_localization()
+                model = defineModel_single_target_detector_sweep()
+                # model = define_robust_model_v2(use_heatmap=False)
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
             model.summary()
 
+            # exit()
+
             # ai_handler.plot_block_diagram(model)
 
-            # loss = kl.CategoricalFocalCrossentropy(
-            #     gamma=2.0,
-            #     alpha=0.25
-            # )
+            loss = kl.CategoricalFocalCrossentropy(
+                gamma=2.0,
+                alpha=0.25
+            )
 
             ce = kl.CategoricalCrossentropy(reduction=None)
             bce = kl.BinaryCrossentropy()
@@ -99,51 +103,51 @@ def main():
                 masked_loss = loss * presence
                 return ai_handler.tf.reduce_sum(masked_loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
-            compiled_model = ai_handler.compile_model(model, 
-                                optimizer=ko.Adam(learning_rate=1e-4, clipnorm=1.0),
-                                loss={
-                                    "target_present": bce,
-                                    "coords": masked_mse,
-                                    # "heatmap": None
-                                    # "range_head":     masked_loss,
-                                    # "doppler_head":   masked_loss
-                                },
-                                loss_weights={
-                                    "target_present": 10.0,
-                                    "coords": 1.0,
-                                    # "heatmap": 0.0
-                                    # "range_head":     1.0,
-                                    # "doppler_head":   1.0
-                                },
-                                metrics={
-                                    "target_present": ["accuracy"],
-                                    "coords": [masked_mae],  # regression error in normalized [0,1] units
-                                    # "heatmap": []       # optional, usually none
-                                    # "range_head":     [range_acc_mask],
-                                    # "doppler_head":   [range_acc_mask]
-                                })
+            # compiled_model = ai_handler.compile_model(model, 
+            #                     optimizer=ko.Adam(learning_rate=1e-4, clipnorm=1.0),
+            #                     loss={
+            #                         "target_present": bce,
+            #                         "coords": masked_mse,
+            #                         # "heatmap": None
+            #                         # "range_head":     masked_loss,
+            #                         # "doppler_head":   masked_loss
+            #                     },
+            #                     loss_weights={
+            #                         "target_present": 10.0,
+            #                         "coords": 1.0,
+            #                         # "heatmap": 0.0
+            #                         # "range_head":     1.0,
+            #                         # "doppler_head":   1.0
+            #                     },
+            #                     metrics={
+            #                         "target_present": ["accuracy"],
+            #                         "coords": [masked_mae],  # regression error in normalized [0,1] units
+            #                         # "heatmap": []       # optional, usually none
+            #                         # "range_head":     [range_acc_mask],
+            #                         # "doppler_head":   [range_acc_mask]
+            #                     })
             
-            # compiled_model = ai_handler.compile_model(model,
-            #                         optimizer=ko.Adam(1e-4),
-            #                         loss=loss,
-            #                         metrics=["accuracy"]
-            #                         )
+            compiled_model = ai_handler.compile_model(model,
+                                    optimizer=ko.Adam(1e-4),
+                                    loss=loss,
+                                    metrics=["accuracy"]
+                                    )
 
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
+                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
-                target_present = np.array([0], dtype=np.float32)
+                # target_present = np.array([0], dtype=np.float32)
                 # range_label = np.zeros(num_range_out, dtype=np.float32)
                 # doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
                 
-                coords = np.zeros(2, dtype=np.float32)
+                # coords = np.zeros(2, dtype=np.float32)
 
                 # --- Object presence ---
-                if np.sum(label) != 0:
-                    target_present[0] = 1 # target present
-                    coords = label
+                # if np.sum(label) != 0:
+                #     target_present[0] = 1 # target present
+                #     coords = label
                     # --- Scale label to relative bin index ---
                     # Example scaling, adjust factors to your bin definitions
                 #     label_scaled = np.array([
@@ -166,16 +170,18 @@ def main():
                 # doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
 
                 # --- Return as dict for 3-head model ---
-                return {
-                    "target_present": target_present,
-                    "coords": np.concatenate([target_present, coords.astype(np.float32)], axis=-1),
-                    # "heatmap": np.zeros((64, 32, 1), dtype=np.float32)  # optional
-                    # "range_head": range_label,
-                    # "doppler_head": doppler_label
-                }
+                # return {
+                #     "target_present": target_present,
+                #     "coords": np.concatenate([target_present, coords.astype(np.float32)], axis=-1),
+                #     # "heatmap": np.zeros((64, 32, 1), dtype=np.float32)  # optional
+                #     # "range_head": range_label,
+                #     # "doppler_head": doppler_label
+                # }
+                # return target_present
 
             def loader_func_data(f): 
-                data = np.load(f)[... , None]
+                # data = (np.load(f)[0])[... , None]
+                data = np.load(f)
                 return np.nan_to_num(data, nan=0.0)
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
@@ -323,7 +329,7 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            # confusion_matrix()
+            confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",

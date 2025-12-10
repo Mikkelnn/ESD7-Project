@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Layer, Conv2D, Input, MaxPooling2D, Convolution2D, Flatten, Dense, Reshape, InputLayer, GlobalAveragePooling2D, Multiply, Add, Activation, BatchNormalization, Reshape, Lambda
+from tensorflow.keras.layers import *
 from tensorflow.keras.models import Sequential, Model
 import tensorflow as tf #noqa
 
@@ -77,6 +77,36 @@ def softargmax2d(heatmap):
     y = tf.reduce_sum(flat * ys, axis=1, keepdims=True)
 
     return tf.concat([x, y], axis=1)
+
+def define_sweep_single_localization():
+    inputs = Input(shape=(1024, 256, 21))
+
+    # --- Initial conv layers ---
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)    
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = MaxPooling2D((2,1))(x)  # (1024,256)->(512,256)
+
+    x = Conv2D(64, (3,3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Residual blocks ---
+    x = residual_block_v2(x, 64)
+    x = MaxPooling2D((2,2))(x)
+
+    x = residual_block_v2(x, 128)
+    x = MaxPooling2D((2,2))(x)
+
+    # --- Coordinate head ---
+    heatmap = Conv2D(64, (3,3), padding='same', activation='relu')(x)
+    heatmap = Conv2D(64, (3,3), padding='same', activation='relu')(heatmap)
+    heatmap = Conv2D(32, (3,3), padding='same', activation='relu')(heatmap)
+    heatmap = Conv2D(1, (1,1), activation='relu', padding='same')(heatmap)
+    coords_out = Lambda(softargmax2d)(heatmap)
+
+    model = Model(inputs, coords_out)
+    return model
+
 
 def define_robust_model_v2(use_heatmap=True):
     inputs = Input(shape=(1024, 256, 1))
@@ -248,30 +278,28 @@ def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
 
 def defineModel_single_target_detector_sweep():
 
-    model = Sequential([
-        Input(shape=(1024, 256, 21)),
-        
-        # Block 1
-        Conv2D(32, (3, 3), activation='relu', padding="same"),
-        MaxPooling2D(pool_size=(2, 1)),  # (1024, 256) -> (512, 256)
+    inputs = Input(shape=(21,1024,256,1))
 
-        # Block 2
-        Conv2D(64, (3, 3), activation='relu', padding="same"),
-        MaxPooling2D(pool_size=(2, 2)),  # (512, 256) -> (256, 128)
+    # per-frame CNN
+    x = TimeDistributed(
+            Conv2D(32,(3,3),padding="same",activation="relu")
+        )(inputs)
+    x = TimeDistributed(MaxPooling2D((2,2)))(x)
 
-        # Block 3
-        Conv2D(128, (3, 3), activation='relu', padding="same"),
-        MaxPooling2D(pool_size=(2, 2)),  # (256, 128) -> (128, 64)
+    x = TimeDistributed(Conv2D(64,(3,3),activation="relu",padding="same"))(x)
+    x = TimeDistributed(MaxPooling2D((2,2)))(x)
 
-        # Block 4
-        Conv2D(256, (3, 3), activation='relu', padding="same"),
-        MaxPooling2D(pool_size=(2, 2)),  # (128, 64) -> (64, 32)
-        
-        Flatten(),
-        Dense(256, activation='relu'),
-        Dense(2, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
-    ])
+    # flatten every frame
+    x = TimeDistributed(Flatten())(x)
 
+    # fuse angle information: simple max or mean → lightweight and effective
+    x = GlobalMaxPooling1D()(x)
+
+    # classifier
+    x = Dense(128,activation="relu")(x)
+    outputs = Dense(2,activation="sigmoid")(x)
+
+    model = Model(inputs, outputs)
     return model
 
 def defineModel_single_target_detector_frame():
