@@ -19,8 +19,8 @@ import shutil
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "training_data" # "big_training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "validate_data" # "training_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "big_training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "training_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -36,7 +36,7 @@ def main():
     with ai_handler.strategy.scope():
         model = None
         time_started = 0
-        batch_size = 32 # Decrease as model get larger to fit in GPU memory
+        batch_size = 2 # Decrease as model get larger to fit in GPU memory
         epochs = 10
         initial_epoch = 0
         train_on_latest_result = False
