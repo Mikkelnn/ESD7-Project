@@ -66,7 +66,7 @@ def main():
             
             model.summary()
 
-            exit()
+            # exit()
 
             # ai_handler.plot_block_diagram(model)
 
