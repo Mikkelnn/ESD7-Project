@@ -57,6 +57,7 @@ def main():
                 if not found:
                     exit()
             else:
+                # model = defineModel_single_target_detector_doubleConv()
                 # model = define_sweep_single_localization()
                 model = defineModel_single_target_detector_sweep()
                 # model = define_robust_model_v2(use_heatmap=False)
@@ -65,7 +66,7 @@ def main():
             
             model.summary()
 
-            # exit()
+            exit()
 
             # ai_handler.plot_block_diagram(model)
 

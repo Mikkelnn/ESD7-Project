@@ -2,8 +2,8 @@
 
 import os, random, shutil
 
-src_root = "training_data"
-dst_root = "validate_data"
+src_root = "one/training_data"
+dst_root = "one/validate_data"
 ratio = 0.15 # validation ratio
 
 src_inputs = os.path.join(src_root, "input")

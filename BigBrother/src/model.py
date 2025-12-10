@@ -281,22 +281,20 @@ def defineModel_single_target_detector_sweep():
     inputs = Input(shape=(21,1024,256,1))
 
     # per-frame CNN
-    x = TimeDistributed(
-            Conv2D(32,(3,3),padding="same",activation="relu")
-        )(inputs)
+    x = TimeDistributed(Conv2D(32,(3,3),padding="same",activation="relu"))(inputs)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)
 
     x = TimeDistributed(Conv2D(64,(3,3),activation="relu",padding="same"))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)
 
     # flatten every frame
-    x = TimeDistributed(Flatten())(x)
+    x = TimeDistributed(GlobalAveragePooling2D())(x)
 
     # fuse angle information: simple max or mean → lightweight and effective
     x = GlobalMaxPooling1D()(x)
 
     # classifier
-    x = Dense(128,activation="relu")(x)
+    x = Dense(256,activation="relu")(x)
     outputs = Dense(2,activation="sigmoid")(x)
 
     model = Model(inputs, outputs)

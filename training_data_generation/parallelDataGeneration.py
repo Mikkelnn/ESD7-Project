@@ -25,7 +25,7 @@ def disk_monitor(root_path, flag, check_interval=1):
         # flag.value = used_percent < 98
 
         disk_used_Byte = (used - init_disk_used)
-        flag.value = disk_used_Byte < 60e9 # 100GB in bytes 
+        flag.value = disk_used_Byte < 100e9 # 100GB in bytes 
 
         # path =  os.path.join(root_path, "input")
         # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25
@@ -37,7 +37,7 @@ def disk_monitor(root_path, flag, check_interval=1):
 # -------------------------------
 def generate_batch(rng):
     """Generate a random batch of targets"""
-    n_targets = rng.integers(0, 1)
+    n_targets = 1 # rng.integers(0, 1)
     data = np.zeros((n_targets, 3)) #, dtype=np.int16)
     for j in range(n_targets):
         data[j, 0] = rng.integers(100, 1000)   # range
@@ -123,7 +123,7 @@ def run_worker(root_path, worker_id, disk_flag):
 # Main
 # -------------------------------
 if __name__ == "__main__":
-    root_path = "../../training_data"  # Change to desired folder
+    root_path = "../../one/training_data"  # Change to desired folder
     os.makedirs(os.path.join(root_path, "labels"), exist_ok=True)
     os.makedirs(os.path.join(root_path, "input"), exist_ok=True)
 
