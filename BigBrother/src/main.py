@@ -336,7 +336,7 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            confusion_matrix()
+            # confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",

@@ -9,7 +9,7 @@
 #SBATCH --time=12:00:00
 
 # Run Python script in container
-singularity exec --nv \
+singularity exec --nv \ 
     -B ~/:/scratch \
     /ceph/container/tensorflow/tensorflow_24.09.sif \
     /bin/bash -lc ' \
