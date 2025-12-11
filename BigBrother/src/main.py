@@ -129,8 +129,7 @@ def main():
                         #                         # "doppler_head":   [range_acc_mask]
                         #                     })
             """            
-            
-            exit()
+
             # compiled_model = ai_handler.compile_model(model,
             #                         optimizer=ko.Adam(1e-4),
             #                         loss=kl.Huber(delta=1.0),
