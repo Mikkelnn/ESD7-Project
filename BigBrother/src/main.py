@@ -36,7 +36,7 @@ def main():
     with ai_handler.strategy.scope():
         model = None
         time_started = 0
-        batch_size = 2 # Decrease as model get larger to fit in GPU memory
+        batch_size = 1 # Decrease as model get larger to fit in GPU memory
         epochs = 10
         initial_epoch = 0
         train_on_latest_result = False
@@ -128,17 +128,20 @@ def main():
             #                         # "doppler_head":   [range_acc_mask]
             #                     })
             
+            # compiled_model = ai_handler.compile_model(model,
+            #                         optimizer=ko.Adam(1e-4),
+            #                         loss=kl.Huber(delta=1.0),
+            #                         metrics=[
+            #                             ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
+            #                             ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
+            #                         ]
+            #                         )
+
             compiled_model = ai_handler.compile_model(model,
                                     optimizer=ko.Adam(1e-4),
-                                    loss=kl.Huber(delta=1.0),
-                                    metrics=[
-                                        ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
-                                        ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
-                                    ]
-                                    # loss=loss,
-                                    # metrics=["accuracy"]
+                                    loss=loss,
+                                    metrics=["accuracy"]
                                     )
-
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
@@ -336,7 +339,7 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            # confusion_matrix()
+            confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",
@@ -375,7 +378,7 @@ def main():
             # )
         finally:
             # copy logfiles
-            src_dir = os.path.dirname(os.path.abspath(__file__))
+            src_dir = Path(__file__).parent
             for f in ["log.log", "my_job.err", "my_job.out"]:
                 src = os.path.join(src_dir, f)
                 if os.path.isfile(src):
