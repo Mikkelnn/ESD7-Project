@@ -16,8 +16,8 @@ import sklearn.metrics as sklearn
 import shutil
 
 
-# GENEREL_PATH = Path("../../")
-GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
+GENEREL_PATH = Path("../../")
+# GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
@@ -37,7 +37,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 1 # Decrease as model get larger to fit in GPU memory
-        epochs = 10
+        epochs = 2
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -75,78 +75,81 @@ def main():
                 alpha=0.25
             )
 
-            ce = kl.CategoricalCrossentropy(reduction=None)
-            bce = kl.BinaryCrossentropy()
+            """ 
+                        ce = kl.CategoricalCrossentropy(reduction=None)
+                        bce = kl.BinaryCrossentropy()
 
-            def masked_loss(y_true, y_pred):
-                # y_true = [object_flag, one_hot_range]
-                object_flag = y_true[:, 0]                         # shape (batch, 1)
-                range_label = y_true[:, 1:]                         # shape (batch, range_bins)
-                loss = ce(range_label, y_pred)                      # shape (batch,)
-                loss = loss * ai_handler.tf.squeeze(object_flag)
-                # loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)      # mask
-                return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(object_flag) + 1e-6) # ai_handler.tf.reduce_mean(loss)
+                        def masked_loss(y_true, y_pred):
+                            # y_true = [object_flag, one_hot_range]
+                            object_flag = y_true[:, 0]                         # shape (batch, 1)
+                            range_label = y_true[:, 1:]                         # shape (batch, range_bins)
+                            loss = ce(range_label, y_pred)                      # shape (batch,)
+                            loss = loss * ai_handler.tf.squeeze(object_flag)
+                            # loss = loss * ai_handler.tf.squeeze(object_flag, axis=-1)      # mask
+                            return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(object_flag) + 1e-6) # ai_handler.tf.reduce_mean(loss)
 
-            def range_acc_mask(y_true, y_pred):
-                return ai_handler.tf.keras.metrics.categorical_accuracy(y_true[:, 1:], y_pred)
+                        def range_acc_mask(y_true, y_pred):
+                            return ai_handler.tf.keras.metrics.categorical_accuracy(y_true[:, 1:], y_pred)
 
-            def masked_mse(y_true, y_pred):
-                presence = y_true[:, 0]          # first column = target_present
-                coords_true = y_true[:, 1:]      # remaining = coordinates
-                loss = ai_handler.tf.reduce_mean(ai_handler.tf.square(coords_true - y_pred), axis=-1)
-                loss = loss * presence           # zero out absent targets
-                return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
+                        def masked_mse(y_true, y_pred):
+                            presence = y_true[:, 0]          # first column = target_present
+                            coords_true = y_true[:, 1:]      # remaining = coordinates
+                            loss = ai_handler.tf.reduce_mean(ai_handler.tf.square(coords_true - y_pred), axis=-1)
+                            loss = loss * presence           # zero out absent targets
+                            return ai_handler.tf.reduce_sum(loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
-            def masked_mae(y_true, y_pred):
-                presence = y_true[:, 0]
-                coords_true = y_true[:, 1:]
-                loss = ai_handler.tf.reduce_mean(ai_handler.tf.abs(coords_true - y_pred), axis=-1)
-                masked_loss = loss * presence
-                return ai_handler.tf.reduce_sum(masked_loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
+                        def masked_mae(y_true, y_pred):
+                            presence = y_true[:, 0]
+                            coords_true = y_true[:, 1:]
+                            loss = ai_handler.tf.reduce_mean(ai_handler.tf.abs(coords_true - y_pred), axis=-1)
+                            masked_loss = loss * presence
+                            return ai_handler.tf.reduce_sum(masked_loss) / (ai_handler.tf.reduce_sum(presence) + 1e-6)
 
-            # compiled_model = ai_handler.compile_model(model, 
-            #                     optimizer=ko.Adam(learning_rate=1e-4, clipnorm=1.0),
-            #                     loss={
-            #                         "target_present": bce,
-            #                         "coords": masked_mse,
-            #                         # "heatmap": None
-            #                         # "range_head":     masked_loss,
-            #                         # "doppler_head":   masked_loss
-            #                     },
-            #                     loss_weights={
-            #                         "target_present": 10.0,
-            #                         "coords": 1.0,
-            #                         # "heatmap": 0.0
-            #                         # "range_head":     1.0,
-            #                         # "doppler_head":   1.0
-            #                     },
-            #                     metrics={
-            #                         "target_present": ["accuracy"],
-            #                         "coords": [masked_mae],  # regression error in normalized [0,1] units
-            #                         # "heatmap": []       # optional, usually none
-            #                         # "range_head":     [range_acc_mask],
-            #                         # "doppler_head":   [range_acc_mask]
-            #                     })
+                        # compiled_model = ai_handler.compile_model(model, 
+                        #                     optimizer=ko.Adam(learning_rate=1e-4, clipnorm=1.0),
+                        #                     loss={
+                        #                         "target_present": bce,
+                        #                         "coords": masked_mse,
+                        #                         # "heatmap": None
+                        #                         # "range_head":     masked_loss,
+                        #                         # "doppler_head":   masked_loss
+                        #                     },
+                        #                     loss_weights={
+                        #                         "target_present": 10.0,
+                        #                         "coords": 1.0,
+                        #                         # "heatmap": 0.0
+                        #                         # "range_head":     1.0,
+                        #                         # "doppler_head":   1.0
+                        #                     },
+                        #                     metrics={
+                        #                         "target_present": ["accuracy"],
+                        #                         "coords": [masked_mae],  # regression error in normalized [0,1] units
+                        #                         # "heatmap": []       # optional, usually none
+                        #                         # "range_head":     [range_acc_mask],
+                        #                         # "doppler_head":   [range_acc_mask]
+                        #                     })
+            """            
             
-            compiled_model = ai_handler.compile_model(model,
-                                    optimizer=ko.Adam(1e-4),
-                                    loss=kl.Huber(delta=1.0),
-                                    metrics=[
-                                        ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
-                                        ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
-                                    ]
-                                    )
-
+            exit()
             # compiled_model = ai_handler.compile_model(model,
             #                         optimizer=ko.Adam(1e-4),
-            #                         loss=ce,
-            #                         metrics=["accuracy"]
+            #                         loss=kl.Huber(delta=1.0),
+            #                         metrics=[
+            #                             ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
+            #                             ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
+            #                         ]
             #                         )
+
+            compiled_model = ai_handler.compile_model(model,
+                                    optimizer=ko.Adam(1e-4),
+                                    loss=loss,
+                                    metrics=["accuracy"]
+                                    )
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                return label
-                # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
+                # return label
+                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
                 # target_present = np.array([0], dtype=np.float32)
                 # range_label = np.zeros(num_range_out, dtype=np.float32)
@@ -378,7 +381,8 @@ def main():
             # )
         finally:
             # copy logfiles
-            src_dir = Path(__file__).parent
+            log.info("Copying log files to result directory")
+            src_dir = Path(__file__).parent.parent
             for f in ["log.log", "my_job.err", "my_job.out"]:
                 src = os.path.join(src_dir, f)
                 if os.path.isfile(src):
