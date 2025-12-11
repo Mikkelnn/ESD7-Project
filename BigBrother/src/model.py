@@ -386,7 +386,7 @@ def defineModel_single_target_detector_sweep():
     model = Model(inputs, outputs)
     return model
 
-def defineModel_single_target_detector_frame():
+def defineModel_single_target_detector_frame(activateion="sigmoid"):
 
     model = Sequential([
         Input(shape=(1024, 256, 1)),
@@ -409,7 +409,7 @@ def defineModel_single_target_detector_frame():
         
         Flatten(),
         Dense(256, activation='relu'),
-        Dense(2, activation='sigmoid'), #TODO Potentially use tanh activation of -1 to 1
+        Dense(2, activation=activateion), #TODO Potentially use tanh activation of -1 to 1
     ])
 
     return model
