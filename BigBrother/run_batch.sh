@@ -15,7 +15,7 @@ singularity exec --nv -B ~/:/scratch \
   export TF_NUM_INTRAOP_THREADS=\${SLURM_CPUS_PER_TASK}; \
   export TF_NUM_INTEROP_THREADS=2; \
   source /scratch/ESD7-Project/BigBrother/.venv/bin/activate; \
-  python /scratch/ESD7-Project/BigBrother/src/main.py"
+  python /scratch/ESD7-Project-2/BigBrother/src/main.py"
 
 # singularity exec --nv \ 
 #     -B ~/:/scratch \

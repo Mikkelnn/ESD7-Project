@@ -19,8 +19,8 @@ import shutil
 # GENEREL_PATH = Path("../../")
 GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
-TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "big_training_data"
-VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "training_data"
+TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
+VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
 
 log = get_logger()
 ai_handler = AiHandler(RESULTS_PATH)
@@ -58,8 +58,8 @@ def main():
                     exit()
             else:
                 # model = defineModel_single_target_detector_doubleConv()
-                # model = define_sweep_single_localization()
-                model = defineModel_single_target_detector_sweep()
+                model = define_sweep_single_localization()
+                # model = defineModel_single_target_detector_sweep()
                 # model = define_robust_model_v2(use_heatmap=False)
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
@@ -128,25 +128,25 @@ def main():
             #                         # "doppler_head":   [range_acc_mask]
             #                     })
             
-            # compiled_model = ai_handler.compile_model(model,
-            #                         optimizer=ko.Adam(1e-4),
-            #                         loss=kl.Huber(delta=1.0),
-            #                         metrics=[
-            #                             ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
-            #                             ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
-            #                         ]
-            #                         )
-
             compiled_model = ai_handler.compile_model(model,
                                     optimizer=ko.Adam(1e-4),
-                                    loss=ce,
-                                    metrics=["accuracy"]
+                                    loss=kl.Huber(delta=1.0),
+                                    metrics=[
+                                        ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
+                                        ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
+                                    ]
                                     )
+
+            # compiled_model = ai_handler.compile_model(model,
+            #                         optimizer=ko.Adam(1e-4),
+            #                         loss=ce,
+            #                         metrics=["accuracy"]
+            #                         )
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                # return label
-                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
+                return label
+                # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
                 # target_present = np.array([0], dtype=np.float32)
                 # range_label = np.zeros(num_range_out, dtype=np.float32)
@@ -339,7 +339,7 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            confusion_matrix()
+            # confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",
