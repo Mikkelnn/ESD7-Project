@@ -78,6 +78,14 @@ def softargmax2d(heatmap):
 
     return tf.concat([x, y], axis=1)
 
+class ResidualBlockV2Layer(keras.layers.Layer):
+    def __init__(self, filters):
+        super().__init__()
+        self.filters = filters
+
+    def call(self, inputs):
+        return residual_block_v2(inputs, self.filters)
+
 def define_sweep_single_localization():
     inputs = Input(shape=(21, 1024, 256, 1))
 
@@ -91,10 +99,10 @@ def define_sweep_single_localization():
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 512→256
 
     # residual blocks must accept a tensor of shape (None, None, None, C)
-    x = x = TimeDistributed(lambda t: residual_block_v2(t, 64))(x)
+    x = TimeDistributed(ResidualBlockV2Layer(64))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 256→128
 
-    x = x = TimeDistributed(lambda t: residual_block_v2(t, 64))(x)
+    x = TimeDistributed(ResidualBlockV2Layer(64))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 128→64
 
     # ---- fuse 21 beams ----------
@@ -110,9 +118,9 @@ def define_sweep_single_localization():
     coords = Lambda(softargmax2d)(heatmap)
 
     # small correction head
-    x = Dense(32, activation='relu')(coords)
-    x = Dense(16, activation='relu')(x)
-    coords_out = Dense(2, activation='sigmoid')(x)
+    coords = Dense(32, activation='relu')(coords)
+    coords = Dense(16, activation='relu')(coords)
+    coords_out = Dense(2, activation='sigmoid')(coords)
 
     model = Model(inputs, coords_out)
     return model
@@ -294,7 +302,7 @@ def defineModel_single_target_detector_sweep():
     x = TimeDistributed(Conv2D(16,(3,3),padding="same",activation="relu"))(inputs)
     x = TimeDistributed(MaxPooling2D((2,1)))(x) # (1024, 256) -> (512, 256)
 
-    x = TimeDistributed(Conv2D(32,(3,3),padding="same",activation="relu"))(inputs)
+    x = TimeDistributed(Conv2D(32,(3,3),padding="same",activation="relu"))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x) # (512, 256) -> (256, 128)
 
     x = TimeDistributed(Conv2D(64,(3,3),activation="relu",padding="same"))(x)
