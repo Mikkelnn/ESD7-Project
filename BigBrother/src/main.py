@@ -16,8 +16,8 @@ import sklearn.metrics as sklearn
 import shutil
 
 
-# GENEREL_PATH = Path("../../")
-GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
+GENEREL_PATH = Path("../../")
+# GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
@@ -66,7 +66,7 @@ def main():
             
             model.summary()
 
-            # exit()
+            exit()
 
             # ai_handler.plot_block_diagram(model)
 

@@ -78,13 +78,73 @@ def softargmax2d(heatmap):
 
     return tf.concat([x, y], axis=1)
 
-class ResidualBlockV2Layer(keras.layers.Layer):
-    def __init__(self, filters):
+class ResidualBlockV2Layer(Layer):
+    def __init__(self, filters, kernel_size=(3,3), reduction=8):
         super().__init__()
         self.filters = filters
+        self.kernel_size = kernel_size
+        self.reduction = reduction
 
-    def call(self, inputs):
-        return residual_block_v2(inputs, self.filters)
+        # Main path
+        self.conv1 = Conv2D(filters, kernel_size, padding='same', use_bias=False)
+        self.bn1   = BatchNormalization()
+        self.act1  = Activation('relu')
+
+        self.conv2 = Conv2D(filters, kernel_size, padding='same', use_bias=False)
+        self.bn2   = BatchNormalization()
+
+        # Squeeze & Excitation
+        self.gap   = GlobalAveragePooling2D()
+        self.fc1   = Dense(filters // reduction, activation='relu')
+        self.fc2   = Dense(filters, activation='sigmoid')
+
+        # Shortcut projection (only created if needed)
+        self.shortcut_conv = None
+        self.shortcut_bn   = None
+
+    def build(self, input_shape):
+        in_channels = int(input_shape[-1])
+
+        # Create projection shortcut if channels mismatch
+        if in_channels != self.filters:
+            self.shortcut_conv = Conv2D(self.filters, (1,1), padding='same', use_bias=False)
+            self.shortcut_bn   = BatchNormalization()
+
+        super().build(input_shape)
+
+    def call(self, inputs, training=None):
+        shortcut = inputs
+
+        # --- Shortcut projection ---
+        if self.shortcut_conv is not None:
+            shortcut = self.shortcut_conv(shortcut)
+            shortcut = self.shortcut_bn(shortcut, training=training)
+
+        # --- Conv 1 ---
+        x = self.conv1(inputs)
+        x = self.bn1(x, training=training)
+        x = self.act1(x)
+
+        # --- Conv 2 ---
+        x = self.conv2(x)
+        x = self.bn2(x, training=training)
+
+        # --- Squeeze & Excitation ---
+        se = self.gap(x)
+        se = self.fc1(se)
+        se = self.fc2(se)
+        se = Reshape((1,1,self.filters))(se)
+        x = Multiply()([x, se])
+
+        # --- Merge + ReLU ---
+        out = Add()([x, shortcut])
+        out = Activation('relu')(out)
+
+        return out
+
+    def compute_output_shape(self, input_shape):
+        # Residual block preserves size, only channels may change
+        return input_shape[:-1] + (self.filters,)
 
 def define_sweep_single_localization():
     inputs = Input(shape=(21, 1024, 256, 1))
@@ -293,6 +353,8 @@ def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
     model = Model(inputs, [target_out, range_out, doppler_out])
 
     return model
+
+
 
 def defineModel_single_target_detector_sweep():
 
