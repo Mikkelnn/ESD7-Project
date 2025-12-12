@@ -341,7 +341,7 @@ def main():
             plt.savefig(ai_handler.result_path / "loss.png", format="png")
             plt.close()
 
-            # confusion_matrix()
+            confusion_matrix()
 
             # ntfy.post(  # Remember the message is markdown format
             #     title=f"Results of ML {time_started}",
@@ -399,7 +399,8 @@ def confusion_matrix():
     model = ai_handler.load_model_directory(modelPath)
     
     def loader_func_data(f): 
-        data = np.load(f)[... , None]
+        # data = np.load(f)[... , None]
+        data = np.load(f)
         return np.nan_to_num(data, nan=0.0)
 
     def loader_func_label(f):
