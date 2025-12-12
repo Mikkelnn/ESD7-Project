@@ -36,7 +36,7 @@ def main():
     with ai_handler.strategy.scope():
         model = None
         time_started = 0
-        batch_size = 1 # Decrease as model get larger to fit in GPU memory
+        batch_size = 32 # Decrease as model get larger to fit in GPU memory
         epochs = 2
         initial_epoch = 0
         train_on_latest_result = False
@@ -193,7 +193,7 @@ def main():
                 # return target_present
 
             def loader_func_data(f): 
-                data = (np.load(f)[0])[... , None]
+                data = np.load(f)[... , None]
                 # data = np.load(f)
                 return np.nan_to_num(data, nan=0.0)
 
