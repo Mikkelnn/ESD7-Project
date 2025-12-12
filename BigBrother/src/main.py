@@ -416,7 +416,8 @@ def confusion_matrix():
     assert len(data_files) == len(label_files), "Data and label counts differ"
 
 
-    zeros = 0, ones = 1
+    zeros = 0
+    ones = 1
     for label_file in label_files:
         arr = np.load(label_file)
         zeros += 1 if np.sum(arr) == 0 else ones += 1
