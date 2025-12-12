@@ -381,7 +381,7 @@ def defineModel_single_target_detector_sweep():
 
     # classifier
     x = Dense(256,activation="relu")(x)
-    outputs = Dense(2,activation="sigmoid")(x)
+    outputs = Dense(2,activation="softmax")(x)
 
     model = Model(inputs, outputs)
     return model
