@@ -21,11 +21,11 @@ log.info("Finalised importing AI libs")
 
 class AiHandler():
     """Class for helping get Tensorflow hardware and helper functions"""
-    def __init__(self, result_path):
+    def __init__(self, result_path, namedResultDir=None):
         """Initiates AI Handler"""
         self.time_of_import = time.localtime()       
         self.base_result_path = result_path
-        self.result_path = result_path / self.set_time_start()
+        self.result_path = result_path / (namedResultDir or self.set_time_start())
         self.result_path.mkdir(parents=True, exist_ok=True)
         self.tensorboard_logdir = self.result_path / "logs"
         self.checkpoint_dir = os.path.join(self.result_path, "checkpoints")
@@ -264,8 +264,16 @@ class AiHandler():
         data = np.array(data)
 
         # If single sample, add batch dimension
-        if len(data.shape) == len(model.input_shape) - 1:
-            data = np.expand_dims(data, axis=0)
+        size_diff = (len(model.input_shape) - 1) - len(data.shape)
+        if size_diff > 0:
+            if size_diff == 1:            
+                data = np.expand_dims(data, axis=0)
+            else if size_diff = 2:
+                data = np.expand_dims(data, axis=0)
+                data = np.expand_dims(data, axis=-1)
+            else:
+                self.log.error(f"Data shape {data.shape} incompatible with model input shape {model.input_shape}")
+                raise ValueError("Incompatible data shape for prediction")
 
         # print(f"Input: {data}")
 

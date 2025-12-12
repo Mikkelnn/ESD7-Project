@@ -150,46 +150,6 @@ def main():
                 return label
                 # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
-                # target_present = np.array([0], dtype=np.float32)
-                # range_label = np.zeros(num_range_out, dtype=np.float32)
-                # doppler_label = np.zeros(num_velocity_out, dtype=np.float32)
-                
-                # coords = np.zeros(2, dtype=np.float32)
-
-                # --- Object presence ---
-                # if np.sum(label) != 0:
-                #     target_present[0] = 1 # target present
-                #     coords = label
-                    # --- Scale label to relative bin index ---
-                    # Example scaling, adjust factors to your bin definitions
-                #     label_scaled = np.array([
-                #         label[0] * num_range_out,    # range scale
-                #         label[1] * num_velocity_out  # doppler scale
-                #     ])
-
-                #     # --- Floor to nearest bin index ---
-                #     label_idx = np.floor(label_scaled).astype(int)
-
-                #     # --- Clip to valid range ---
-                #     label_idx[0] = np.clip(label_idx[0], 0, num_range_out - 1)
-                #     label_idx[1] = np.clip(label_idx[1], 0, num_velocity_out - 1)
-
-                #     # --- Create one-hot vectors ---
-                #     range_label[label_idx[0]] = 1.0
-                #     doppler_label[label_idx[1]] = 1.0
-
-                # range_label = np.concatenate([target_present, range_label], axis=-1)
-                # doppler_label = np.concatenate([target_present, doppler_label], axis=-1)
-
-                # --- Return as dict for 3-head model ---
-                # return {
-                #     "target_present": target_present,
-                #     "coords": np.concatenate([target_present, coords.astype(np.float32)], axis=-1),
-                #     # "heatmap": np.zeros((64, 32, 1), dtype=np.float32)  # optional
-                #     # "range_head": range_label,
-                #     # "doppler_head": doppler_label
-                # }
-                # return target_present
 
             def loader_func_data(f): 
                 # data = (np.load(f)[0])[... , None]

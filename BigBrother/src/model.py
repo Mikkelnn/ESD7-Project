@@ -434,8 +434,6 @@ def defineModel_bigCNN(output_size):
 
     return model
 
-
-
 def defineModel_single_target_detector_doubleConv():
 
     model = Sequential([
