@@ -405,7 +405,7 @@ def confusion_matrix():
 
     def loader_func_label(f):
         arr = np.load(f)
-        # class 0: no debris (sum == 0), class 1: debris present (sum != 0)
+        # class 0: no debris (sum == 0), class 1: debris present (sum != 0)        
         return 0 if (np.sum(arr) == 0) else 1
     
         #return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
@@ -414,6 +414,15 @@ def confusion_matrix():
     data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
     label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
     assert len(data_files) == len(label_files), "Data and label counts differ"
+
+
+    zeros = 0, ones = 1
+    for label_file in label_files:
+        arr = np.load(label_file)
+        zeros += 1 if np.sum(arr) == 0 else ones += 1
+
+    print(f"zeros: {zeros}, ones: {ones}")
+    exit()
 
     # N, TP, FP, TN, FN = len(data_files), 0, 0, 0, 0
 
@@ -436,6 +445,7 @@ def confusion_matrix():
         #    FP += 1
         #elif np.array_equal(act, [1,0]) and np.array_equal(pre, [1,0]):
         #    TN += 1
+
 
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
