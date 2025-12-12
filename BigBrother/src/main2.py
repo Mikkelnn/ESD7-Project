@@ -148,8 +148,8 @@ def main():
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                return label
-                # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
+                # return label
+                return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
                 # target_present = np.array([0], dtype=np.float32)
                 # range_label = np.zeros(num_range_out, dtype=np.float32)
@@ -193,8 +193,8 @@ def main():
                 # return target_present
 
             def loader_func_data(f): 
-                # data = (np.load(f)[0])[... , None]
-                data = np.load(f)
+                data = (np.load(f)[0])[... , None]
+                # data = np.load(f)
                 return np.nan_to_num(data, nan=0.0)
 
             labeld_data = ai_handler.dataset_from_data_and_labels(
