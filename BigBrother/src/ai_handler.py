@@ -268,7 +268,7 @@ class AiHandler():
         if size_diff > 0:
             if size_diff == 1:            
                 data = np.expand_dims(data, axis=0)
-            else if size_diff = 2:
+            else if size_diff == 2:
                 data = np.expand_dims(data, axis=0)
                 data = np.expand_dims(data, axis=-1)
             else:
