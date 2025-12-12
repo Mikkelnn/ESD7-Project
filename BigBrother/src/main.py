@@ -420,7 +420,10 @@ def confusion_matrix():
     ones = 1
     for label_file in label_files:
         arr = np.load(label_file)
-        zeros += 1 if np.sum(arr) == 0 else ones += 1
+        if np.sum(arr) == 0:
+            zeros += 1
+        else:
+            ones += 1
 
     print(f"zeros: {zeros}, ones: {ones}")
     exit()
