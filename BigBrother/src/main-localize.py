@@ -204,9 +204,8 @@ def main():
 
             for i in epochs:
                 log.info(
-                    f"Epoch {i}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, MAE {mae[i - 1]}, validation MAE {mae_acc[i - 1]}, MSE {mse[i - 1]}, validation MSE {val_mse[i - 1]}"
+                    f"Epoch {i + initial_epoch}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, MAE {mae[i - 1]}, validation MAE {mae_acc[i - 1]}, MSE {mse[i - 1]}, validation MSE {val_mse[i - 1]}"
                 )
-
 
             # Plot and save mae figure
             plt.figure(figsize=(8, 5))
