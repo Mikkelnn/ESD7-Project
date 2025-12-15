@@ -159,10 +159,12 @@ def define_sweep_single_localization():
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 512→256
 
     # residual blocks must accept a tensor of shape (None, None, None, C)
-    x = TimeDistributed(ResidualBlockV2Layer(64))(x)
+    # x = TimeDistributed(ResidualBlockV2Layer(64))(x)
+    x = TimeDistributed(Conv2D(64, (3,3), padding='same', activation='relu'))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 256→128
 
-    x = TimeDistributed(ResidualBlockV2Layer(64))(x)
+    # x = TimeDistributed(ResidualBlockV2Layer(64))(x)
+    x = TimeDistributed(Conv2D(64, (3,3), padding='same', activation='relu'))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x)   # 128→64
 
     # ---- fuse 21 beams ----------
