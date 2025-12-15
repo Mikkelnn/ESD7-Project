@@ -229,11 +229,28 @@ class AiHandler():
 
         return model_path
 
+    def load_weights_directory(self, model, directory):
+        """Load weights from directory if exists"""
+
+        directory = Path(directory)
+        weights_files = list(directory.glob("*.weights.h5"))
+
+        weights_path = weights_files[0] if weights_files else None
+
+        if not weights_path:
+            self.log.warning(f"[ModelLoad] No weights found in: {directory}")
+            return model
+
+        self.log.info(f"[ModelLoad] Loading weights: {weights_path.name}")
+        model.load_weights(weights_path)
+        
+        return model
+
     def load_model_directory(self, directory):
         """Load model from directory if exists"""
 
         directory = Path(directory)
-        model_files = list(directory.glob("*.keras"))
+        model_files = None if only_weights else list(directory.glob("*.keras"))
         weights_files = list(directory.glob("*.weights.h5"))
 
         model_path = model_files[0] if model_files else None
@@ -379,7 +396,7 @@ class AiHandler():
         
         return dataset
 
-    def find_latest_model(self):
+    def find_latest_model(self, model=None):
         """
         Find latest trained model directory and extract last completed epoch.
         Returns the loaded model with weights
@@ -422,7 +439,13 @@ class AiHandler():
 
             last_epoch = max(epochs)
             self.log.info(f"[ModelSearch] Found previous model '{latest_results.name}' up to epoch {last_epoch}.")
-            model = self.load_model_directory(latest_results)
+
+            if model is not None:
+                self.log.info(f"[ModelSearch] Model already provided, only loading weights.")
+                model = self.load_weights_directory(model, latest_results)
+            else:
+                model = self.load_model_directory(latest_results)
+   
             if model is None:
                 self.log.error("model not loaded")
                 return False, last_epoch, model

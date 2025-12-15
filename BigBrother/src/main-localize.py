@@ -52,7 +52,8 @@ def main():
             time_started = ai_handler.set_time_start()
 
             if train_on_latest_result:
-                (found, initial_epoch, model) = ai_handler.find_latest_model()
+                model = define_sweep_single_localization()
+                (found, initial_epoch, model) = ai_handler.find_latest_model(model)
                 epochs += initial_epoch
                 if not found:
                     exit()
