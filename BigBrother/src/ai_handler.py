@@ -249,7 +249,7 @@ class AiHandler():
     def load_model(self, model_path, weights_path=None):
         """Load model from file"""
         self.log.info(f"Loading model from: {model_path}")
-        model = self.tf.keras.models.load_model(model_path)
+        model = self.tf.keras.models.load_model(model_path, safe_mode=False)
 
         # load weights if found
         if weights_path is not None and os.path.exists(weights_path):
