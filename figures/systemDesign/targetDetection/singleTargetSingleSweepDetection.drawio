@@ -268,10 +268,10 @@
         <mxCell id="goTT5H2CPnxMvPVLZK_Y-64" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="64x32" vertex="1">
           <mxGeometry height="30" width="60" x="506.06" y="290.98" as="geometry" />
         </mxCell>
-        <mxCell id="goTT5H2CPnxMvPVLZK_Y-72" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="GAP2D" vertex="1">
+        <mxCell id="goTT5H2CPnxMvPVLZK_Y-72" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="GAP2D" vertex="1">
           <mxGeometry height="30" width="60" x="550" y="219.98" as="geometry" />
         </mxCell>
-        <mxCell id="6h7JKcaLEraKrPjpGxK9-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="GAP1D" vertex="1">
+        <mxCell id="6h7JKcaLEraKrPjpGxK9-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="GAP1D" vertex="1">
           <mxGeometry height="30" width="60" x="606" y="219.98" as="geometry" />
         </mxCell>
         <mxCell id="6h7JKcaLEraKrPjpGxK9-3" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Project Font;">
