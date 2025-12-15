@@ -193,10 +193,10 @@ def main():
             
             ai_handler.save_model(compiled_model)
             
-            mae = history.history["mae"]
-            mae_acc = history.history["val_mae"]
-            mse = history.history["mse"]
-            val_mse = history.history["val_mse"]
+            mae = history.history["MAE"]
+            mae_acc = history.history["val_MAE"]
+            mse = history.history["MSE"]
+            val_mse = history.history["val_MSE"]
 
             loss = history.history["loss"]
             val_loss = history.history["val_loss"]
