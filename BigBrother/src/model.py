@@ -191,8 +191,8 @@ def define_robust_model_v2(use_heatmap=True):
 
     # --- Initial conv layers ---
     x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)
-    x = Conv2D(32, (3,3), padding='same', activation='relu')(inputs)    
-    x = Conv2D(16, (3,3), activation='relu', padding='same')(inputs)
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(x)    
+    x = Conv2D(16, (3,3), activation='relu', padding='same')(x)
     x = MaxPooling2D((2,1))(x)  # (1024,256)->(512,256)
 
     x = Conv2D(64, (3,3), activation='relu', padding='same')(x)
