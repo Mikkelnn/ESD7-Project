@@ -1,10 +1,25 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy import fft
+from pathlib import Path
+# import matplotlib.pyplot as plt
+# from scipy import fft
 
-from dsp_mini import range_doppler_fft
+# from dsp_mini import range_doppler_fft
 
-ROOT_PATH = "../../training_data/"
+ROOT_PATH = Path("~/zero_one/training_data/")
+
+label_files = Path(ROOT_PATH / "labels").glob("*")
+
+zero_count = 0
+nonzero_count = 0
+for f in label_files:
+    label = np.load(f)
+    if np.sum(label) != 0:
+        nonzero_count += 1
+    else:
+        zero_count += 1
+
+print(f"zero labels: {zero_count}, non-zero labels: {nonzero_count}")
+exit()
 
 file_to_inspect = "9376d46d-f701-4a4b-a8ac-4a8260c416e4.npy"
 
