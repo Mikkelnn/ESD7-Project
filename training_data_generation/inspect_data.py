@@ -5,7 +5,7 @@ from pathlib import Path
 
 # from dsp_mini import range_doppler_fft
 
-ROOT_PATH = Path("~/zero_one/training_data/")
+ROOT_PATH = Path("/home/mikkel/repoes/zero_one/validate_data/")
 
 label_files = Path(ROOT_PATH / "labels").glob("*")
 

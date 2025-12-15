@@ -37,7 +37,7 @@ def main():
         model = None
         time_started = 0
         batch_size = 1 # Decrease as model get larger to fit in GPU memory
-        epochs = 2
+        epochs = 5
         initial_epoch = 0
         train_on_latest_result = False
         
@@ -414,20 +414,7 @@ def confusion_matrix():
     data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
     label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
     assert len(data_files) == len(label_files), "Data and label counts differ"
-
-
-    zeros = 0
-    ones = 1
-    for label_file in label_files:
-        arr = np.load(label_file)
-        if np.sum(arr) == 0:
-            zeros += 1
-        else:
-            ones += 1
-
-    print(f"zeros: {zeros}, ones: {ones}")
-    exit()
-
+    
     # N, TP, FP, TN, FN = len(data_files), 0, 0, 0, 0
 
     y_true = []
@@ -453,6 +440,8 @@ def confusion_matrix():
 
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
+
+    log.info(f"count: {len(y_true)}, targets: {np.sum(y_true==1)}, no targets: {np.sum(y_true==0)}")
 
     #TP /= (TP + FN)
     #FN /= (TP + FN)
