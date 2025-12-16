@@ -10,7 +10,7 @@ Bw = 20e6
 Temp = 300
 noiseFloor = 10 * np.log10(k * Temp * Bw)
 
-SNR_dB = 10
+SNR_dB = 5
 SNR = 10**(SNR_dB/10)
 N = 16
 pfa = np.linspace(0, 1, 4000000)
@@ -38,8 +38,8 @@ def pd_cafar(pfa, snr, N, cfar_loss_dB=1.5):
 
     return pd
 
-def pd_ml(pfa, snr, kappa=0.95):
-    return norm.sf(norm.isf(pfa) - np.sqrt(kappa*snr))
+def pd_ml(pfa, snr):
+    return norm.sf(norm.isf(pfa) - np.sqrt(25))
 
 def pd_random(pfa):
     return pfa
@@ -61,9 +61,9 @@ pfa_target_values = [
     1
 ]
 
-font_size = 30
+font_size = 25
 
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(10, 6))
 
 # Plot ROC curves
 plt.plot(pfa, Pd_np, 'b-', label='NP')

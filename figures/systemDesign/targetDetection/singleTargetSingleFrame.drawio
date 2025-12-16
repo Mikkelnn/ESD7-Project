@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0" version="29.2.7">
   <diagram name="Page-1" id="HdbOuSPgm0uEW5RGxkvF">
-    <mxGraphModel dx="1019" dy="499" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1426" dy="699" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -261,9 +261,6 @@
         </mxCell>
         <mxCell id="7ebby2Debyv9ZEmr6hgD-150" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="64x32" vertex="1">
           <mxGeometry height="30" width="60" x="450.06" y="240" as="geometry" />
-        </mxCell>
-        <mxCell id="7ebby2Debyv9ZEmr6hgD-151" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="65792" vertex="1">
-          <mxGeometry height="30" width="60" x="505" y="290.19" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
