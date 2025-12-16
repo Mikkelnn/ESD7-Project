@@ -553,7 +553,7 @@ def get_validation_predictions():
             predicted_raw_scaled = np.multiply(predicted_raw, [1000, 7500])
             label_raw_scaled = np.multiply(label_raw, [1000, 7500])
 
-            f.write(f"predicted_raw: {predicted_raw}; label_raw: {label_raw}; predicted_raw_scaled: {predicted_raw_scaled}; label_raw_scaled: {label_raw_scaled}")
+            f.write(f"predicted_raw: {predicted_raw}; label_raw: {label_raw}; predicted_raw_scaled: {predicted_raw_scaled}; label_raw_scaled: {label_raw_scaled}\n")
 
 
 if __name__ == "__main__":
