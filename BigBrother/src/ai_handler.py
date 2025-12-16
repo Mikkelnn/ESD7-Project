@@ -250,7 +250,7 @@ class AiHandler():
         """Load model from directory if exists"""
 
         directory = Path(directory)
-        model_files = None if only_weights else list(directory.glob("*.keras"))
+        model_files = list(directory.glob("*.keras"))
         weights_files = list(directory.glob("*.weights.h5"))
 
         model_path = model_files[0] if model_files else None
