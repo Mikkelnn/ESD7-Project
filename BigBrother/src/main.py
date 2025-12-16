@@ -426,7 +426,9 @@ def confusion_matrix():
         pre_idx = int(np.argmax(pre, axis=-1)) 
         act_idx = loader_func_label(label_file) 
 
-        log.info(f"pre: {pre}, label: {acct_idx}")
+        label = np.load(label_file)
+
+        log.info(f"pre: {pre}, label_raw: {label}, label_range: {label[0] * 1000} m, label_velocity: {label[1] * 7500} m/s")
 
         y_true.append(act_idx)
         y_pred.append(pre_idx)
