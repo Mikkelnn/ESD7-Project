@@ -23,7 +23,7 @@ TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "big_training_dat
 VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "training_data"
 
 log = get_logger()
-ai_handler = AiHandler(RESULTS_PATH) # namedResultDir="12-12-2025_09:51:09"
+ai_handler = AiHandler(RESULTS_PATH, namedResultDir="15-12-2025_18:18:44") # namedResultDir="12-12-2025_09:51:09"
 ntfy = NtfyHandler("ai_template")
 
 
@@ -422,8 +422,11 @@ def confusion_matrix():
 
     for data_file, label_file in tqdm(zip(data_files, label_files), total=len(data_files)):
         pre = ai_handler.predict(model, loader_func_data(data_file))
+
         pre_idx = int(np.argmax(pre, axis=-1)) 
         act_idx = loader_func_label(label_file) 
+
+        log.info(f"pre: {pre}, label: {acct_idx}")
 
         y_true.append(act_idx)
         y_pred.append(pre_idx)
@@ -566,5 +569,5 @@ def roc(modelPath: str):
 
 if __name__ == "__main__":
     # load_predict()
-    main()
-    # _ = confusion_matrix()
+    # main()
+    _ = confusion_matrix()
