@@ -23,7 +23,7 @@ TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
 
 log = get_logger()
-ai_handler = AiHandler(RESULTS_PATH)
+ai_handler = AiHandler(RESULTS_PATH, namedResultDir="15-12-2025_20:51:34")
 ntfy = NtfyHandler("ai_template")
 
 
@@ -534,8 +534,30 @@ def roc(modelPath: str):
     print(f"ROC AUC: {roc_auc:.3f}")
     return fpr, tpr, thresholds, roc_auc
 
+def get_validation_predictions():
+    modelPath = ai_handler.result_path
+    model = define_sweep_single_localization()
+    model = ai_handler.load_weights_directory(model, modelPath)
+
+    data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
+    data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
+    label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
+    assert len(data_files) == len(label_files), "Data and label counts differ"
+
+    log_path = Path(__file__).parent.parent / "metrics.txt"
+    with open(log_path, "w", encoding="utf-8") as f:
+        for data_file, label_file in tqdm(zip(data_files, label_files), total=len(data_files)):
+            predicted_raw = ai_handler.predict(model, data = np.load(data_file))
+            label_raw = np.load(label_file)
+
+            predicted_raw_scaled = np.multiply(predicted_raw, [1000, 7500])
+            label_raw_scaled = np.multiply(label_raw, [1000, 7500])
+
+            f.write(f"predicted_raw: {predicted_raw}; label_raw: {label_raw}; predicted_raw_scaled: {predicted_raw_scaled}; label_raw_scaled: {label_raw_scaled}")
+
 
 if __name__ == "__main__":
     # load_predict()
-    main()
+    # main()
     # _ = confusion_matrix()
+    _ = get_validation_predictions()
