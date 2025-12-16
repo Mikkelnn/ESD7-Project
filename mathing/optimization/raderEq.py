@@ -8,7 +8,7 @@ const = Pt * Gt * Gr * wavelength**2 / ((4*np.pi)**3)
 
 # to get 4 values (2x2) use broadcasting or outer product
 sigma = np.array([3.47e-6 , 0.035])[:, None]   # shape (2,1)
-R     = np.array([100.0, 2000.0])[None, :]  # shape (1,2)
+R     = np.array([100.0, 1000.0])[None, :]  # shape (1,2)
 Pr = const * sigma / (R**4)  # shape (2,2) -> 4 combinations
 
 PrdBm = 10 * np.log10(Pr) + 30

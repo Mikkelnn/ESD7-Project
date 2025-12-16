@@ -39,7 +39,7 @@ def pd_cafar(pfa, snr, N, cfar_loss_dB=1.5):
     return pd
 
 def pd_ml(pfa, snr):
-    return norm.sf(norm.isf(pfa) - np.sqrt(25))
+    return norm.sf(norm.isf(pfa) - np.sqrt(40))
 
 def pd_random(pfa):
     return pfa
@@ -51,7 +51,7 @@ Pd_np = pd_np_coherent(pfa, SNR)
 Pd_cafar_ = pd_cafar(pfa, SNR, N, cfar_loss_dB=1.5)
 Pd_ml_ = pd_ml(pfa, SNR)
 
-pfa_target = 10e-2
+pfa_target = 10e-6
 pfa_target_idx = np.searchsorted(pfa, pfa_target)
 pfa_target_values = [
     Pd_np[pfa_target_idx],
