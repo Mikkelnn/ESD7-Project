@@ -1,0 +1,341 @@
+'16-12-2025 14:28:40' - dev                  :confusion_matrix      - INFO - pre: [[0.00343001 0.99657   ]], label_raw: [0.868      0.15093333], label_range: 868.0 m, label_velocity: 1132.0 m/s
+'16-12-2025 14:28:40' - dev                  :confusion_matrix      - INFO - pre: [[0.98848265 0.01151731]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:41' - dev                  :confusion_matrix      - INFO - pre: [[0.9914369  0.00856316]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:42' - dev                  :confusion_matrix      - INFO - pre: [[0.00367309 0.99632686]], label_raw: [0.851      0.61133333], label_range: 851.0 m, label_velocity: 4585.0 m/s
+'16-12-2025 14:28:43' - dev                  :confusion_matrix      - INFO - pre: [[0.00238313 0.9976169 ]], label_raw: [0.461      0.82906667], label_range: 461.0 m, label_velocity: 6218.0 m/s
+'16-12-2025 14:28:43' - dev                  :confusion_matrix      - INFO - pre: [[0.99025565 0.00974432]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:44' - dev                  :confusion_matrix      - INFO - pre: [[0.99243295 0.0075671 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:45' - dev                  :confusion_matrix      - INFO - pre: [[0.00226846 0.9977316 ]], label_raw: [0.12       0.53026667], label_range: 120.0 m, label_velocity: 3977.0 m/s
+'16-12-2025 14:28:46' - dev                  :confusion_matrix      - INFO - pre: [[0.00243148 0.99756855]], label_raw: [0.526  0.3632], label_range: 526.0 m, label_velocity: 2724.0 m/s
+'16-12-2025 14:28:47' - dev                  :confusion_matrix      - INFO - pre: [[0.00313782 0.9968622 ]], label_raw: [0.739      0.77346667], label_range: 739.0 m, label_velocity: 5801.0 m/s
+'16-12-2025 14:28:47' - dev                  :confusion_matrix      - INFO - pre: [[0.9796681  0.02033187]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:48' - dev                  :confusion_matrix      - INFO - pre: [[0.00264921 0.9973508 ]], label_raw: [0.702      0.23413333], label_range: 702.0 m, label_velocity: 1756.0 m/s
+'16-12-2025 14:28:49' - dev                  :confusion_matrix      - INFO - pre: [[0.00258404 0.9974159 ]], label_raw: [0.64  0.698], label_range: 640.0 m, label_velocity: 5235.0 m/s
+'16-12-2025 14:28:50' - dev                  :confusion_matrix      - INFO - pre: [[0.9904737  0.00952629]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:51' - dev                  :confusion_matrix      - INFO - pre: [[0.9871525  0.01284747]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:51' - dev                  :confusion_matrix      - INFO - pre: [[0.9923578  0.00764216]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:52' - dev                  :confusion_matrix      - INFO - pre: [[0.9920162  0.00798385]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:53' - dev                  :confusion_matrix      - INFO - pre: [[0.99159324 0.00840682]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:28:54' - dev                  :confusion_matrix      - INFO - pre: [[0.00391424 0.99608576]], label_raw: [0.824      0.11573333], label_range: 824.0 m, label_velocity: 868.0 m/s
+'16-12-2025 14:28:54' - dev                  :confusion_matrix      - INFO - pre: [[0.00239386 0.99760616]], label_raw: [0.505  0.8464], label_range: 505.0 m, label_velocity: 6348.0 m/s
+'16-12-2025 14:28:56' - dev                  :confusion_matrix      - INFO - pre: [[0.00246576 0.9975343 ]], label_raw: [0.686      0.30053333], label_range: 686.0 m, label_velocity: 2254.0 m/s
+'16-12-2025 14:28:57' - dev                  :confusion_matrix      - INFO - pre: [[0.00254982 0.9974502 ]], label_raw: [0.339      0.08013333], label_range: 339.0 m, label_velocity: 601.0 m/s
+'16-12-2025 14:28:58' - dev                  :confusion_matrix      - INFO - pre: [[0.00232347 0.99767655]], label_raw: [0.492      0.34386667], label_range: 492.0 m, label_velocity: 2579.0 m/s
+'16-12-2025 14:28:59' - dev                  :confusion_matrix      - INFO - pre: [[0.9921359  0.00786418]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:00' - dev                  :confusion_matrix      - INFO - pre: [[0.9932106  0.00678942]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:01' - dev                  :confusion_matrix      - INFO - pre: [[0.99286735 0.00713269]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:02' - dev                  :confusion_matrix      - INFO - pre: [[0.00239566 0.9976044 ]], label_raw: [0.176      0.46986667], label_range: 176.0 m, label_velocity: 3524.0 m/s
+'16-12-2025 14:29:03' - dev                  :confusion_matrix      - INFO - pre: [[0.9590094  0.04099059]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:04' - dev                  :confusion_matrix      - INFO - pre: [[0.00537685 0.9946232 ]], label_raw: [0.937      0.95413333], label_range: 937.0 m, label_velocity: 7156.0 m/s
+'16-12-2025 14:29:04' - dev                  :confusion_matrix      - INFO - pre: [[0.99241453 0.00758551]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:05' - dev                  :confusion_matrix      - INFO - pre: [[0.0023529 0.9976471]], label_raw: [0.123      0.02053333], label_range: 123.0 m, label_velocity: 154.0 m/s
+'16-12-2025 14:29:06' - dev                  :confusion_matrix      - INFO - pre: [[0.00272228 0.9972778 ]], label_raw: [0.374      0.52266667], label_range: 374.0 m, label_velocity: 3919.9999999999995 m/s
+'16-12-2025 14:29:07' - dev                  :confusion_matrix      - INFO - pre: [[0.0024412  0.99755883]], label_raw: [0.404  0.5192], label_range: 404.0 m, label_velocity: 3894.0 m/s
+'16-12-2025 14:29:07' - dev                  :confusion_matrix      - INFO - pre: [[0.00251031 0.9974897 ]], label_raw: [0.617      0.48466667], label_range: 617.0 m, label_velocity: 3635.0 m/s
+'16-12-2025 14:29:08' - dev                  :confusion_matrix      - INFO - pre: [[0.9908958  0.00910414]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:09' - dev                  :confusion_matrix      - INFO - pre: [[0.9926103  0.00738969]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:10' - dev                  :confusion_matrix      - INFO - pre: [[0.00500354 0.9949964 ]], label_raw: [0.892      0.42973333], label_range: 892.0 m, label_velocity: 3223.0 m/s
+'16-12-2025 14:29:11' - dev                  :confusion_matrix      - INFO - pre: [[0.9911169  0.00888309]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:12' - dev                  :confusion_matrix      - INFO - pre: [[0.00346889 0.9965312 ]], label_raw: [0.813      0.71173333], label_range: 813.0 m, label_velocity: 5338.0 m/s
+'16-12-2025 14:29:12' - dev                  :confusion_matrix      - INFO - pre: [[0.99002975 0.00997029]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:13' - dev                  :confusion_matrix      - INFO - pre: [[0.9927805 0.0072195]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00710543 0.9928946 ]], label_raw: [0.956      0.80266667], label_range: 956.0 m, label_velocity: 6020.0 m/s
+'16-12-2025 14:29:15' - dev                  :confusion_matrix      - INFO - pre: [[0.00242659 0.99757344]], label_raw: [0.532      0.00973333], label_range: 532.0 m, label_velocity: 73.0 m/s
+'16-12-2025 14:29:16' - dev                  :confusion_matrix      - INFO - pre: [[0.00233014 0.9976699 ]], label_raw: [0.231      0.47213333], label_range: 231.0 m, label_velocity: 3541.0 m/s
+'16-12-2025 14:29:16' - dev                  :confusion_matrix      - INFO - pre: [[0.00278913 0.9972109 ]], label_raw: [0.397      0.36813333], label_range: 397.0 m, label_velocity: 2761.0 m/s
+'16-12-2025 14:29:17' - dev                  :confusion_matrix      - INFO - pre: [[0.00235938 0.9976406 ]], label_raw: [0.482      0.22213333], label_range: 482.0 m, label_velocity: 1666.0 m/s
+'16-12-2025 14:29:18' - dev                  :confusion_matrix      - INFO - pre: [[0.00237142 0.9976286 ]], label_raw: [0.236  0.4844], label_range: 236.0 m, label_velocity: 3633.0 m/s
+'16-12-2025 14:29:19' - dev                  :confusion_matrix      - INFO - pre: [[0.99156266 0.00843739]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:20' - dev                  :confusion_matrix      - INFO - pre: [[0.00246617 0.9975338 ]], label_raw: [0.295      0.12773333], label_range: 295.0 m, label_velocity: 958.0 m/s
+'16-12-2025 14:29:20' - dev                  :confusion_matrix      - INFO - pre: [[0.9943355  0.00566454]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:21' - dev                  :confusion_matrix      - INFO - pre: [[0.9926717  0.00732831]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:21' - dev                  :confusion_matrix      - INFO - pre: [[0.00467626 0.9953237 ]], label_raw: [0.85       0.05493333], label_range: 850.0 m, label_velocity: 412.0 m/s
+'16-12-2025 14:29:22' - dev                  :confusion_matrix      - INFO - pre: [[0.00290849 0.99709153]], label_raw: [0.758 0.304], label_range: 758.0 m, label_velocity: 2280.0 m/s
+'16-12-2025 14:29:23' - dev                  :confusion_matrix      - INFO - pre: [[0.0128514 0.9871486]], label_raw: [0.979      0.74013333], label_range: 979.0 m, label_velocity: 5551.0 m/s
+'16-12-2025 14:29:23' - dev                  :confusion_matrix      - INFO - pre: [[0.00456208 0.9954379 ]], label_raw: [0.906  0.0796], label_range: 906.0 m, label_velocity: 597.0 m/s
+'16-12-2025 14:29:25' - dev                  :confusion_matrix      - INFO - pre: [[0.00259964 0.9974004 ]], label_raw: [0.623  0.7504], label_range: 623.0 m, label_velocity: 5628.0 m/s
+'16-12-2025 14:29:25' - dev                  :confusion_matrix      - INFO - pre: [[0.98775977 0.01224023]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:26' - dev                  :confusion_matrix      - INFO - pre: [[0.99217814 0.00782193]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:27' - dev                  :confusion_matrix      - INFO - pre: [[0.9901424  0.00985762]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:28' - dev                  :confusion_matrix      - INFO - pre: [[0.99273723 0.0072628 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:29' - dev                  :confusion_matrix      - INFO - pre: [[0.99126476 0.00873518]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:29' - dev                  :confusion_matrix      - INFO - pre: [[0.00274526 0.9972548 ]], label_raw: [0.104      0.76146667], label_range: 104.0 m, label_velocity: 5711.0 m/s
+'16-12-2025 14:29:30' - dev                  :confusion_matrix      - INFO - pre: [[0.00309415 0.99690586]], label_raw: [0.809      0.48133333], label_range: 809.0 m, label_velocity: 3610.0 m/s
+'16-12-2025 14:29:31' - dev                  :confusion_matrix      - INFO - pre: [[0.00250492 0.99749506]], label_raw: [0.427      0.09586667], label_range: 427.0 m, label_velocity: 719.0 m/s
+'16-12-2025 14:29:32' - dev                  :confusion_matrix      - INFO - pre: [[0.9897333 0.0102667]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:33' - dev                  :confusion_matrix      - INFO - pre: [[0.99027926 0.00972071]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:33' - dev                  :confusion_matrix      - INFO - pre: [[0.99116 0.00884]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:35' - dev                  :confusion_matrix      - INFO - pre: [[0.00268274 0.99731725]], label_raw: [0.655  0.1924], label_range: 655.0 m, label_velocity: 1443.0 m/s
+'16-12-2025 14:29:36' - dev                  :confusion_matrix      - INFO - pre: [[0.00247609 0.99752384]], label_raw: [0.688      0.42746667], label_range: 688.0 m, label_velocity: 3206.0 m/s
+'16-12-2025 14:29:37' - dev                  :confusion_matrix      - INFO - pre: [[0.9892034  0.01079656]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:37' - dev                  :confusion_matrix      - INFO - pre: [[0.00242109 0.9975789 ]], label_raw: [0.51       0.91266667], label_range: 510.0 m, label_velocity: 6845.0 m/s
+'16-12-2025 14:29:38' - dev                  :confusion_matrix      - INFO - pre: [[0.9921612 0.0078388]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:39' - dev                  :confusion_matrix      - INFO - pre: [[0.00292051 0.9970795 ]], label_raw: [0.11       0.37346667], label_range: 110.0 m, label_velocity: 2801.0 m/s
+'16-12-2025 14:29:40' - dev                  :confusion_matrix      - INFO - pre: [[0.99154305 0.00845698]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:40' - dev                  :confusion_matrix      - INFO - pre: [[0.99131936 0.00868067]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:42' - dev                  :confusion_matrix      - INFO - pre: [[0.99068403 0.00931596]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:42' - dev                  :confusion_matrix      - INFO - pre: [[0.9919755  0.00802456]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:43' - dev                  :confusion_matrix      - INFO - pre: [[0.99303705 0.0069629 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:44' - dev                  :confusion_matrix      - INFO - pre: [[0.00251695 0.9974831 ]], label_raw: [0.352 0.55 ], label_range: 352.0 m, label_velocity: 4125.0 m/s
+'16-12-2025 14:29:45' - dev                  :confusion_matrix      - INFO - pre: [[0.00265361 0.9973464 ]], label_raw: [0.199      0.10346667], label_range: 199.0 m, label_velocity: 776.0 m/s
+'16-12-2025 14:29:46' - dev                  :confusion_matrix      - INFO - pre: [[0.9908008  0.00919925]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:47' - dev                  :confusion_matrix      - INFO - pre: [[0.00262165 0.99737835]], label_raw: [0.173      0.36493333], label_range: 173.0 m, label_velocity: 2737.0 m/s
+'16-12-2025 14:29:48' - dev                  :confusion_matrix      - INFO - pre: [[0.00233115 0.9976688 ]], label_raw: [0.467  0.2316], label_range: 467.0 m, label_velocity: 1737.0 m/s
+'16-12-2025 14:29:49' - dev                  :confusion_matrix      - INFO - pre: [[0.9920677  0.00793224]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:50' - dev                  :confusion_matrix      - INFO - pre: [[0.00244815 0.99755186]], label_raw: [0.697      0.96066667], label_range: 697.0 m, label_velocity: 7205.0 m/s
+'16-12-2025 14:29:51' - dev                  :confusion_matrix      - INFO - pre: [[0.9915479  0.00845213]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:51' - dev                  :confusion_matrix      - INFO - pre: [[0.00220029 0.9977997 ]], label_raw: [0.527      0.55186667], label_range: 527.0 m, label_velocity: 4139.0 m/s
+'16-12-2025 14:29:52' - dev                  :confusion_matrix      - INFO - pre: [[0.99383706 0.00616293]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:53' - dev                  :confusion_matrix      - INFO - pre: [[0.99143595 0.00856401]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:54' - dev                  :confusion_matrix      - INFO - pre: [[0.9924076  0.00759238]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:55' - dev                  :confusion_matrix      - INFO - pre: [[0.9902811  0.00971887]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:56' - dev                  :confusion_matrix      - INFO - pre: [[0.00286712 0.9971329 ]], label_raw: [0.525  0.5824], label_range: 525.0 m, label_velocity: 4368.0 m/s
+'16-12-2025 14:29:57' - dev                  :confusion_matrix      - INFO - pre: [[0.0025499  0.99745005]], label_raw: [0.147  0.2052], label_range: 147.0 m, label_velocity: 1539.0 m/s
+'16-12-2025 14:29:58' - dev                  :confusion_matrix      - INFO - pre: [[0.00237179 0.9976283 ]], label_raw: [0.283      0.44426667], label_range: 283.0 m, label_velocity: 3332.0 m/s
+'16-12-2025 14:29:59' - dev                  :confusion_matrix      - INFO - pre: [[0.9902243  0.00977565]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:29:59' - dev                  :confusion_matrix      - INFO - pre: [[0.00245554 0.99754447]], label_raw: [0.568  0.8604], label_range: 568.0 m, label_velocity: 6453.0 m/s
+'16-12-2025 14:30:00' - dev                  :confusion_matrix      - INFO - pre: [[0.993022   0.00697802]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:01' - dev                  :confusion_matrix      - INFO - pre: [[0.99243104 0.00756892]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:01' - dev                  :confusion_matrix      - INFO - pre: [[0.99232906 0.00767094]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:02' - dev                  :confusion_matrix      - INFO - pre: [[0.0036246 0.9963754]], label_raw: [0.828      0.62586667], label_range: 828.0 m, label_velocity: 4694.0 m/s
+'16-12-2025 14:30:03' - dev                  :confusion_matrix      - INFO - pre: [[0.0024472 0.9975528]], label_raw: [0.603  0.7708], label_range: 603.0 m, label_velocity: 5781.0 m/s
+'16-12-2025 14:30:04' - dev                  :confusion_matrix      - INFO - pre: [[0.01047863 0.9895214 ]], label_raw: [0.929      0.80373333], label_range: 929.0 m, label_velocity: 6028.0 m/s
+'16-12-2025 14:30:04' - dev                  :confusion_matrix      - INFO - pre: [[0.981574   0.01842595]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:05' - dev                  :confusion_matrix      - INFO - pre: [[0.00273227 0.9972677 ]], label_raw: [0.744      0.54666667], label_range: 744.0 m, label_velocity: 4100.0 m/s
+'16-12-2025 14:30:06' - dev                  :confusion_matrix      - INFO - pre: [[0.9929066  0.00709341]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:08' - dev                  :confusion_matrix      - INFO - pre: [[0.9915724  0.00842761]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:08' - dev                  :confusion_matrix      - INFO - pre: [[0.9917452 0.0082548]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:09' - dev                  :confusion_matrix      - INFO - pre: [[0.99318475 0.00681522]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:10' - dev                  :confusion_matrix      - INFO - pre: [[0.9937546  0.00624532]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:10' - dev                  :confusion_matrix      - INFO - pre: [[0.00265245 0.9973476 ]], label_raw: [0.2        0.09933333], label_range: 200.0 m, label_velocity: 745.0 m/s
+'16-12-2025 14:30:11' - dev                  :confusion_matrix      - INFO - pre: [[0.99273866 0.00726138]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:12' - dev                  :confusion_matrix      - INFO - pre: [[0.98621386 0.01378618]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:13' - dev                  :confusion_matrix      - INFO - pre: [[0.00266925 0.9973308 ]], label_raw: [0.155  0.9956], label_range: 155.0 m, label_velocity: 7467.0 m/s
+'16-12-2025 14:30:14' - dev                  :confusion_matrix      - INFO - pre: [[0.99277765 0.00722229]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00249037 0.9975096 ]], label_raw: [0.649      0.05613333], label_range: 649.0 m, label_velocity: 421.0 m/s
+'16-12-2025 14:30:15' - dev                  :confusion_matrix      - INFO - pre: [[0.00247283 0.9975272 ]], label_raw: [0.634      0.90093333], label_range: 634.0 m, label_velocity: 6757.0 m/s
+'16-12-2025 14:30:16' - dev                  :confusion_matrix      - INFO - pre: [[0.9933936  0.00660634]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:17' - dev                  :confusion_matrix      - INFO - pre: [[0.00249679 0.9975032 ]], label_raw: [0.476      0.26426667], label_range: 476.0 m, label_velocity: 1981.9999999999998 m/s
+'16-12-2025 14:30:18' - dev                  :confusion_matrix      - INFO - pre: [[0.99308735 0.00691265]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:19' - dev                  :confusion_matrix      - INFO - pre: [[0.990593   0.00940698]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:19' - dev                  :confusion_matrix      - INFO - pre: [[0.99153495 0.00846497]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:21' - dev                  :confusion_matrix      - INFO - pre: [[0.9934522  0.00654782]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:22' - dev                  :confusion_matrix      - INFO - pre: [[0.9884765  0.01152353]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:22' - dev                  :confusion_matrix      - INFO - pre: [[0.002375   0.99762505]], label_raw: [0.708      0.58146667], label_range: 708.0 m, label_velocity: 4361.0 m/s
+'16-12-2025 14:30:23' - dev                  :confusion_matrix      - INFO - pre: [[0.9935861 0.0064139]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:24' - dev                  :confusion_matrix      - INFO - pre: [[0.9919659  0.00803412]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:25' - dev                  :confusion_matrix      - INFO - pre: [[0.9887988  0.01120117]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:25' - dev                  :confusion_matrix      - INFO - pre: [[0.99197024 0.00802983]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:26' - dev                  :confusion_matrix      - INFO - pre: [[0.00245845 0.99754155]], label_raw: [0.236  0.0312], label_range: 236.0 m, label_velocity: 234.0 m/s
+'16-12-2025 14:30:27' - dev                  :confusion_matrix      - INFO - pre: [[0.00233121 0.9976688 ]], label_raw: [0.604  0.6936], label_range: 604.0 m, label_velocity: 5202.0 m/s
+'16-12-2025 14:30:28' - dev                  :confusion_matrix      - INFO - pre: [[0.01479758 0.9852024 ]], label_raw: [0.968      0.75546667], label_range: 968.0 m, label_velocity: 5666.0 m/s
+'16-12-2025 14:30:30' - dev                  :confusion_matrix      - INFO - pre: [[0.005052 0.994948]], label_raw: [0.884      0.35733333], label_range: 884.0 m, label_velocity: 2680.0 m/s
+'16-12-2025 14:30:31' - dev                  :confusion_matrix      - INFO - pre: [[0.991932   0.00806804]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:31' - dev                  :confusion_matrix      - INFO - pre: [[0.00267111 0.9973289 ]], label_raw: [0.718      0.01266667], label_range: 718.0 m, label_velocity: 95.0 m/s
+'16-12-2025 14:30:32' - dev                  :confusion_matrix      - INFO - pre: [[0.9920322 0.0079679]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:33' - dev                  :confusion_matrix      - INFO - pre: [[0.00234125 0.9976587 ]], label_raw: [0.515      0.16453333], label_range: 515.0 m, label_velocity: 1234.0 m/s
+'16-12-2025 14:30:34' - dev                  :confusion_matrix      - INFO - pre: [[0.00280775 0.9971923 ]], label_raw: [0.781      0.20133333], label_range: 781.0 m, label_velocity: 1510.0 m/s
+'16-12-2025 14:30:35' - dev                  :confusion_matrix      - INFO - pre: [[0.9905421  0.00945785]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:35' - dev                  :confusion_matrix      - INFO - pre: [[0.0024029  0.99759704]], label_raw: [0.175  0.6472], label_range: 175.0 m, label_velocity: 4854.0 m/s
+'16-12-2025 14:30:36' - dev                  :confusion_matrix      - INFO - pre: [[0.99085087 0.00914914]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:37' - dev                  :confusion_matrix      - INFO - pre: [[0.00256992 0.99743   ]], label_raw: [0.602      0.03146667], label_range: 602.0 m, label_velocity: 235.99999999999997 m/s
+'16-12-2025 14:30:38' - dev                  :confusion_matrix      - INFO - pre: [[0.99010086 0.0098991 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:39' - dev                  :confusion_matrix      - INFO - pre: [[0.00260821 0.9973918 ]], label_raw: [0.682      0.01893333], label_range: 682.0 m, label_velocity: 142.0 m/s
+'16-12-2025 14:30:40' - dev                  :confusion_matrix      - INFO - pre: [[0.00257205 0.9974279 ]], label_raw: [0.183      0.97013333], label_range: 183.0 m, label_velocity: 7276.0 m/s
+'16-12-2025 14:30:41' - dev                  :confusion_matrix      - INFO - pre: [[0.00231164 0.9976884 ]], label_raw: [0.237      0.15373333], label_range: 237.0 m, label_velocity: 1153.0 m/s
+'16-12-2025 14:30:42' - dev                  :confusion_matrix      - INFO - pre: [[0.99050117 0.00949876]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:42' - dev                  :confusion_matrix      - INFO - pre: [[0.00240368 0.9975963 ]], label_raw: [0.529  0.2516], label_range: 529.0 m, label_velocity: 1887.0 m/s
+'16-12-2025 14:30:43' - dev                  :confusion_matrix      - INFO - pre: [[0.9891852  0.01081479]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:44' - dev                  :confusion_matrix      - INFO - pre: [[0.99275076 0.00724923]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:45' - dev                  :confusion_matrix      - INFO - pre: [[0.99185735 0.00814266]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:45' - dev                  :confusion_matrix      - INFO - pre: [[0.0154921 0.9845079]], label_raw: [0.971  0.5192], label_range: 971.0 m, label_velocity: 3894.0 m/s
+'16-12-2025 14:30:46' - dev                  :confusion_matrix      - INFO - pre: [[0.00242559 0.9975744 ]], label_raw: [0.39       0.25893333], label_range: 390.0 m, label_velocity: 1942.0000000000002 m/s
+'16-12-2025 14:30:47' - dev                  :confusion_matrix      - INFO - pre: [[0.00235768 0.99764234]], label_raw: [0.475  0.5328], label_range: 475.0 m, label_velocity: 3996.0000000000005 m/s
+'16-12-2025 14:30:48' - dev                  :confusion_matrix      - INFO - pre: [[0.00265598 0.9973441 ]], label_raw: [0.684      0.96106667], label_range: 684.0 m, label_velocity: 7208.0 m/s
+'16-12-2025 14:30:49' - dev                  :confusion_matrix      - INFO - pre: [[0.00263608 0.99736387]], label_raw: [0.527 0.094], label_range: 527.0 m, label_velocity: 705.0 m/s
+'16-12-2025 14:30:50' - dev                  :confusion_matrix      - INFO - pre: [[0.00293141 0.9970686 ]], label_raw: [0.77       0.75573333], label_range: 770.0 m, label_velocity: 5668.0 m/s
+'16-12-2025 14:30:51' - dev                  :confusion_matrix      - INFO - pre: [[0.00240688 0.9975931 ]], label_raw: [0.573 0.07 ], label_range: 573.0 m, label_velocity: 525.0 m/s
+'16-12-2025 14:30:52' - dev                  :confusion_matrix      - INFO - pre: [[0.9896595  0.01034056]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:53' - dev                  :confusion_matrix      - INFO - pre: [[0.98954356 0.01045647]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:54' - dev                  :confusion_matrix      - INFO - pre: [[0.00398435 0.9960156 ]], label_raw: [0.819      0.33746667], label_range: 819.0 m, label_velocity: 2531.0 m/s
+'16-12-2025 14:30:54' - dev                  :confusion_matrix      - INFO - pre: [[0.00288436 0.9971156 ]], label_raw: [0.186  0.0532], label_range: 186.0 m, label_velocity: 399.0 m/s
+'16-12-2025 14:30:55' - dev                  :confusion_matrix      - INFO - pre: [[0.98876053 0.01123946]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:30:56' - dev                  :confusion_matrix      - INFO - pre: [[0.00237228 0.9976278 ]], label_raw: [0.576      0.62133333], label_range: 576.0 m, label_velocity: 4660.0 m/s
+'16-12-2025 14:30:57' - dev                  :confusion_matrix      - INFO - pre: [[0.00232363 0.99767643]], label_raw: [0.243  0.3568], label_range: 243.0 m, label_velocity: 2676.0 m/s
+'16-12-2025 14:30:58' - dev                  :confusion_matrix      - INFO - pre: [[0.00253753 0.9974625 ]], label_raw: [0.388      0.33453333], label_range: 388.0 m, label_velocity: 2509.0 m/s
+'16-12-2025 14:31:00' - dev                  :confusion_matrix      - INFO - pre: [[0.992569   0.00743099]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:01' - dev                  :confusion_matrix      - INFO - pre: [[0.9909031 0.0090969]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:02' - dev                  :confusion_matrix      - INFO - pre: [[0.00254981 0.9974502 ]], label_raw: [0.293      0.82346667], label_range: 293.0 m, label_velocity: 6176.0 m/s
+'16-12-2025 14:31:02' - dev                  :confusion_matrix      - INFO - pre: [[0.99002516 0.00997479]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:03' - dev                  :confusion_matrix      - INFO - pre: [[0.9922597  0.00774037]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:04' - dev                  :confusion_matrix      - INFO - pre: [[0.00311765 0.9968823 ]], label_raw: [0.774  0.4808], label_range: 774.0 m, label_velocity: 3606.0 m/s
+'16-12-2025 14:31:05' - dev                  :confusion_matrix      - INFO - pre: [[0.9855989  0.01440109]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:06' - dev                  :confusion_matrix      - INFO - pre: [[0.9877416  0.01225841]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:06' - dev                  :confusion_matrix      - INFO - pre: [[0.9922544  0.00774555]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:07' - dev                  :confusion_matrix      - INFO - pre: [[0.9927632  0.00723678]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:08' - dev                  :confusion_matrix      - INFO - pre: [[0.9902068 0.0097932]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:09' - dev                  :confusion_matrix      - INFO - pre: [[0.00450658 0.9954934 ]], label_raw: [0.879  0.3908], label_range: 879.0 m, label_velocity: 2931.0 m/s
+'16-12-2025 14:31:11' - dev                  :confusion_matrix      - INFO - pre: [[0.9877158  0.01228416]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:11' - dev                  :confusion_matrix      - INFO - pre: [[0.9896969  0.01030306]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:13' - dev                  :confusion_matrix      - INFO - pre: [[0.9913898  0.00861021]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:13' - dev                  :confusion_matrix      - INFO - pre: [[0.99188167 0.00811832]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00957705 0.99042296]], label_raw: [0.958      0.14853333], label_range: 958.0 m, label_velocity: 1114.0 m/s
+'16-12-2025 14:31:15' - dev                  :confusion_matrix      - INFO - pre: [[0.98643523 0.01356477]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:17' - dev                  :confusion_matrix      - INFO - pre: [[0.99006945 0.00993055]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:17' - dev                  :confusion_matrix      - INFO - pre: [[0.988948   0.01105203]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:18' - dev                  :confusion_matrix      - INFO - pre: [[0.9931176 0.0068824]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:20' - dev                  :confusion_matrix      - INFO - pre: [[0.00237482 0.9976252 ]], label_raw: [0.619      0.49733333], label_range: 619.0 m, label_velocity: 3730.0 m/s
+'16-12-2025 14:31:21' - dev                  :confusion_matrix      - INFO - pre: [[0.99075985 0.00924022]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:23' - dev                  :confusion_matrix      - INFO - pre: [[0.00501377 0.9949863 ]], label_raw: [0.888      0.61333333], label_range: 888.0 m, label_velocity: 4600.0 m/s
+'16-12-2025 14:31:24' - dev                  :confusion_matrix      - INFO - pre: [[0.0025295 0.9974705]], label_raw: [0.267      0.13893333], label_range: 267.0 m, label_velocity: 1042.0 m/s
+'16-12-2025 14:31:24' - dev                  :confusion_matrix      - INFO - pre: [[0.00423966 0.9957604 ]], label_raw: [0.894  0.3044], label_range: 894.0 m, label_velocity: 2283.0 m/s
+'16-12-2025 14:31:26' - dev                  :confusion_matrix      - INFO - pre: [[0.9919715  0.00802854]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:27' - dev                  :confusion_matrix      - INFO - pre: [[0.9911924  0.00880764]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:27' - dev                  :confusion_matrix      - INFO - pre: [[0.0048349 0.9951651]], label_raw: [0.868  0.2612], label_range: 868.0 m, label_velocity: 1959.0 m/s
+'16-12-2025 14:31:29' - dev                  :confusion_matrix      - INFO - pre: [[0.986328   0.01367197]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:29' - dev                  :confusion_matrix      - INFO - pre: [[0.9625586  0.03744131]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:30' - dev                  :confusion_matrix      - INFO - pre: [[0.00260376 0.99739623]], label_raw: [0.601  0.1196], label_range: 601.0 m, label_velocity: 897.0 m/s
+'16-12-2025 14:31:31' - dev                  :confusion_matrix      - INFO - pre: [[0.00293446 0.9970656 ]], label_raw: [0.768      0.91093333], label_range: 768.0 m, label_velocity: 6832.0 m/s
+'16-12-2025 14:31:31' - dev                  :confusion_matrix      - INFO - pre: [[0.00250502 0.99749506]], label_raw: [0.335      0.26693333], label_range: 335.0 m, label_velocity: 2002.0000000000002 m/s
+'16-12-2025 14:31:32' - dev                  :confusion_matrix      - INFO - pre: [[0.00249021 0.9975097 ]], label_raw: [0.723      0.90906667], label_range: 723.0 m, label_velocity: 6818.0 m/s
+'16-12-2025 14:31:33' - dev                  :confusion_matrix      - INFO - pre: [[0.9912539 0.0087461]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:33' - dev                  :confusion_matrix      - INFO - pre: [[0.9930327  0.00696731]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:34' - dev                  :confusion_matrix      - INFO - pre: [[0.9920825  0.00791756]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:34' - dev                  :confusion_matrix      - INFO - pre: [[0.00267363 0.9973264 ]], label_raw: [0.346  0.4676], label_range: 346.0 m, label_velocity: 3507.0 m/s
+'16-12-2025 14:31:35' - dev                  :confusion_matrix      - INFO - pre: [[0.9897786  0.01022141]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:36' - dev                  :confusion_matrix      - INFO - pre: [[0.9875552  0.01244478]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:37' - dev                  :confusion_matrix      - INFO - pre: [[0.00303865 0.9969613 ]], label_raw: [0.771      0.60266667], label_range: 771.0 m, label_velocity: 4520.0 m/s
+'16-12-2025 14:31:38' - dev                  :confusion_matrix      - INFO - pre: [[0.98955697 0.01044306]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:38' - dev                  :confusion_matrix      - INFO - pre: [[0.00274679 0.99725324]], label_raw: [0.763  0.2464], label_range: 763.0 m, label_velocity: 1848.0 m/s
+'16-12-2025 14:31:39' - dev                  :confusion_matrix      - INFO - pre: [[0.9916021  0.00839782]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:40' - dev                  :confusion_matrix      - INFO - pre: [[0.00295987 0.9970401 ]], label_raw: [0.804      0.26146667], label_range: 804.0 m, label_velocity: 1961.0 m/s
+'16-12-2025 14:31:41' - dev                  :confusion_matrix      - INFO - pre: [[0.0041831 0.9958169]], label_raw: [0.868      0.47866667], label_range: 868.0 m, label_velocity: 3590.0 m/s
+'16-12-2025 14:31:42' - dev                  :confusion_matrix      - INFO - pre: [[0.98458636 0.01541362]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:43' - dev                  :confusion_matrix      - INFO - pre: [[0.990599   0.00940099]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:43' - dev                  :confusion_matrix      - INFO - pre: [[0.0025766 0.9974234]], label_raw: [0.523      0.33813333], label_range: 523.0 m, label_velocity: 2536.0 m/s
+'16-12-2025 14:31:44' - dev                  :confusion_matrix      - INFO - pre: [[0.00234759 0.9976525 ]], label_raw: [0.256      0.43546667], label_range: 256.0 m, label_velocity: 3266.0 m/s
+'16-12-2025 14:31:45' - dev                  :confusion_matrix      - INFO - pre: [[0.9906911  0.00930887]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:46' - dev                  :confusion_matrix      - INFO - pre: [[0.00240859 0.9975914 ]], label_raw: [0.531  0.2252], label_range: 531.0 m, label_velocity: 1689.0 m/s
+'16-12-2025 14:31:47' - dev                  :confusion_matrix      - INFO - pre: [[0.99298286 0.00701716]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:47' - dev                  :confusion_matrix      - INFO - pre: [[0.98868495 0.01131508]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:48' - dev                  :confusion_matrix      - INFO - pre: [[0.99245584 0.00754416]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:49' - dev                  :confusion_matrix      - INFO - pre: [[0.0126161  0.98738384]], label_raw: [0.963 0.272], label_range: 963.0 m, label_velocity: 2040.0000000000002 m/s
+'16-12-2025 14:31:50' - dev                  :confusion_matrix      - INFO - pre: [[0.00933649 0.9906635 ]], label_raw: [0.983      0.68213333], label_range: 983.0 m, label_velocity: 5116.0 m/s
+'16-12-2025 14:31:51' - dev                  :confusion_matrix      - INFO - pre: [[0.0072214 0.9927786]], label_raw: [0.853  0.0676], label_range: 853.0 m, label_velocity: 506.99999999999994 m/s
+'16-12-2025 14:31:51' - dev                  :confusion_matrix      - INFO - pre: [[0.00285289 0.99714714]], label_raw: [0.731      0.20133333], label_range: 731.0 m, label_velocity: 1510.0 m/s
+'16-12-2025 14:31:53' - dev                  :confusion_matrix      - INFO - pre: [[0.99242014 0.00757981]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:54' - dev                  :confusion_matrix      - INFO - pre: [[0.9904813  0.00951869]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:54' - dev                  :confusion_matrix      - INFO - pre: [[0.98657596 0.01342399]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:55' - dev                  :confusion_matrix      - INFO - pre: [[0.00242143 0.99757856]], label_raw: [0.229  0.6612], label_range: 229.0 m, label_velocity: 4959.0 m/s
+'16-12-2025 14:31:56' - dev                  :confusion_matrix      - INFO - pre: [[0.0024773  0.99752265]], label_raw: [0.649  0.1068], label_range: 649.0 m, label_velocity: 801.0 m/s
+'16-12-2025 14:31:57' - dev                  :confusion_matrix      - INFO - pre: [[0.00243029 0.99756974]], label_raw: [0.684 0.914], label_range: 684.0 m, label_velocity: 6855.0 m/s
+'16-12-2025 14:31:58' - dev                  :confusion_matrix      - INFO - pre: [[0.99103594 0.00896405]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:31:59' - dev                  :confusion_matrix      - INFO - pre: [[0.992796   0.00720401]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:00' - dev                  :confusion_matrix      - INFO - pre: [[0.99131507 0.00868496]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:01' - dev                  :confusion_matrix      - INFO - pre: [[0.99231863 0.00768137]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:01' - dev                  :confusion_matrix      - INFO - pre: [[0.9917985  0.00820151]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:02' - dev                  :confusion_matrix      - INFO - pre: [[0.9882903  0.01170972]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:03' - dev                  :confusion_matrix      - INFO - pre: [[0.01247891 0.98752105]], label_raw: [0.957      0.90546667], label_range: 957.0 m, label_velocity: 6791.0 m/s
+'16-12-2025 14:32:04' - dev                  :confusion_matrix      - INFO - pre: [[0.00244854 0.9975515 ]], label_raw: [0.558      0.51533333], label_range: 558.0 m, label_velocity: 3865.0 m/s
+'16-12-2025 14:32:06' - dev                  :confusion_matrix      - INFO - pre: [[0.991327   0.00867296]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:06' - dev                  :confusion_matrix      - INFO - pre: [[0.00379526 0.9962048 ]], label_raw: [0.842 0.59 ], label_range: 842.0 m, label_velocity: 4425.0 m/s
+'16-12-2025 14:32:07' - dev                  :confusion_matrix      - INFO - pre: [[0.00236632 0.9976337 ]], label_raw: [0.448      0.36506667], label_range: 448.0 m, label_velocity: 2738.0 m/s
+'16-12-2025 14:32:08' - dev                  :confusion_matrix      - INFO - pre: [[0.99222916 0.00777085]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:09' - dev                  :confusion_matrix      - INFO - pre: [[0.99021345 0.00978652]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:09' - dev                  :confusion_matrix      - INFO - pre: [[0.9934411 0.0065589]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:10' - dev                  :confusion_matrix      - INFO - pre: [[0.00326341 0.9967366 ]], label_raw: [0.783      0.52453333], label_range: 783.0 m, label_velocity: 3933.9999999999995 m/s
+'16-12-2025 14:32:11' - dev                  :confusion_matrix      - INFO - pre: [[0.99211746 0.00788256]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:12' - dev                  :confusion_matrix      - INFO - pre: [[0.99330306 0.00669694]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:12' - dev                  :confusion_matrix      - INFO - pre: [[0.9916624 0.0083376]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:13' - dev                  :confusion_matrix      - INFO - pre: [[0.98966366 0.01033636]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00664018 0.99335986]], label_raw: [0.888  0.4416], label_range: 888.0 m, label_velocity: 3312.0 m/s
+'16-12-2025 14:32:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00242134 0.9975787 ]], label_raw: [0.165      0.95253333], label_range: 165.0 m, label_velocity: 7144.0 m/s
+'16-12-2025 14:32:15' - dev                  :confusion_matrix      - INFO - pre: [[0.99143946 0.00856057]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:16' - dev                  :confusion_matrix      - INFO - pre: [[0.00377163 0.99622834]], label_raw: [0.829      0.53026667], label_range: 829.0 m, label_velocity: 3977.0 m/s
+'16-12-2025 14:32:17' - dev                  :confusion_matrix      - INFO - pre: [[0.98642296 0.01357705]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:18' - dev                  :confusion_matrix      - INFO - pre: [[0.99124485 0.00875514]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:18' - dev                  :confusion_matrix      - INFO - pre: [[0.9897804  0.01021955]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:19' - dev                  :confusion_matrix      - INFO - pre: [[0.99070704 0.00929288]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:20' - dev                  :confusion_matrix      - INFO - pre: [[0.00237286 0.9976272 ]], label_raw: [0.254  0.3168], label_range: 254.0 m, label_velocity: 2376.0 m/s
+'16-12-2025 14:32:20' - dev                  :confusion_matrix      - INFO - pre: [[0.9919446  0.00805536]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:21' - dev                  :confusion_matrix      - INFO - pre: [[0.00252793 0.997472  ]], label_raw: [0.345      0.54986667], label_range: 345.0 m, label_velocity: 4124.0 m/s
+'16-12-2025 14:32:21' - dev                  :confusion_matrix      - INFO - pre: [[0.00233397 0.997666  ]], label_raw: [0.243      0.56706667], label_range: 243.0 m, label_velocity: 4253.0 m/s
+'16-12-2025 14:32:23' - dev                  :confusion_matrix      - INFO - pre: [[0.00278931 0.9972107 ]], label_raw: [0.199      0.99733333], label_range: 199.0 m, label_velocity: 7480.0 m/s
+'16-12-2025 14:32:23' - dev                  :confusion_matrix      - INFO - pre: [[0.00284898 0.9971511 ]], label_raw: [0.242      0.67773333], label_range: 242.0 m, label_velocity: 5083.0 m/s
+'16-12-2025 14:32:25' - dev                  :confusion_matrix      - INFO - pre: [[0.9938968  0.00610322]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:25' - dev                  :confusion_matrix      - INFO - pre: [[0.99260324 0.00739678]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:26' - dev                  :confusion_matrix      - INFO - pre: [[0.99173975 0.00826021]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:27' - dev                  :confusion_matrix      - INFO - pre: [[0.991808   0.00819199]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:28' - dev                  :confusion_matrix      - INFO - pre: [[0.00588418 0.9941158 ]], label_raw: [0.88   0.3108], label_range: 880.0 m, label_velocity: 2331.0 m/s
+'16-12-2025 14:32:28' - dev                  :confusion_matrix      - INFO - pre: [[0.0146171 0.9853829]], label_raw: [0.949  0.7748], label_range: 949.0 m, label_velocity: 5811.0 m/s
+'16-12-2025 14:32:30' - dev                  :confusion_matrix      - INFO - pre: [[0.00469282 0.99530715]], label_raw: [0.859      0.39573333], label_range: 859.0 m, label_velocity: 2968.0 m/s
+'16-12-2025 14:32:31' - dev                  :confusion_matrix      - INFO - pre: [[0.9919619 0.0080381]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:31' - dev                  :confusion_matrix      - INFO - pre: [[0.00357586 0.99642414]], label_raw: [0.821      0.69706667], label_range: 821.0 m, label_velocity: 5228.0 m/s
+'16-12-2025 14:32:32' - dev                  :confusion_matrix      - INFO - pre: [[0.00255017 0.9974498 ]], label_raw: [0.504      0.63013333], label_range: 504.0 m, label_velocity: 4726.0 m/s
+'16-12-2025 14:32:32' - dev                  :confusion_matrix      - INFO - pre: [[0.99258476 0.00741519]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:33' - dev                  :confusion_matrix      - INFO - pre: [[0.00558891 0.99441105]], label_raw: [0.871 0.832], label_range: 871.0 m, label_velocity: 6240.0 m/s
+'16-12-2025 14:32:34' - dev                  :confusion_matrix      - INFO - pre: [[0.9930697  0.00693026]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:34' - dev                  :confusion_matrix      - INFO - pre: [[0.00219033 0.9978097 ]], label_raw: [0.65   0.7644], label_range: 650.0 m, label_velocity: 5733.0 m/s
+'16-12-2025 14:32:35' - dev                  :confusion_matrix      - INFO - pre: [[0.00270626 0.9972938 ]], label_raw: [0.65   0.3836], label_range: 650.0 m, label_velocity: 2877.0 m/s
+'16-12-2025 14:32:36' - dev                  :confusion_matrix      - INFO - pre: [[0.990248   0.00975199]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:37' - dev                  :confusion_matrix      - INFO - pre: [[0.00233145 0.99766856]], label_raw: [0.461  0.9832], label_range: 461.0 m, label_velocity: 7374.0 m/s
+'16-12-2025 14:32:38' - dev                  :confusion_matrix      - INFO - pre: [[0.99145997 0.00853999]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:39' - dev                  :confusion_matrix      - INFO - pre: [[0.9915445  0.00845551]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:39' - dev                  :confusion_matrix      - INFO - pre: [[0.98901635 0.01098369]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:40' - dev                  :confusion_matrix      - INFO - pre: [[0.99238765 0.0076124 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:41' - dev                  :confusion_matrix      - INFO - pre: [[0.01144987 0.9885501 ]], label_raw: [0.965  0.9164], label_range: 965.0 m, label_velocity: 6873.0 m/s
+'16-12-2025 14:32:41' - dev                  :confusion_matrix      - INFO - pre: [[0.00585393 0.994146  ]], label_raw: [0.863      0.67306667], label_range: 863.0 m, label_velocity: 5048.0 m/s
+'16-12-2025 14:32:42' - dev                  :confusion_matrix      - INFO - pre: [[0.9916813  0.00831873]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:43' - dev                  :confusion_matrix      - INFO - pre: [[0.00267817 0.9973219 ]], label_raw: [0.452      0.74333333], label_range: 452.0 m, label_velocity: 5575.0 m/s
+'16-12-2025 14:32:44' - dev                  :confusion_matrix      - INFO - pre: [[0.99185467 0.00814532]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:45' - dev                  :confusion_matrix      - INFO - pre: [[0.00543772 0.9945623 ]], label_raw: [0.86   0.5336], label_range: 860.0 m, label_velocity: 4001.9999999999995 m/s
+'16-12-2025 14:32:46' - dev                  :confusion_matrix      - INFO - pre: [[0.00250031 0.99749964]], label_raw: [0.734      0.96986667], label_range: 734.0 m, label_velocity: 7274.0 m/s
+'16-12-2025 14:32:47' - dev                  :confusion_matrix      - INFO - pre: [[0.9915469  0.00845311]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:48' - dev                  :confusion_matrix      - INFO - pre: [[0.98915416 0.01084577]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:49' - dev                  :confusion_matrix      - INFO - pre: [[0.00264745 0.9973526 ]], label_raw: [0.305      0.88253333], label_range: 305.0 m, label_velocity: 6619.0 m/s
+'16-12-2025 14:32:50' - dev                  :confusion_matrix      - INFO - pre: [[0.99210125 0.0078987 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:50' - dev                  :confusion_matrix      - INFO - pre: [[0.00236509 0.9976349 ]], label_raw: [0.293  0.5844], label_range: 293.0 m, label_velocity: 4383.0 m/s
+'16-12-2025 14:32:51' - dev                  :confusion_matrix      - INFO - pre: [[0.9932388  0.00676123]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:52' - dev                  :confusion_matrix      - INFO - pre: [[0.99018455 0.00981545]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:53' - dev                  :confusion_matrix      - INFO - pre: [[0.00233563 0.99766433]], label_raw: [0.545      0.23533333], label_range: 545.0 m, label_velocity: 1765.0 m/s
+'16-12-2025 14:32:54' - dev                  :confusion_matrix      - INFO - pre: [[0.99095637 0.00904371]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:55' - dev                  :confusion_matrix      - INFO - pre: [[0.00241493 0.99758506]], label_raw: [0.375      0.70906667], label_range: 375.0 m, label_velocity: 5318.0 m/s
+'16-12-2025 14:32:56' - dev                  :confusion_matrix      - INFO - pre: [[0.00230252 0.9976974 ]], label_raw: [0.43       0.08253333], label_range: 430.0 m, label_velocity: 619.0 m/s
+'16-12-2025 14:32:57' - dev                  :confusion_matrix      - INFO - pre: [[0.9908083  0.00919174]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:58' - dev                  :confusion_matrix      - INFO - pre: [[0.990497   0.00950298]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:59' - dev                  :confusion_matrix      - INFO - pre: [[0.9898588  0.01014118]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:32:59' - dev                  :confusion_matrix      - INFO - pre: [[0.0030669 0.9969331]], label_raw: [0.796  0.6616], label_range: 796.0 m, label_velocity: 4962.0 m/s
+'16-12-2025 14:33:00' - dev                  :confusion_matrix      - INFO - pre: [[0.0053322  0.99466777]], label_raw: [0.893      0.61973333], label_range: 893.0 m, label_velocity: 4648.0 m/s
+'16-12-2025 14:33:00' - dev                  :confusion_matrix      - INFO - pre: [[0.9850971  0.01490289]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:01' - dev                  :confusion_matrix      - INFO - pre: [[0.00278222 0.9972178 ]], label_raw: [0.283      0.44053333], label_range: 283.0 m, label_velocity: 3304.0 m/s
+'16-12-2025 14:33:03' - dev                  :confusion_matrix      - INFO - pre: [[0.99316746 0.00683256]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:03' - dev                  :confusion_matrix      - INFO - pre: [[0.00269319 0.9973068 ]], label_raw: [0.568  0.2792], label_range: 568.0 m, label_velocity: 2094.0 m/s
+'16-12-2025 14:33:04' - dev                  :confusion_matrix      - INFO - pre: [[0.9929762  0.00702389]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:05' - dev                  :confusion_matrix      - INFO - pre: [[0.9940666  0.00593337]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:06' - dev                  :confusion_matrix      - INFO - pre: [[0.00321211 0.9967879 ]], label_raw: [0.765  0.8496], label_range: 765.0 m, label_velocity: 6372.0 m/s
+'16-12-2025 14:33:07' - dev                  :confusion_matrix      - INFO - pre: [[0.00409576 0.99590427]], label_raw: [0.803      0.10253333], label_range: 803.0 m, label_velocity: 769.0 m/s
+'16-12-2025 14:33:08' - dev                  :confusion_matrix      - INFO - pre: [[0.99071395 0.00928607]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:09' - dev                  :confusion_matrix      - INFO - pre: [[0.9900255  0.00997447]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:09' - dev                  :confusion_matrix      - INFO - pre: [[0.99190193 0.00809808]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:10' - dev                  :confusion_matrix      - INFO - pre: [[0.99239314 0.00760689]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:11' - dev                  :confusion_matrix      - INFO - pre: [[0.00226146 0.9977386 ]], label_raw: [0.152 0.79 ], label_range: 152.0 m, label_velocity: 5925.0 m/s
+'16-12-2025 14:33:12' - dev                  :confusion_matrix      - INFO - pre: [[0.99149936 0.0085007 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:12' - dev                  :confusion_matrix      - INFO - pre: [[0.00335764 0.99664235]], label_raw: [0.827      0.19573333], label_range: 827.0 m, label_velocity: 1468.0 m/s
+'16-12-2025 14:33:13' - dev                  :confusion_matrix      - INFO - pre: [[0.00253007 0.9974699 ]], label_raw: [0.631      0.58013333], label_range: 631.0 m, label_velocity: 4351.0 m/s
+'16-12-2025 14:33:14' - dev                  :confusion_matrix      - INFO - pre: [[0.00283653 0.9971635 ]], label_raw: [0.142      0.87413333], label_range: 142.0 m, label_velocity: 6556.0 m/s
+'16-12-2025 14:33:15' - dev                  :confusion_matrix      - INFO - pre: [[0.99043417 0.0095658 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:16' - dev                  :confusion_matrix      - INFO - pre: [[0.9928926  0.00710742]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:17' - dev                  :confusion_matrix      - INFO - pre: [[0.00247276 0.9975273 ]], label_raw: [0.542      0.18973333], label_range: 542.0 m, label_velocity: 1423.0 m/s
+'16-12-2025 14:33:18' - dev                  :confusion_matrix      - INFO - pre: [[0.9931386  0.00686133]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:19' - dev                  :confusion_matrix      - INFO - pre: [[0.9922023  0.00779766]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:20' - dev                  :confusion_matrix      - INFO - pre: [[0.99244165 0.0075584 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:21' - dev                  :confusion_matrix      - INFO - pre: [[0.00224132 0.9977586 ]], label_raw: [0.456 0.736], label_range: 456.0 m, label_velocity: 5520.0 m/s
+'16-12-2025 14:33:22' - dev                  :confusion_matrix      - INFO - pre: [[0.98883367 0.01116632]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:22' - dev                  :confusion_matrix      - INFO - pre: [[0.00541478 0.9945852 ]], label_raw: [0.885      0.83026667], label_range: 885.0 m, label_velocity: 6227.0 m/s
+'16-12-2025 14:33:23' - dev                  :confusion_matrix      - INFO - pre: [[0.9909362  0.00906375]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:24' - dev                  :confusion_matrix      - INFO - pre: [[0.9932175  0.00678252]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:25' - dev                  :confusion_matrix      - INFO - pre: [[0.99375135 0.0062487 ]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:26' - dev                  :confusion_matrix      - INFO - pre: [[0.99258864 0.00741128]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:26' - dev                  :confusion_matrix      - INFO - pre: [[0.00236923 0.9976307 ]], label_raw: [0.392      0.07426667], label_range: 392.0 m, label_velocity: 557.0 m/s
+'16-12-2025 14:33:27' - dev                  :confusion_matrix      - INFO - pre: [[0.99233586 0.00766413]], label_raw: [0 0], label_range: 0 m, label_velocity: 0 m/s
+'16-12-2025 14:33:27' - dev                  :confusion_matrix      - INFO - count: 340, targets: 159, no targets: 181
