@@ -31,8 +31,8 @@
         <mxCell id="y1eSpjLpRXwo7B79qitP-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Project Font;" value="Info" vertex="1">
           <mxGeometry height="30" width="60" x="630" y="370" as="geometry" />
         </mxCell>
-        <mxCell id="y1eSpjLpRXwo7B79qitP-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=8 8;fontFamily=Project Font;" value="" vertex="1">
-          <mxGeometry height="100" width="640" x="80" y="350" as="geometry" />
+        <mxCell id="wN7684WoHhKG4YjGkVLd-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="RADAR image" vertex="1">
+          <mxGeometry height="30" width="60" x="430" y="370" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
