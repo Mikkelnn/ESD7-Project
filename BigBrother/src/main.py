@@ -16,8 +16,8 @@ import sklearn.metrics as sklearn
 import shutil
 
 
-# GENEREL_PATH = Path("../../")
-GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
+GENEREL_PATH = Path("../../../")
+# GENEREL_PATH = Path("/scratch")  # /scratch # Use full path for correct mapping on ai-lab container
 RESULTS_PATH = GENEREL_PATH / "results"
 TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "training_data"
@@ -394,7 +394,7 @@ def load_predict(modelPath = "results/26-09-2025_12:15:53/sum_diff_model.keras")
     print(res)
 
 def confusion_matrix():
-    modelPath = ai_handler.result_path
+    modelPath = "../models/detector_15_12_2025"
 
     model = ai_handler.load_model_directory(modelPath)
     
@@ -410,7 +410,7 @@ def confusion_matrix():
     
         #return np.array([1,0]) if (sum(np.load(f)) == 0) else np.array([0,1])
 
-    data_dir, label_dir = Path(VALIDATE_DATA_PATH / "input"), Path(VALIDATE_DATA_PATH / "labels")
+    data_dir, label_dir = Path(TRAINING_DATA_PATH / "input"), Path(TRAINING_DATA_PATH / "labels")
     data_files  = sorted(str(f) for f in Path(data_dir).glob("*"))
     label_files = sorted(str(f) for f in Path(label_dir).glob("*"))
     assert len(data_files) == len(label_files), "Data and label counts differ"
