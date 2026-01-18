@@ -196,7 +196,7 @@ def define_sweep_single_localization_lstm(
     vel_min_mps=-7500.0,
     vel_max_mps=7500.0,
 ):
-    inp = tf.keras.Input(
+    inp = Input(
         shape=(time_steps, vel_bins, range_bins, 1),
         name="radar_sequence"
     )
@@ -249,8 +249,15 @@ def define_sweep_single_localization_lstm(
     v_idx = tf.range(vel_bins, dtype=tf.float32)
 
     # Expected bin (soft-argmax)
-    r_bin = Dot(axes=1, name="range_bin")([range_prob, r_idx])
-    v_bin = Dot(axes=1, name="vel_bin")([vel_prob, v_idx])
+    r_bin = Lambda(
+        lambda t: tf.reduce_sum(t * r_idx[None, :], axis=1),
+        name="range_bin"
+    )(range_prob)
+
+    v_bin = Lambda(
+        lambda t: tf.reduce_sum(t * v_idx[None, :], axis=1),
+        name="vel_bin"
+    )(vel_prob)
 
     # Sub-bin offsets
     g = GlobalAveragePooling2D()(x)
