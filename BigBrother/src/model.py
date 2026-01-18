@@ -278,12 +278,7 @@ def define_sweep_single_localization_lstm(
         name="vel_mps"
     )([v_bin, offsets])
 
-    model = tf.keras.Model(
-        inputs=inp,
-        outputs=[range_m, vel_mps],
-        name="Radar_ConvLSTM_SubBin_Localizer"
-    )
-
+    model = Model(inp, [range_m, vel_mps])
     return model
 
 
