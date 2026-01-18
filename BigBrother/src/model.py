@@ -191,10 +191,10 @@ def define_sweep_single_localization_lstm(
     time_steps=21,
     range_bins=256,
     vel_bins=1024,
-    range_min_m=10.0,
+    range_min_m=0.0,
     range_max_m=1000.0,
-    vel_min_mps=-7500.0,
-    vel_max_mps=7500.0,
+    vel_min_mps=-2694.0,
+    vel_max_mps=2694.0,
 ):
     inp = Input(
         shape=(time_steps, vel_bins, range_bins, 1),
