@@ -149,7 +149,8 @@ def main():
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                return np.array([max_range * label[0], max_velocity * label[1]])  # scale to physical units
+                # return np.array([max_range * label[0], max_velocity * label[1]])  # scale to physical units
+                return { "range_m": max_range * label[0], "vel_mps": max_velocity * label[1] }
                 # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
 
