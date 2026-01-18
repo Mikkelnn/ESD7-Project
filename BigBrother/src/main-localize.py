@@ -134,7 +134,7 @@ def main():
             
             compiled_model = ai_handler.compile_model(model,
                                     optimizer=ko.Adam(1e-4),
-                                    loss=kl.Huber(delta=1.0),
+                                    loss=[kl.Huber(delta=1.0), kl.Huber(delta=1.0)],
                                     metrics=[
                                         ai_handler.tf.keras.metrics.MeanAbsoluteError(name="MAE"),
                                         ai_handler.tf.keras.metrics.MeanSquaredError(name="MSE")
