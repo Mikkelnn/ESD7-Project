@@ -23,7 +23,7 @@ TRAINING_DATA_PATH = GENEREL_PATH / "one/training_data" # "big_training_data"
 VALIDATE_DATA_PATH = GENEREL_PATH / "one/validate_data" # "training_data"
 
 log = get_logger()
-ai_handler = AiHandler(RESULTS_PATH, namedResultDir="15-12-2025_20:51:34")
+ai_handler = AiHandler(RESULTS_PATH) # , namedResultDir="15-12-2025_20:51:34"
 ntfy = NtfyHandler("ai_template")
 
 
@@ -39,7 +39,7 @@ def main():
         batch_size = 1 # Decrease as model get larger to fit in GPU memory
         epochs = 20
         initial_epoch = 0
-        train_on_latest_result = True
+        train_on_latest_result = False
         
         max_range = 1000 # m
         max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
