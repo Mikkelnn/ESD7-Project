@@ -270,12 +270,12 @@ def define_sweep_single_localization_lstm(
 
     range_m = Lambda(
         lambda t: (t[0] + t[1][:, 0]) * range_bin_width + range_min_m,
-        name="range_m"
+        # name="range_m"
     )([r_bin, offsets])
 
     vel_mps = Lambda(
         lambda t: (t[0] + t[1][:, 1]) * vel_bin_width + vel_min_mps,
-        name="vel_mps"
+        # name="vel_mps"
     )([v_bin, offsets])
 
     model = Model(inp, [range_m, vel_mps])
