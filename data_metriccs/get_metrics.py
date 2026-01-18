@@ -69,7 +69,7 @@ def compute_metrics(pred, label, units, name="Data"):
         print(f"    {p}th percentile: {val:.4f} {units}")
     
     # Tolerance coverage
-    for key in [50, 90, 95, 98]:
+    for key in [1, 5, 10, 20, 50, 75, 90, 95, 98, 100]:
         tol_level = np.percentile(rel_error, key)
         print(f"    Tolerance covering {key}% of predictions: ±{tol_level:.2f}%")
 

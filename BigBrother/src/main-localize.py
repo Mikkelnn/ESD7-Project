@@ -41,8 +41,8 @@ def main():
         initial_epoch = 0
         train_on_latest_result = True
         
-        # max_range = 800 # m
-        # max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
+        max_range = 1000 # m
+        max_velocity = 7500 # m/s - for now only between zero and 7500 m/s
     
         # num_range_out = int(max_range / 10) #
         # num_velocity_out = int(max_velocity / 50) #
@@ -59,7 +59,8 @@ def main():
                     exit()
             else:
                 # model = defineModel_single_target_detector_doubleConv()
-                model = define_sweep_single_localization()
+                # model = define_sweep_single_localization()
+                model = define_sweep_single_localization_lstm()
                 # model = defineModel_single_target_detector_sweep()
                 # model = define_robust_model_v2(use_heatmap=False)
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
@@ -148,7 +149,7 @@ def main():
 
             def loader_func_label(f): 
                 label = np.load(f) # shape (2,) → [range, velocity]
-                return label
+                return label * np.array([max_range, max_velocity])  # scale to physical units
                 # return np.array([1,0]) if (sum(label) == 0) else np.array([0,1])
                 
 
@@ -195,17 +196,17 @@ def main():
             ai_handler.save_model(compiled_model)
             
             mae = history.history["MAE"]
-            mae_acc = history.history["val_MAE"]
+            val_mae = history.history["val_MAE"]
             mse = history.history["MSE"]
             val_mse = history.history["val_MSE"]
 
             loss = history.history["loss"]
             val_loss = history.history["val_loss"]
-            epochs = range(1, len(acc) + 1)
+            epochs = range(1, len(loss) + 1)
 
             for i in epochs:
                 log.info(
-                    f"Epoch {i + initial_epoch}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, MAE {mae[i - 1]}, validation MAE {mae_acc[i - 1]}, MSE {mse[i - 1]}, validation MSE {val_mse[i - 1]}"
+                    f"Epoch {i + initial_epoch}: loss {loss[i - 1]}, validation loss {val_loss[i - 1]}, MAE {mae[i - 1]}, validation MAE {val_mae[i - 1]}, MSE {mse[i - 1]}, validation MSE {val_mse[i - 1]}"
                 )
 
             # Plot and save mae figure
@@ -558,6 +559,6 @@ def get_validation_predictions():
 
 if __name__ == "__main__":
     # load_predict()
-    # main()
+    main()
     # _ = confusion_matrix()
-    _ = get_validation_predictions()
+    # _ = get_validation_predictions()
