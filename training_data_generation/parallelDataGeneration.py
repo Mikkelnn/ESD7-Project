@@ -37,7 +37,8 @@ def disk_monitor(root_path, flag, check_interval=1):
 # -------------------------------
 def generate_batch(rng):
     """Generate a random batch of targets"""
-    n_targets = rng.integers(0, 1, endpoint=True)  # 0 or 1 target
+    n_targets = 0
+    if(rng.integers(0,100)>=89): n_targets = 1  # 0 or 1 target
     data = np.zeros((n_targets, 3)) #, dtype=np.int16)
     for j in range(n_targets):
         data[j, 0] = rng.integers(100, 1000)   # range
