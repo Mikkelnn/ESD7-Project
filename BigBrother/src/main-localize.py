@@ -66,7 +66,7 @@ def main():
                 # model = defineModel_singel_target_estimate() # model = defineModel_singel_target_estimate_descreete(num_range_out, num_velocity_out) # defineModel_single_target_detector()
                 # model = defineModel_smallCNN()
             
-            # model.summary()
+            model.summary()
 
             # exit()
 

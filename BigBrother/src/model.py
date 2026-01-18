@@ -223,7 +223,7 @@ def define_sweep_single_localization_lstm(
     # Shared logits
     logits = Conv2D(
         filters=1,
-        kernel_size=1,
+        kernel_size=(1,1),
         padding="same",
         activation=None
     )(x)
