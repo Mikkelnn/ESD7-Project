@@ -340,10 +340,14 @@ class AiHandler():
             loader_func_label = lambda f: np.load(f)  # default expects .npy
 
         data_shape = loader_func_data(data_files[0]).shape
-        # label_shape = loader_func_label(label_files[0]).shape
-
         label_sample = loader_func_label(label_files[0])
-        label_keys = list(label_sample.keys())
+        label_shape = None, label_keys = None
+        
+        label_is_key_value = isinstance(label_sample, np.ndarray)
+        if label_is_key_value:
+            label_keys = list(label_sample.keys())
+        else:
+            label_shape = label_sample.shape
 
         # Create tf.data.Dataset from filenames
         dataset = self.tf.data.Dataset.from_tensor_slices((data_files, label_files))
@@ -351,33 +355,32 @@ class AiHandler():
         def load_numpy_files(data_path, label_path):
             # Use tf.py_function to run numpy loading in parallel workers
             data = self.tf.py_function(lambda x: loader_func_data(x.numpy().decode()), [data_path], self.tf.float32)
-            # label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
-            
-            def load_label_pyfunc(path):
-                d = loader_func_label(path.numpy().decode())
-                # return a tuple in a consistent order
-                return tuple(d[k].astype("float32") for k in label_keys)
-
-            # Load label dict directly # lambda x: loader_func_label(x.numpy().decode()),
-            label_dict = self.tf.py_function(
-                load_label_pyfunc,
-                [label_path],
-                Tout=[self.tf.float32 for _ in label_keys]
-            )
-
-            # Map the returned tuple back to the dict keys            
-            label_dict = {k: v for k, v in zip(label_keys, label_dict)}
-
-            # Set shapes for TF
             data.set_shape(data_shape)
-            for k, v in label_dict.items():
-                v.set_shape(label_sample[k].shape)
+            
+            if not label_is_key_value:
+                label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
+                label.set_shape(label_shape)
+            else:
+                def load_label_pyfunc(path):
+                    d = loader_func_label(path.numpy().decode())
+                    # return a tuple in a consistent order
+                    return tuple(d[k].astype("float32") for k in label_keys)
 
-            # # Set static shapes so TF knows tensor ranks
-            # data.set_shape(data_shape)
-            # label.set_shape(label_shape)
+                # Load label dict directly # lambda x: loader_func_label(x.numpy().decode()),
+                label = self.tf.py_function(
+                    load_label_pyfunc,
+                    [label_path],
+                    Tout=[self.tf.float32 for _ in label_keys]
+                )
 
-            return data, label_dict # label
+                # Map the returned tuple back to the dict keys            
+                label = {k: v for k, v in zip(label_keys, label)}
+
+                # Set shapes for TF
+                for k, v in label.items():
+                    v.set_shape(label_sample[k].shape)
+
+            return data, label
 
         # Apply parallel mapping and prefetch
         dataset = (
