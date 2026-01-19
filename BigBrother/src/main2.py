@@ -565,5 +565,5 @@ def roc(modelPath: str):
 
 if __name__ == "__main__":
     # load_predict()
-    # main()
-    _ = confusion_matrix()
+    main()
+    # _ = confusion_matrix()
