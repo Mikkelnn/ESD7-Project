@@ -344,11 +344,11 @@ class AiHandler():
         label_shape = None
         label_keys = None
         
-        label_is_key_value = isinstance(label_sample, np.ndarray)
-        if label_is_key_value:
-            label_keys = list(label_sample.keys())
-        else:
+        label_is_array = isinstance(label_sample, np.ndarray)
+        if label_is_array:
             label_shape = label_sample.shape
+        else:
+            label_keys = list(label_sample.keys())
 
         # Create tf.data.Dataset from filenames
         dataset = self.tf.data.Dataset.from_tensor_slices((data_files, label_files))
@@ -358,7 +358,7 @@ class AiHandler():
             data = self.tf.py_function(lambda x: loader_func_data(x.numpy().decode()), [data_path], self.tf.float32)
             data.set_shape(data_shape)
             
-            if not label_is_key_value:
+            if label_is_array:
                 label = self.tf.py_function(lambda x: loader_func_label(x.numpy().decode()), [label_path], self.tf.float32)
                 label.set_shape(label_shape)
             else:
