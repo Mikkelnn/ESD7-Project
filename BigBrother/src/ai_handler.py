@@ -341,7 +341,8 @@ class AiHandler():
 
         data_shape = loader_func_data(data_files[0]).shape
         label_sample = loader_func_label(label_files[0])
-        label_shape = None, label_keys = None
+        label_shape = None
+        label_keys = None
         
         label_is_key_value = isinstance(label_sample, np.ndarray)
         if label_is_key_value:
