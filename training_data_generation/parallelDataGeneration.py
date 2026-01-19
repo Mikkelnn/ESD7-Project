@@ -25,7 +25,7 @@ def disk_monitor(root_path, flag, check_interval=1):
         # flag.value = used_percent < 98
 
         disk_used_Byte = (used - init_disk_used)
-        flag.value = disk_used_Byte < 100e9 # 100GB in bytes 
+        flag.value = disk_used_Byte < 20e9 # 20GB in bytes 
 
         # path =  os.path.join(root_path, "input")
         # flag.value = sum(1 for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))) < 25

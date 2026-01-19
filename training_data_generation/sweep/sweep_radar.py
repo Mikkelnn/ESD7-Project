@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from tqdm import tqdm
+import random as rnd
 
 from .radiation_pattern import radiation_pattern
 from .plot_3d_scene import  plot_radar_scene, save_frames_mp4, show_all_figs
@@ -160,7 +161,7 @@ def simulate_sweep_targets(targets):
             dict(
                 location=(target[0], y_start, z_start),
                 speed=(0, np.sin(angel_rad) * speed, np.cos(angel_rad) * speed),
-                rcs=-54.60,
+                rcs=rnd.uniform(-54.60, -14.60),
                 phase=0,
             )
         )
