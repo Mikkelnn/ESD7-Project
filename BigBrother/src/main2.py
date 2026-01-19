@@ -23,7 +23,7 @@ TRAINING_DATA_PATH = GENEREL_PATH / "zero_one/training_data" # "ideal_data/big_t
 VALIDATE_DATA_PATH = GENEREL_PATH / "zero_one/validate_data" # "ideal_data/training_data"
 
 log = get_logger()
-ai_handler = AiHandler(RESULTS_PATH, namedResultDir="19-01-2026_14:46:48")
+ai_handler = AiHandler(RESULTS_PATH)
 ntfy = NtfyHandler("ai_template")
 
 
