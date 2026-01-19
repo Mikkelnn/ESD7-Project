@@ -451,6 +451,35 @@ def defineModel_singel_target_estimate_descreete(range_bins, doppler_bins):
     return model
 
 
+def defineModel_single_target_detector_sweep_small():
+
+    inputs = Input(shape=(21,1024,256,1))
+
+    # per-frame CNN
+    x = TimeDistributed(Conv2D(16,(3,3),padding="same",activation="relu"))(inputs)
+    x = TimeDistributed(MaxPooling2D((2,1)))(x) # (1024, 256) -> (512, 256)
+
+    x = TimeDistributed(Conv2D(32,(3,3),padding="same",activation="relu"))(x)
+    x = TimeDistributed(MaxPooling2D((2,2)))(x) # (512, 256) -> (256, 128)
+
+    # x = TimeDistributed(Conv2D(64,(3,3),activation="relu",padding="same"))(x)
+    # x = TimeDistributed(MaxPooling2D((2,2)))(x) # (256, 128) -> (128, 64)
+
+    # x = TimeDistributed(Conv2D(128,(3,3),activation="relu",padding="same"))(x)
+    # x = TimeDistributed(MaxPooling2D((2,2)))(x) # (128, 64) -> (64, 32)
+
+    # flatten every frame
+    x = TimeDistributed(GlobalAveragePooling2D())(x)
+
+    # fuse angle information: simple max or mean → lightweight and effective
+    x = GlobalMaxPooling1D()(x)
+
+    # classifier
+    x = Dense(256,activation="relu")(x)
+    outputs = Dense(2,activation="softmax")(x)
+
+    model = Model(inputs, outputs)
+    return model
 
 def defineModel_single_target_detector_sweep():
 
