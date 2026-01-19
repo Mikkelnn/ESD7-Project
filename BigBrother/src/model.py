@@ -456,10 +456,10 @@ def defineModel_single_target_detector_sweep_small():
     inputs = Input(shape=(21,1024,256,1))
 
     # per-frame CNN
-    x = TimeDistributed(Conv2D(4,(3,3),padding="same",activation="relu"))(inputs)
+    x = TimeDistributed(Conv2D(2,(3,3),padding="same",activation="relu"))(inputs)
     x = TimeDistributed(MaxPooling2D((2,1)))(x) # (1024, 256) -> (512, 256)
 
-    x = TimeDistributed(Conv2D(8,(3,3),padding="same",activation="relu"))(x)
+    x = TimeDistributed(Conv2D(4,(3,3),padding="same",activation="relu"))(x)
     x = TimeDistributed(MaxPooling2D((2,2)))(x) # (512, 256) -> (256, 128)
 
     # flatten every frame
