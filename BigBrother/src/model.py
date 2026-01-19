@@ -469,7 +469,7 @@ def defineModel_single_target_detector_sweep_small():
     x = GlobalMaxPooling1D()(x)
 
     # classifier
-    x = Dense(256,activation="relu")(x)
+    x = Dense(128,activation="relu")(x)
     outputs = Dense(2,activation="softmax")(x)
 
     model = Model(inputs, outputs)
