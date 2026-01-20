@@ -136,7 +136,7 @@ def main():
                                     optimizer=ko.Adam(1e-4),
                                     loss={
                                         "range_m": kl.Huber(delta=1.0),
-                                        "vel_mps": kl.Huber(delta=1.0),
+                                        "vel_mps": kl.Huber(delta=0.05),
                                     },
                                     metrics={
                                         "range_m": [

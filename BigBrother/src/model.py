@@ -187,7 +187,7 @@ def define_sweep_single_localization():
     model = Model(inputs, coords_out)
     return model
 
-def define_sweep_single_localization_lstm(
+def define_sweep_single_localization_lstm_first(
     time_steps=21,
     range_bins=256,
     vel_bins=1024,
@@ -265,6 +265,112 @@ def define_sweep_single_localization_lstm(
     offsets = Dense(2, activation="tanh", name="offsets")(g)
 
     # Physical conversion
+    range_bin_width = (range_max_m - range_min_m) / float(range_bins)
+    vel_bin_width = (vel_max_mps - vel_min_mps) / float(vel_bins)
+
+    range_m = Lambda(
+        lambda t: (t[0] + t[1][:, 0]) * range_bin_width + range_min_m,
+        name="range_m"
+    )([r_bin, offsets])
+
+    vel_mps = Lambda(
+        lambda t: (t[0] + t[1][:, 1]) * vel_bin_width + vel_min_mps,
+        name="vel_mps"
+    )([v_bin, offsets])
+
+    model = Model(inp, [range_m, vel_mps])
+    return model
+
+def define_sweep_single_localization_lstm(
+    time_steps=21,
+    range_bins=256,
+    vel_bins=1024,
+    range_min_m=0.0,
+    range_max_m=1000.0,
+    vel_min_mps=-2694.0,
+    vel_max_mps=2694.0,
+):
+    inp = Input(
+        shape=(time_steps, vel_bins, range_bins, 1),
+        name="radar_sequence"
+    )
+
+    # --- EARLY DOWNSAMPLING (CRITICAL) ---
+    x = TimeDistributed(
+        Conv2D(
+            filters=8,
+            kernel_size=3,
+            strides=2,
+            padding="same",
+            activation="relu"
+        )
+    )(inp)
+
+    # --- Spatiotemporal integration ---
+    x = ConvLSTM2D(
+        filters=8,
+        kernel_size=(5, 5),
+        padding="same",
+        return_sequences=True,
+        activation="tanh"
+    )(x)
+
+    # REMOVE BatchNorm (kills temporal signal)
+
+    x = ConvLSTM2D(
+        filters=16,
+        kernel_size=(3, 3),
+        padding="same",
+        return_sequences=False,
+        activation="tanh"
+    )(x)
+
+    # --- Shared logits ---
+    logits = Conv2D(
+        filters=1,
+        kernel_size=(1, 1),
+        padding="same",
+        activation=None
+    )(x)
+
+    # --- PROPER MARGINALIZATION (log-sum-exp) ---
+    range_logits = Lambda(
+        lambda t: tf.reduce_logsumexp(t, axis=1),
+        name="range_logits"
+    )(logits)
+    range_logits = Flatten()(range_logits)
+    range_prob = Softmax(name="range_prob")(range_logits)
+
+    vel_logits = Lambda(
+        lambda t: tf.reduce_logsumexp(t, axis=2),
+        name="vel_logits"
+    )(logits)
+    vel_logits = Flatten()(vel_logits)
+    vel_prob = Softmax(name="vel_prob")(vel_logits)
+
+    # --- Bin indices ---
+    r_idx = tf.range(range_bins, dtype=tf.float32)
+    v_idx = tf.range(vel_bins, dtype=tf.float32)
+
+    # --- Soft-argmax ---
+    r_bin = Lambda(
+        lambda t: tf.reduce_sum(t * r_idx[None, :], axis=1),
+        name="range_bin"
+    )(range_prob)
+
+    v_bin = Lambda(
+        lambda t: tf.reduce_sum(t * v_idx[None, :], axis=1),
+        name="vel_bin"
+    )(vel_prob)
+
+    # --- Sub-bin offsets (CLAMPED) ---
+    g = GlobalAveragePooling2D()(x)
+    g = Dense(64, activation="relu")(g)
+
+    offsets = Dense(2, activation="tanh")(g)
+    offsets = Lambda(lambda t: 0.5 * t, name="offsets")(offsets)
+
+    # --- Physical conversion ---
     range_bin_width = (range_max_m - range_min_m) / float(range_bins)
     vel_bin_width = (vel_max_mps - vel_min_mps) / float(vel_bins)
 
